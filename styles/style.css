@@ -2,14 +2,13 @@
 
 :root {
     --primary-color: #007bff; /* Blue */
-    --secondary-color: #ff9900; /* Orange/Yellow */
+    --secondary-color: #ff9900; /* Orange/Yellow - Used for high-contrast CTA */
     --text-color: #333;
     --bg-color: #f4f4f9;
     --white: #ffffff;
     --font-stack: 'Arial', sans-serif;
     --light-bg-primary: #e6f0ff;
     --light-bg-secondary: #e9e9f1;
-    --light-bg-tertiary: #f1f1f9;
     --header-height: 60px;
 }
 
@@ -134,10 +133,7 @@ ul {
     background: #0056b3;
 }
 
-/* * --- HERO SECTION STYLES --- 
- * NOTE: .hero-section uses --primary-color (Blue) background.
- * The cta-primary and cta-secondary classes are styled to contrast this blue.
-*/
+/* --- HERO SECTION STYLES (for index.html, services.html, etc.) --- */
 .hero-section {
     background: var(--primary-color);
     color: var(--white);
@@ -170,22 +166,22 @@ ul {
     margin-top: 0; 
 }
 
-/* .cta-primary (Used for 'Order Nell - Foods' in the current HTML) */
+/* .cta-primary */
 .cta-primary {
-    background: var(--secondary-color); /* Orange/Yellow background */
+    background: var(--secondary-color); 
     color: var(--white);
     border: 2px solid var(--secondary-color);
 }
 
 .cta-primary:hover {
-    background: #e68a00; /* Darker yellow/orange hover */
+    background: #e68a00; 
     border-color: #e68a00;
 }
 
-/* .cta-secondary (Used for 'Book a Ride' in the current HTML) */
+/* .cta-secondary */
 .cta-secondary {
-    background: var(--white); /* White background stands out against blue hero */
-    color: var(--primary-color); /* Blue text on white background */
+    background: var(--white); 
+    color: var(--primary-color); 
     border: 2px solid var(--white);
 }
 
@@ -248,6 +244,71 @@ footer {
 .page-hero p {
     font-size: 1.1rem;
 }
+
+/* ------------------------------------------------------------------------- */
+/* --- CITY.HTML SPECIFIC STYLES --- */
+/* ------------------------------------------------------------------------- */
+
+.city-search {
+    padding: 2rem 1.5rem 1rem;
+    text-align: center;
+}
+
+#citySearchInput {
+    width: 100%;
+    max-width: 400px;
+    padding: 0.75rem 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1rem;
+}
+
+.city-list {
+    padding: 0 1.5rem 3rem;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.city-list h2 {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-color);
+    color: var(--primary-color);
+}
+
+.city-list ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 0;
+}
+
+.city-list li {
+    background: var(--white);
+    padding: 0.75rem 1rem;
+    border-radius: 5px;
+    flex: 1 1 150px; /* Allows list items to wrap and grow slightly */
+    text-align: center;
+    font-weight: 500;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.city-list li a {
+    display: block;
+    color: var(--text-color);
+}
+
+.city-list li a:hover {
+    color: var(--primary-color);
+}
+
+.city-list .coming-soon li {
+    background: var(--light-bg-secondary);
+    color: var(--text-color);
+}
+
+/* --- Other Secondary Page Styles (for completeness) --- */
 
 /* Services Page Specific */
 .service-detail-section {
@@ -313,30 +374,17 @@ footer {
 @media (min-width: 768px) {
     
     /* === NAV & HEADER FIXES === */
-    
-    /* Reset body padding and fixed header for desktop */
-    body {
-        padding-top: 0; 
-    }
+    body { padding-top: 0; }
     .main-header {
         position: static;
         height: auto;
-        padding: 1.5rem 3rem; /* Adjusted padding for desktop header */
+        padding: 1.5rem 3rem;
+        justify-content: flex-start;
     }
     
-    /* HIDE mobile elements on desktop */
-    .mobile-menu-icon {
-        display: none;
-    }
-    .mobile-nav {
-        /* Ensure mobile nav is always hidden on desktop */
-        display: none; 
-    }
-
-    /* SHOW desktop nav */
-    .desktop-nav {
-        display: block; 
-    }
+    .mobile-menu-icon { display: none; }
+    .mobile-nav { display: none; }
+    .desktop-nav { display: block; margin-left: auto; }
 
     .desktop-nav ul {
         display: flex;
@@ -350,25 +398,11 @@ footer {
 
     /* === LAYOUT OPTIMIZATION === */
     
-    .main-header {
-        justify-content: flex-start; /* Align logo left */
-    }
-    
-    .desktop-nav {
-        margin-left: auto; /* Push desktop nav to the right */
-    }
-
     /* Adjust Hero for wider screens */
-    .hero-section {
-        padding: 6rem 3rem;
-    }
-
-    .hero-section h1 {
-        font-size: 3rem;
-    }
-
+    .hero-section { padding: 6rem 3rem; }
+    .hero-section h1 { font-size: 3rem; }
     .cta-buttons {
-        flex-direction: row; /* Buttons side-by-side on desktop */
+        flex-direction: row; 
         justify-content: center;
     }
     
@@ -380,14 +414,26 @@ footer {
         margin: 0 auto;
     }
 
-    .card {
-        flex: 1;
+    .card { flex: 1; }
+    
+    /* City.html Desktop Layout (Cities side-by-side) */
+    .city-list {
+        padding: 0 3rem 3rem;
+    }
+
+    .city-list ul {
+        gap: 1.5rem;
+        /* Force 3 columns on desktop for better readability */
+        justify-content: space-between; 
     }
     
-    /* Secondary Pages Layout */
-    .page-hero {
-        padding: 5rem 3rem;
+    .city-list li {
+        flex: 0 0 calc(33.33% - 1rem); /* 3 items per row with gap */
+        max-width: calc(33.33% - 1rem); 
     }
+
+    /* Secondary Pages Layout (General 3-column) */
+    .page-hero { padding: 5rem 3rem; }
 
     .service-detail-section,
     .values-grid,
@@ -396,6 +442,7 @@ footer {
         flex-direction: row;
         max-width: 1200px;
         margin: 0 auto;
+        gap: 2rem;
     }
 
     /* Equal width distribution for desktop sections */
@@ -404,13 +451,13 @@ footer {
     .step,
     .faq-card {
         flex: 1;
-        max-width: 30%; /* Appropriate sizing for 3-column layouts */
+        max-width: 30%; 
     }
     
     /* Services image flow */
     .service-block img {
         float: left; 
-        width: 100px; /* Example size */
+        width: 100px;
         height: auto;
         margin-right: 1.5rem;
     }
