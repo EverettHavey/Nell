@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NELL - Order Food</title>
     <style>
-        /* Shared CSS Variables (Mocking an external style.css) */
+        /* Shared CSS Variables */
         :root {
             --color-primary: #1e40af; /* Tailwind blue-700 */
             --color-secondary: #fcd34d; /* Tailwind amber-300 */
@@ -132,8 +132,14 @@
             box-shadow: var(--shadow-sm);
         }
 
+        .filter-group {
+            display: flex;
+            flex-wrap: wrap; /* Allow wrapping for many buttons */
+        }
+        
         .filter-group button {
             margin-left: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm); /* Added margin for wrapped buttons */
             background-color: var(--color-secondary);
             color: var(--color-dark);
             padding: 8px 12px;
@@ -208,20 +214,21 @@
             .filter-group {
                 margin-top: var(--spacing-md);
                 display: flex;
-                justify-content: space-around;
+                justify-content: flex-start; /* Aligned left for wrapping buttons */
             }
             .filter-group button {
-                margin-left: 0;
+                margin-left: var(--spacing-sm);
             }
         }
     </style>
     
     <script>
         const ALL_RESTAURANTS = [
-            { name: 'Starbucks', category: 'Coffee', rating: 4.5, delivery: 15, color: '00704A', text: 'Coffee%20%26%20Pastries' },
+            // Existing 13 restaurants (Starbucks, Fresh Fries, Burger King, KFC)
+            { name: 'Starbucks', category: 'Fast Food', rating: 4.5, delivery: 15, color: '00704A', text: 'Coffee%20%26%20Pastries' },
             { name: 'McDonalds', category: 'Fast Food', rating: 3.9, delivery: 25, color: 'FFC72C', text: 'Burgers%20%26%20Fries' },
             { name: 'The Grill Hub', category: 'Burgers', rating: 4.7, delivery: 35, color: '333333', text: 'Gourmet%20Burgers' },
-            { name: 'Fresh Fries', category: 'Snacks', rating: 4.2, delivery: 10, color: '8B4513', text: 'Specialty%20Fries' },
+            { name: 'Fresh Fries', category: 'Fast Food', rating: 4.2, delivery: 10, color: '8B4513', text: 'Specialty%20Fries' },
             { name: 'Nell Grocers', category: 'Grocery', rating: 4.9, delivery: 60, color: '4CAF50', text: 'Fresh%20Produce' },
             { name: 'Wok Around The Clock', category: 'Asian', rating: 4.6, delivery: 45, color: 'A0522D', text: 'Chinese%20Takeout' },
             { name: 'Artisan Pizza Co.', category: 'Pizza', rating: 4.8, delivery: 30, color: 'ff5a5f', text: 'Wood%20Fired%20Pizza' },
@@ -229,7 +236,26 @@
             { name: 'Juice Bar Express', category: 'Health', rating: 4.3, delivery: 15, color: '06B6D4', text: 'Smoothies%20%26%20Juice' },
             { name: 'Italian Trattoria', category: 'Italian', rating: 4.7, delivery: 40, color: 'DC2626', text: 'Pasta%20%26%20Wine' },
             { name: 'Doughnut Delight', category: 'Dessert', rating: 4.1, delivery: 15, color: 'F9A8D4', text: 'Sweet%20Treats' },
-            { name: 'Sushi Samurai', category: 'Asian', rating: 4.9, delivery: 35, color: '1F2937', text: 'Fresh%20Sushi' }
+            { name: 'Sushi Samurai', category: 'Asian', rating: 4.9, delivery: 35, color: '1F2937', text: 'Fresh%20Sushi' },
+            { name: 'Burger King', category: 'Fast Food', rating: 3.8, delivery: 30, color: 'DC2626', text: 'Flame%20Grilled%20Burgers' },
+            { name: 'KFC', category: 'Fast Food', rating: 4.0, delivery: 20, color: '991B1F', text: 'Fried%20Chicken' },
+            
+            // New 15 restaurants added
+            { name: 'Chipotle', category: 'Mexican', rating: 4.4, delivery: 20, color: '6A0808', text: 'Build%20Your%20Own%20Burrito' },
+            { name: 'Five Guys', category: 'Burgers', rating: 4.6, delivery: 30, color: 'E3000E', text: 'All%20The%20Toppings' },
+            { name: 'Subway', category: 'Health', rating: 3.7, delivery: 20, color: '008C36', text: 'Fresh%20Sandwiches' },
+            { name: 'Taco Bell', category: 'Fast Food', rating: 3.5, delivery: 25, color: '581C87', text: 'Tacos%20%26%20Nachos' },
+            { name: 'Panda Express', category: 'Asian', rating: 4.1, delivery: 40, color: 'D97706', text: 'Orange%20Chicken' },
+            { name: 'Domino\'s', category: 'Pizza', rating: 3.6, delivery: 25, color: '006491', text: 'Quick%20Pizza%20Delivery' },
+            { name: 'Saffron Spice', category: 'Indian', rating: 4.8, delivery: 45, color: 'FF9933', text: 'Indian%20Curries' },
+            { name: 'Cheesecake Factory', category: 'Dessert', rating: 4.5, delivery: 40, color: '6B21A8', text: 'Desserts%20%26%20Mains' },
+            { name: 'Seafood Shack', category: 'Seafood', rating: 4.7, delivery: 50, color: '10B981', text: 'Fresh%20Fish%20%26%20Shrimp' },
+            { name: 'The Vegan Spot', category: 'Health', rating: 4.9, delivery: 30, color: '10B981', text: 'Plant%20Based%20Meals' },
+            { name: 'Dunkin\'', category: 'Fast Food', rating: 4.0, delivery: 15, color: 'E91E63', text: 'Coffee%20%26%20Donuts' },
+            { name: 'Fresh Bagel Bakery', category: 'Bakery', rating: 4.6, delivery: 25, color: '78350F', text: 'Bagels%20%26%20Breads' },
+            { name: 'Mediterranean Feast', category: 'Mediterranean', rating: 4.5, delivery: 35, color: '3B82F6', text: 'Kebabs%20%26%20Hummus' },
+            { name: 'Pho Saigon', category: 'Asian', rating: 4.7, delivery: 30, color: '581C87', text: 'Vietnamese%20Noodle%20Soup' },
+            { name: 'Ice Cream Dream', category: 'Dessert', rating: 4.3, delivery: 10, color: 'FBBF24', text: 'Frozen%20Treats' }
         ];
 
         let currentRestaurants = [...ALL_RESTAURANTS];
@@ -237,7 +263,7 @@
         let visibleCount = pageSize;
         let activeSort = 'delivery'; 
         
-        // Declare element variables globally with 'let'
+        // Element variables declared globally
         let restaurantGrid;
         let loadMoreBtn;
         let sortSelect;
@@ -294,7 +320,7 @@
                 currentRestaurants = ALL_RESTAURANTS.filter(r => r.category === category);
             }
             document.querySelectorAll('.filter-group button').forEach(btn => {
-                // FIX: CSS variables must be wrapped in quotes when assigning via btn.style.
+                // Set button colors based on active filter
                 btn.style.backgroundColor = btn.textContent === category ? 'var(--color-primary)' : 'var(--color-secondary)';
                 btn.style.color = btn.textContent === category ? 'var(--color-light)' : 'var(--color-dark)';
             });
@@ -368,10 +394,18 @@
                 <div id="filterGroup" class="filter-group">
                     <button class="btn">All</button>
                     <button class="btn">Fast Food</button>
-                    <button class="btn">Asian</button>
-                    <button class="btn">Grocery</button>
+                    <button class="btn">Burgers</button>
                     <button class="btn">Pizza</button>
+                    <button class="btn">Asian</button>
+                    <button class="btn">Mexican</button>
+                    <button class="btn">Italian</button>
+                    <button class="btn">Indian</button>
+                    <button class="btn">Seafood</button>
                     <button class="btn">Health</button>
+                    <button class="btn">Dessert</button>
+                    <button class="btn">Bakery</button>
+                    <button class="btn">Mediterranean</button>
+                    <button class="btn">Grocery</button>
                 </div>
                 
                 <div class="sort-group">
@@ -401,3 +435,4 @@
     </footer>
 </body>
 </html>
+
