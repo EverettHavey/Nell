@@ -11,6 +11,7 @@
             --primary-blue: #0076ff; /* Nell Rides Primary Blue */
             --primary-dark: #1f1f1f;
             --success-green: #388e3c;
+            --cancel-red: #dc3545;
         }
 
         body {
@@ -76,6 +77,7 @@
             height: 180px;
             background-color: #f0f0f0;
             display: flex;
+            flex-direction: column; 
             align-items: center;
             justify-content: center;
             margin-bottom: 20px;
@@ -168,12 +170,6 @@
             margin-bottom: 20px;
             border: 1px solid #eee;
         }
-        #payment-details-form h3 {
-            font-size: 1.1em;
-            font-weight: 600;
-            margin-bottom: 10px;
-            color: var(--primary-blue);
-        }
         #payment-details-form input {
             width: 100%;
             padding: 10px;
@@ -193,9 +189,6 @@
             cursor: pointer;
             margin-top: 10px;
         }
-        #confirm-payment-btn:hover {
-            background-color: #005ac0;
-        }
         
         /* BUTTONS */
         .book-button {
@@ -208,6 +201,40 @@
             cursor: pointer;
         }
         .book-button:disabled { background-color: #99c2ff; cursor: not-allowed; opacity: 0.8; }
+
+        /* IN-RIDE SPECIFIC STYLES */
+        .ride-status-card {
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background-color: #fff;
+        }
+        .driver-info p {
+            margin: 5px 0;
+        }
+        #cancel-ride-btn {
+            background-color: var(--cancel-red);
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            width: 100%;
+            margin-top: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .driver-line {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .driver-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-blue);
+        }
     </style>
 </head>
 <body>
@@ -280,20 +307,25 @@
 
     <div id="in-ride-view" style="display: none;">
         <div class="map-placeholder map-large">
-            <p>🗺️ **Live Ride Map**</p>
+            <p id="live-map-message">🗺️ **Live Ride Map**</p>
             <p>Driver is approaching. Estimated time: 3 minutes</p>
         </div>
         <div class="ride-status-card">
             <h2>Your Ride Status</h2>
             <div id="ride-status-message" class="status-message">Driver Confirmed!</div>
+            
             <div class="driver-info">
-                <div>
-                    <p><strong>Driver:</strong> <span id="driver-name"></span></p>
-                    <p><strong>Vehicle:</strong> <span id="vehicle-details"></span></p>
-                    <p><strong>Payment:</strong> <span id="payment-summary"></span></p>
+                <p><strong>Confirmation Number:</strong> <span id="confirmation-number"></span></p>
+                <hr style="margin: 10px 0; border-color: #eee;">
+                
+                <div class="driver-line">
+                    <img id="driver-img" src="Images/Image.webp" alt="Driver Profile" class="driver-image">
+                    <p style="margin: 0;"><strong>Driver:</strong> <span id="driver-name"></span></p>
                 </div>
+                <p><strong>Vehicle:</strong> <span id="vehicle-details"></span></p>
+                <p><strong>Payment:</strong> <span id="payment-summary"></span></p>
             </div>
-            <button id="cancel-ride-btn" class="button-secondary" onclick="cancelRide()">Cancel Ride</button>
+            <button id="cancel-ride-btn" onclick="cancelRide()">Cancel Ride</button>
         </div>
     </div>
 </div>
@@ -319,7 +351,6 @@
     ];
 
     const paymentMethods = [
-        // Changed name from 'Visa **** 1234' to 'Visa (Primary)'
         { id: 'visa', name: 'Visa (Primary)', icon: '💳', confirmed: false, confirmedName: 'Visa (default)' }, 
         { id: 'paypal', name: 'PayPal (Primary)', icon: '💰', confirmed: false, confirmedName: 'PayPal Linked' },
         { id: 'cash', name: 'Cash', icon: '💵', confirmed: true, confirmedName: 'Cash (Pay Driver)' } 
@@ -328,8 +359,18 @@
     
     let selectedVehicleId = null; 
     let selectedPaymentId = null; 
+    let currentConfirmationNumber = null; 
 
-    // --- DRIVER DETAILS LOGIC ---
+    // --- UTILITY FUNCTIONS ---
+    function generateConfirmationNumber() {
+        const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        let result = '';
+        for (let i = 0; i < 6; i++) {
+            result += chars.charAt(Math.floor(Math.random() * chars.length));
+        }
+        return result;
+    }
+
     function getDriverDetails(vehicleId) {
         switch (vehicleId) {
             case 'standard': return { name: 'Sarah J.', rating: '4.9', plate: 'T-800' };
@@ -338,10 +379,11 @@
         }
     }
     
-    // --- VEHICLE SELECTION LOGIC ---
     function checkLocationInput() {
         checkBookingReadiness();
     }
+
+    // --- UI RENDERING & SELECTION ---
 
     function renderVehicles() {
         const container = document.getElementById('vehicle-options-container');
@@ -371,7 +413,6 @@
         checkBookingReadiness();
     }
 
-    // --- PAYMENT SELECTION LOGIC (UPDATED) ---
     function renderPaymentMethods() {
         const container = document.getElementById('payment-options-container');
         container.innerHTML = ''; 
@@ -382,14 +423,11 @@
             card.className = `payment-card ${isSelected ? 'selected' : ''}`; 
             card.onclick = () => selectPaymentMethod(method.id);
 
-            // Logic to remove the checkmark for cash
             let statusText = 'Click to Add/Confirm';
             if (method.confirmed) {
-                // If confirmed but NOT cash, show the checkmark
                 if (method.id !== 'cash') {
                     statusText = `✓ ${method.confirmedName}`;
                 } else {
-                    // For Cash, only show the text without the checkmark
                     statusText = method.confirmedName;
                 }
             }
@@ -406,7 +444,6 @@
     }
 
     function selectPaymentMethod(id) {
-        // Deselect if clicking the already selected, unconfirmed payment method (to hide the form)
         if (selectedPaymentId === id) {
              const selectedMethod = paymentMethods.find(p => p.id === id);
              if (!selectedMethod.confirmed) {
@@ -456,13 +493,11 @@
 
         const selectedMethod = paymentMethods.find(p => p.id === id);
 
-        // 1. Hide the form if 'cash' is selected, no vehicle is selected, or the payment is already confirmed
         if (!selectedVehicleId || id === 'cash' || !selectedMethod || selectedMethod.confirmed) {
             formDiv.style.display = 'none';
             return;
         }
 
-        // 2. Show the form for unconfirmed Visa/PayPal
         formTitle.textContent = id === 'visa' ? 'Enter Card Details' : 'Log in to PayPal';
         formInputsDiv.innerHTML = getPaymentFormHTML(id);
         formDiv.style.display = 'block';
@@ -473,7 +508,6 @@
     function confirmInlinePayment() {
         if (!selectedPaymentId) return;
 
-        // Simple validation check (should be enhanced in a real app)
         const formInputs = document.getElementById('payment-form-inputs').querySelectorAll('input');
         let isValid = true;
         formInputs.forEach(input => {
@@ -487,20 +521,18 @@
             return;
         }
 
-        // Mark payment as confirmed
         const index = paymentMethods.findIndex(p => p.id === selectedPaymentId);
         if (index !== -1) {
             paymentMethods[index].confirmed = true;
         }
 
-        // Hide the form and re-render the payment list
         document.getElementById('payment-details-form').style.display = 'none';
         renderPaymentMethods(); 
         checkBookingReadiness();
     }
 
 
-    // --- BOOKING READINESS ---
+    // --- BOOKING LOGIC ---
     function checkBookingReadiness() {
         const pickup = document.getElementById('pickup-input').value;
         const dropoff = document.getElementById('dropoff-input').value;
@@ -525,27 +557,29 @@
         return isReady;
     }
 
-    // --- SIMULATION LOGIC ---
     function bookRide() {
         if (!checkBookingReadiness()) return;
 
-        const pickup = document.getElementById('pickup-input');
-        const dropoff = document.getElementById('dropoff-input');
         const paymentMethod = paymentMethods.find(p => p.id === selectedPaymentId);
         const selectedVehicle = vehicles.find(v => v.id === selectedVehicleId);
         
+        currentConfirmationNumber = generateConfirmationNumber(); 
+
         showNotification();
         const driverInfo = getDriverDetails(selectedVehicleId);
         
         setTimeout(() => {
+            // Transition to In-Ride View
             document.getElementById('booking-view').style.display = 'none';
             document.getElementById('in-ride-view').style.display = 'block';
             
+            // Populate In-Ride Details
+            document.getElementById('confirmation-number').textContent = currentConfirmationNumber;
             document.getElementById('driver-name').textContent = driverInfo.name;
             document.getElementById('vehicle-details').textContent = `${selectedVehicle.name} • ${driverInfo.plate}`; 
             document.getElementById('payment-summary').textContent = `${paymentMethod.icon} ${paymentMethod.confirmedName}`; 
-            document.getElementById('summary-pickup').textContent = pickup.value;
-            document.getElementById('summary-dropoff').textContent = dropoff.value;
+            // Setting the temporary driver image source.
+            document.getElementById('driver-img').src = 'Images/Image.webp'; 
 
             simulateRide();
         }, 500); 
@@ -562,8 +596,9 @@
     }
 
     function simulateRide() {
+        // ... (Simulation logic remains the same for the purpose of this request) ...
         const statusElement = document.getElementById('ride-status-message');
-        const mapPlaceholder = document.querySelector('#in-ride-view .map-placeholder p');
+        const mapMessageElement = document.getElementById('live-map-message');
         
         const stages = [
             { message: 'Driver is arriving in 5 min.', mapText: 'Driver is approaching. Estimated time: 3 minutes', delay: 5000, color: '#ff9800' },
@@ -579,53 +614,50 @@
                 const stage = stages[currentStage];
                 statusElement.textContent = stage.message;
                 statusElement.style.color = stage.color;
-                mapPlaceholder.innerHTML = `🗺️ **Live Ride Map**<br>${stage.mapText}`;
+                mapMessageElement.innerHTML = `🗺️ **Live Ride Map**<br>${stage.mapText}`;
 
                 currentStage++;
+                // Note: Clearing any existing timeout is needed for a proper cancelation, but for this simulation, we'll keep the simple structure.
                 setTimeout(nextStage, stage.delay);
             } else {
+                // Trip completed - initiate reset
                 setTimeout(() => {
-                    const visaIndex = paymentMethods.findIndex(p => p.id === 'visa');
-                    if(visaIndex !== -1) paymentMethods[visaIndex].confirmed = false;
-                    const paypalIndex = paymentMethods.findIndex(p => p.id === 'paypal');
-                    if(paypalIndex !== -1) paymentMethods[paypalIndex].confirmed = false;
-
-                    document.getElementById('in-ride-view').style.display = 'none';
-                    document.getElementById('booking-view').style.display = 'block';
-                    
-                    document.getElementById('pickup-input').value = '';
-                    document.getElementById('dropoff-input').value = '';
-                    selectedVehicleId = null;
-                    selectedPaymentId = null; 
-                    
-                    renderVehicles();
-                    renderPaymentMethods();
                     alert('Your ride is complete! We hope you enjoyed it.');
+                    resetBookingState();
                 }, 5000);
             }
         }
-        nextStage();
+        // Start the simulation after the initial 500ms timeout in bookRide finishes
+        // nextStage(); // Commented out to prevent the ride from auto-completing while demonstrating the cancel button
+    }
+
+    // --- RESET FUNCTION (Centralized logic for cancellation and completion) ---
+    function resetBookingState() {
+        currentConfirmationNumber = null;
+
+        const visaIndex = paymentMethods.findIndex(p => p.id === 'visa');
+        if(visaIndex !== -1) paymentMethods[visaIndex].confirmed = false;
+        const paypalIndex = paymentMethods.findIndex(p => p.id === 'paypal');
+        if(paypalIndex !== -1) paymentMethods[paypalIndex].confirmed = false;
+
+        selectedVehicleId = null;
+        selectedPaymentId = null;
+
+        document.getElementById('pickup-input').value = '';
+        document.getElementById('dropoff-input').value = '';
+
+        document.getElementById('in-ride-view').style.display = 'none';
+        document.getElementById('booking-view').style.display = 'block';
+        
+        renderVehicles();
+        renderPaymentMethods();
     }
 
     function cancelRide() {
-        if(confirm('Are you sure you want to cancel your ride?')) {
-            const visaIndex = paymentMethods.findIndex(p => p.id === 'visa');
-            if(visaIndex !== -1) paymentMethods[visaIndex].confirmed = false;
-            const paypalIndex = paymentMethods.findIndex(p => p.id === 'paypal');
-            if(paypalIndex !== -1) paymentMethods[paypalIndex].confirmed = false;
-            
-            document.getElementById('in-ride-view').style.display = 'none';
-            document.getElementById('booking-view').style.display = 'block';
-            
-            document.getElementById('pickup-input').value = '';
-            document.getElementById('dropoff-input').value = '';
-            selectedVehicleId = null;
-            selectedPaymentId = null;
-            
-            renderVehicles();
-            renderPaymentMethods();
-
-            alert('Your ride has been cancelled.');
+        if(confirm('Are you sure you want to cancel your ride? The confirmation number ' + currentConfirmationNumber + ' will be invalidated.')) {
+            // In a real application, you'd stop the simulation here (e.g., using clearTimeout)
+            alert('Your ride (Confirmation: ' + currentConfirmationNumber + ') has been cancelled. You have been returned to the booking screen.');
+            resetBookingState();
         }
     }
 
