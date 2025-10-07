@@ -15,6 +15,11 @@
             min-height: 100vh;
         }
 
+        /* Utility class to prevent body scrolling when mobile menu is open */
+        .overflow-hidden {
+            overflow: hidden;
+        }
+
         .main-header {
             background-color: #1f2937; /* Dark gray */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -69,20 +74,23 @@
         // --- GLOBAL STATE ---
         let appState = 'request'; // 'request', 'confirm', 'finding', 'complete'
         let rideDetails = {
-            pickup: '123 Main St, New City',
-            dropoff: '456 Oak Ave, New City',
-            type: 'Standard',
+            pickup: '', 
+            dropoff: '', 
+            type: '', // No default ride type selected
             price: 0,
             distance: 5.5, // simulated distance in miles
             duration: 15, // simulated duration in minutes
         };
         let driver = null;
-        let selectedPaymentMethod = 'credit';
-
+        let selectedPaymentMethod = ''; // No default payment method selected
+        let isMenuOpen = false; // Mobile menu state
+        
         const RIDE_TYPES = [
             { name: 'Standard', description: 'Affordable, everyday rides (2-4 pax)', icon: '🧍', multiplier: 1.0, minFare: 5.00 },
             { name: 'Premium', description: 'Luxury sedans, top rated drivers (2-4 pax)', icon: '💎', multiplier: 1.5, minFare: 8.00 },
             { name: 'SUV', description: 'Extra room for groups (4-6 pax)', icon: '🚐', multiplier: 1.8, minFare: 10.00 },
+            // Wheelchair Accessible option
+            { name: 'Accessible', description: 'Wheelchair-accessible vehicle (1-4 pax)', icon: '♿', multiplier: 1.2, minFare: 6.50 },
         ];
         
         const DRIVERS = [
@@ -93,12 +101,63 @@
         ];
 
         // --- CORE FUNCTIONS ---
+        
+        const toggleMobileMenu = () => {
+            const menu = document.getElementById('mobile-menu');
+            isMenuOpen = !isMenuOpen;
+            
+            if (isMenuOpen) {
+                // Show menu: slide in from left and prevent body scroll
+                menu.classList.remove('-translate-x-full');
+                menu.innerHTML = renderMobileMenuContent();
+                document.body.classList.add('overflow-hidden'); 
+            } else {
+                // Hide menu: slide out to left and allow body scroll
+                menu.classList.add('-translate-x-full');
+                document.body.classList.remove('overflow-hidden');
+            }
+        };
+
+        const renderMobileMenuContent = () => {
+            const navLinks = [
+                { href: 'index.html', label: 'Home' },
+                { href: 'services.html', label: 'Services' },
+                { href: 'city.html', label: 'Cities' },
+                { href: 'food.html', label: 'Order Food' },
+                { href: 'aboutus.html', label: 'About Us' },
+                { href: 'support.html', label: 'Support' },
+                { href: 'career.html', label: 'Careers' },
+            ];
+            
+            // Mobile menu content with close button (X)
+            return `
+                <div class="flex justify-between items-center p-4 h-16 bg-gray-900 border-b border-gray-700">
+                    <a href="index.html" class="logo text-white">NELL Rides</a>
+                    <button onclick="toggleMobileMenu()" class="text-white hover:text-amber-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+                <ul class="flex flex-col space-y-2 p-4 text-xl font-bold">
+                    ${navLinks.map(link => `
+                        <li><a href="${link.href}" onclick="toggleMobileMenu()" class="text-gray-300 hover:bg-gray-700 hover:text-amber-300 transition duration-150 block p-3 rounded-lg">${link.label}</a></li>
+                    `).join('')}
+                </ul>
+            `;
+        };
 
         const calculatePrice = () => {
             const baseRate = 2.00;
             const perMile = 1.80;
             const type = RIDE_TYPES.find(t => t.name === rideDetails.type);
             
+            // If no ride type is selected, set price to 0 and exit
+            if (!type) {
+                rideDetails.price = 0;
+                return;
+            }
+
             const rawFare = baseRate + (rideDetails.distance * perMile * type.multiplier);
             const finalFare = Math.max(rawFare, type.minFare);
             
@@ -120,26 +179,112 @@
             selectedPaymentMethod = method;
             const creditOption = document.getElementById('creditRideOption');
             const cashOption = document.getElementById('cashRideOption');
+            const ccForm = document.getElementById('creditCardForm');
             
             // Only attempt to update classes if the elements exist (i.e., we are in the 'confirm' view)
             if (creditOption && cashOption) {
-                creditOption.classList.remove('selected');
-                cashOption.classList.remove('selected');
+                // Remove 'selected' class from all options
+                document.querySelectorAll('.payment-option-card-ride').forEach(el => el.classList.remove('selected'));
                 
-                document.getElementById(`${method}RideOption`).classList.add('selected');
+                // Add 'selected' class only to the currently selected option, if one is selected
+                if (method) {
+                    document.getElementById(`${method}RideOption`).classList.add('selected');
+                }
+            }
+
+            // Toggle Credit Card Form Visibility
+            if (ccForm) {
+                ccForm.style.display = method === 'credit' ? 'block' : 'none';
             }
         };
 
         const requestRide = () => {
-            if (!rideDetails.type || rideDetails.price === 0) {
-                // IMPORTANT: Replacing alert() with a console log or custom message
-                console.warn('Please select a ride type.');
+            const pickup = rideDetails.pickup.trim();
+            const dropoff = rideDetails.dropoff.trim();
+            
+            // 1. Determine error message based on validation state
+            let errorMessage = '';
+            if (!pickup || !dropoff) {
+                errorMessage = '⚠️ Please Enter Pickup and Dropoff Locations';
+            } else if (!rideDetails.type) {
+                errorMessage = '⚠️ Please Select a Ride Type';
+            }
+            
+            if (errorMessage) {
+                console.warn(errorMessage);
+                
+                const requestButton = document.querySelector('button[onclick="requestRide()"]');
+                if (requestButton) {
+                    const originalText = requestButton.textContent;
+                    const originalClass = requestButton.className;
+                    
+                    // Display error on button
+                    requestButton.textContent = errorMessage;
+                    requestButton.className = 'w-full py-4 text-white font-extrabold rounded-xl transition duration-150 bg-red-600 hover:bg-red-700';
+                    
+                    // Restore button after delay
+                    setTimeout(() => {
+                        // The button text must dynamically check the ride type again, as its previous text was dynamic
+                        const currentType = rideDetails.type;
+                        requestButton.textContent = currentType ? `Request ${currentType}` : 'Select a Ride Type to Continue';
+                        requestButton.className = 'w-full py-4 bg-blue-700 text-white font-extrabold rounded-xl hover:bg-blue-800 transition duration-150 ' + (currentType ? '' : 'opacity-60 cursor-not-allowed');
+                    }, 2000); 
+                }
                 return;
             }
+            
+            // If all checks pass
             updateState('confirm');
         };
 
         const confirmBooking = () => {
+            // 1. Check if any payment method is selected
+            if (!selectedPaymentMethod) {
+                console.error('Validation failed: Please select a payment method.');
+                
+                const confirmButton = document.querySelector('button[onclick="confirmBooking()"]');
+                if (confirmButton) {
+                    const originalText = confirmButton.textContent;
+                    const originalClass = confirmButton.className;
+                    
+                    confirmButton.textContent = '⚠️ Please Select a Payment Method!';
+                    confirmButton.className = 'w-full py-4 text-white font-extrabold rounded-xl transition duration-150 bg-red-600 hover:bg-red-700 mt-6';
+                    
+                    setTimeout(() => {
+                        confirmButton.textContent = originalText;
+                        confirmButton.className = originalClass; // Restore original classes
+                    }, 2000);
+                }
+                return;
+            }
+            
+            // 2. If 'credit' is selected, check card details
+            if (selectedPaymentMethod === 'credit') {
+                const ccNumber = document.getElementById('ccNumber')?.value;
+                const ccExpiry = document.getElementById('ccExpiry')?.value;
+                const ccCvv = document.getElementById('ccCvv')?.value;
+
+                // Basic validation check for credit card details
+                if (!ccNumber || ccNumber.length < 16 || !ccExpiry || ccExpiry.length < 5 || !ccCvv || ccCvv.length < 3) {
+                    console.error('Validation failed: Please enter valid credit card details.');
+                    
+                    const confirmButton = document.querySelector('button[onclick="confirmBooking()"]');
+                    if (confirmButton) {
+                        const originalText = confirmButton.textContent;
+                        const originalClass = confirmButton.className;
+                        
+                        confirmButton.textContent = '⚠️ Fill out card details!';
+                        confirmButton.className = 'w-full py-4 text-white font-extrabold rounded-xl transition duration-150 bg-red-600 hover:bg-red-700 mt-6';
+                        
+                        setTimeout(() => {
+                            confirmButton.textContent = originalText;
+                            confirmButton.className = originalClass; // Restore original classes
+                        }, 2000);
+                    }
+                    return;
+                }
+            }
+
             updateState('finding');
             
             // Simulate driver matching time
@@ -149,14 +294,6 @@
             }, 3000); // 3 second delay
         };
         
-        // This function is no longer needed since we are using confirmBooking() directly
-        // const handlePaymentFormSubmission = (event) => {
-        //     event.preventDefault();
-        //     // In a real app, payment would be processed here.
-        //     alert('Payment simulation successful. Ride is confirmed!');
-        //     confirmBooking();
-        // };
-
         // --- RENDER FUNCTIONS ---
 
         const renderRequestView = (container) => {
@@ -179,7 +316,7 @@
                     <!-- Ride Type Selection -->
                     <div class="pt-4">
                         <h3 class="text-xl font-semibold mb-3 text-gray-700">Select Your Ride</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                             ${RIDE_TYPES.map(type => `
                                 <div onclick="selectRideType('${type.name}')" 
                                     class="ride-option-card bg-white p-4 rounded-xl shadow-md text-center ${rideDetails.type === type.name ? 'selected' : ''}">
@@ -197,8 +334,8 @@
                             <span class="text-lg font-semibold">Estimated Fare:</span>
                             <span class="text-3xl font-extrabold text-blue-700">$${rideDetails.price.toFixed(2)}</span>
                         </div>
-                        <button onclick="requestRide()" class="w-full py-4 bg-blue-700 text-white font-extrabold rounded-xl hover:bg-blue-800 transition duration-150">
-                            Request ${rideDetails.type}
+                        <button onclick="requestRide()" class="w-full py-4 bg-blue-700 text-white font-extrabold rounded-xl hover:bg-blue-800 transition duration-150 ${rideDetails.type ? '' : 'opacity-60 cursor-not-allowed'}">
+                            ${rideDetails.type ? `Request ${rideDetails.type}` : 'Select a Ride Type to Continue'}
                         </button>
                     </div>
                 </div>
@@ -214,8 +351,8 @@
                     <div class="p-4 bg-white rounded-xl shadow-lg space-y-2">
                         <p class="text-xl font-bold text-gray-800">${rideDetails.type} Ride</p>
                         <div class="text-gray-600">
-                            <p>From: <span class="font-semibold">${rideDetails.pickup}</span></p>
-                            <p>To: <span class="font-semibold">${rideDetails.dropoff}</span></p>
+                            <p>From: <span class="font-semibold">${rideDetails.pickup || '—'}</span></p>
+                            <p>To: <span class="font-semibold">${rideDetails.dropoff || '—'}</span></p>
                             <p>Est. Time: ${rideDetails.duration} min | Est. Distance: ${rideDetails.distance} miles</p>
                         </div>
                         <div class="text-3xl font-extrabold text-blue-700 pt-2 border-t mt-3">Total: $${rideDetails.price.toFixed(2)}</div>
@@ -224,13 +361,24 @@
                     <!-- Payment Selection -->
                     <h3 class="text-xl font-semibold mt-6 text-gray-700">Choose Payment</h3>
                     <div class="space-y-3">
-                        <div id="creditRideOption" onclick="selectPaymentMethod('credit')" class="payment-option-card-ride p-4 rounded-xl bg-white shadow-sm border-2 border-gray-300">
+                        <div id="creditRideOption" onclick="selectPaymentMethod('credit')" class="payment-option-card-ride p-4 rounded-xl bg-white shadow-sm border-2 border-gray-300 ${selectedPaymentMethod === 'credit' ? 'selected' : ''}">
                             <div class="flex items-center space-x-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-700" viewBox="0 0 20 20" fill="currentColor"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" /><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 110-2 1 1 0 010 2zm10-1a1 1 0 100 2h1a1 1 0 100-2h-1z" clip-rule="evenodd" /></svg>
-                                <p class="font-semibold text-lg">Credit/Debit Card (on file)</p>
+                                <p class="font-semibold text-lg">Credit/Debit Card</p>
                             </div>
                         </div>
-                        <div id="cashRideOption" onclick="selectPaymentMethod('cash')" class="payment-option-card-ride p-4 rounded-xl bg-white shadow-sm border-2 border-gray-300">
+
+                        <!-- Credit Card Input Form -->
+                        <div id="creditCardForm" class="p-4 bg-gray-50 rounded-lg shadow-inner space-y-3 transition duration-300 ease-in-out" style="${selectedPaymentMethod === 'credit' ? 'display: block;' : 'display: none;'}">
+                            <h4 class="text-sm font-bold text-gray-600">Enter Payment Details</h4>
+                            <input type="text" id="ccNumber" placeholder="Card Number (XXXX XXXX XXXX XXXX)" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" maxlength="19">
+                            <div class="flex space-x-3">
+                                <input type="text" id="ccExpiry" placeholder="MM/YY" class="w-1/2 p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" maxlength="5">
+                                <input type="text" id="ccCvv" placeholder="CVV" class="w-1/2 p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" maxlength="4">
+                            </div>
+                        </div>
+                        
+                        <div id="cashRideOption" onclick="selectPaymentMethod('cash')" class="payment-option-card-ride p-4 rounded-xl bg-white shadow-sm border-2 border-gray-300 ${selectedPaymentMethod === 'cash' ? 'selected' : ''}">
                             <div class="flex items-center space-x-3">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1h4a1 1 0 011 1v5a1 1 0 01-1 1h-.828l1.768 1.768A1 1 0 0114 15h-4.172l.939-.939A7.001 7.001 0 0013 4a1 1 0 112 0 5.001 5.001 0 01-5 5H4a1 1 0 110-2h6V2zm-2 9a1 1 0 100 2h4a1 1 0 100-2H8z" clip-rule="evenodd" /></svg>
                                 <p class="font-semibold text-lg">Cash to Driver</p>
@@ -247,8 +395,9 @@
                     </button>
                 </div>
             `;
-            // Set the payment method state immediately after rendering the elements
-            selectPaymentMethod(selectedPaymentMethod);
+            // Note: The selectPaymentMethod call here is technically redundant since we inline the classes now, 
+            // but keeping it ensures the CC form visibility is set correctly if selectedPaymentMethod had a value.
+            selectPaymentMethod(selectedPaymentMethod); 
         };
 
         const renderFindingView = (container) => {
@@ -316,19 +465,42 @@
         document.addEventListener('DOMContentLoaded', () => {
             calculatePrice(); // Initial price calculation
             renderApp();
-            // Removed the initial selectPaymentMethod call here, as it was causing the error
-            // The payment method will be set when the 'confirm' view is rendered.
         });
     </script>
 </head>
 <body class="flex flex-col">
-    <header class="main-header p-4 flex justify-between items-center text-white">
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu" class="fixed inset-0 bg-gray-900 bg-opacity-95 z-40 transform -translate-x-full transition-transform duration-300 md:hidden">
+        <!-- Content injected by JS renderMobileMenuContent() -->
+    </div>
+    
+    <header class="main-header p-4 flex justify-between items-center text-white z-50">
         <a href="index.html" class="logo">NELL Rides</a>
-        <a href="food.html" class="text-gray-300 hover:text-amber-300 transition duration-150">Order Food</a>
+        
+        <!-- Desktop Navigation Links (Visible on MD screens and up) -->
+        <nav class="hidden md:block">
+            <ul class="flex space-x-6 text-sm font-medium">
+                <li><a href="index.html" class="text-gray-300 hover:text-amber-300 transition duration-150">Home</a></li> 
+                <li><a href="services.html" class="text-gray-300 hover:text-amber-300 transition duration-150">Services</a></li>
+                <li><a href="city.html" class="text-gray-300 hover:text-amber-300 transition duration-150">Cities</a></li>
+                <li><a href="food.html" class="text-gray-300 hover:text-amber-300 transition duration-150">Order Food</a></li>
+                <li><a href="aboutus.html" class="text-gray-300 hover:text-amber-300 transition duration-150">About Us</a></li>
+                <li><a href="support.html" class="text-gray-300 hover:text-amber-300 transition duration-150">Support</a></li>
+                <li><a href="career.html" class="text-gray-300 hover:text-amber-300 transition duration-150">Careers</a></li>
+            </ul>
+        </nav>
+
+        <!-- Mobile Menu Button (Hidden on MD screens and up) -->
+        <button id="menu-button" class="md:hidden p-1 text-gray-300 hover:text-amber-300" onclick="toggleMobileMenu()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+            </svg>
+        </button>
     </header>
 
     <main class="container mx-auto px-4 py-8 flex-grow">
-        <div class="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-2xl">
+        <!-- The max-w-3xl ensures the content container doesn't get too wide on large screens, while px-4 provides necessary padding on mobile. -->
+        <div class="max-w-3xl mx-auto bg-white p-6 sm:p-8 rounded-2xl shadow-2xl">
             <div id="rideAppContent">
                 <!-- Content injected by JavaScript -->
             </div>
