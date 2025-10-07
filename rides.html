@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NELL Rides - Book Your Trip</title>
+    <style>
+        /* Shared Styles */
+        :root {
+            --primary-color: #007bff; /* Nell Blue */
+            --secondary-color: #ff9900; /* Foods Orange */
+            --text-color: #333;
+            --bg-color: #f4f4f9;
+            --white: #ffffff;
+            --font-stack: 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-stack);
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--bg-color);
+        }
+
+        a {
+            text-decoration: none;
+            color: var(--primary-color);
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* Header & Navigation */
+        .main-header {
+            background: var(--white);
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .desktop-nav, .mobile-menu-icon {
+            /* Hiding for simplicity in this prototype, but they exist in the full MPA */
+            display: none; 
+        }
+
+        main {
+            padding: 1.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--text-color);
+            color: var(--white);
+            text-align: center;
+            padding: 1.5rem;
+            font-size: 0.9rem;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+
+        /* Rides Specific Styles */
+        .map-placeholder {
+            background: #ccc;
+            height: 200px;
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .booking-form {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .location-input {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 0.5rem;
+        }
+
+        .location-input input {
+            flex-grow: 1;
+            padding: 0.75rem;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            border-radius: 4px;
+        }
+
+        .icon {
+            color: var(--primary-color);
+            margin-right: 10px;
+            font-size: 1.2rem;
+            width: 20px;
+            text-align: center;
+        }
+
+        .ride-options {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+        }
+        
+        /* Custom styled radio cards */
+        .ride-card {
+            flex: 0 0 120px; /* Fixed width for mobile scrolling */
+            text-align: center;
+            padding: 1rem 0.5rem;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--bg-color);
+        }
+
+        .ride-card.selected {
+            border-color: var(--primary-color);
+            background: #e6f0ff;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+        }
+
+        .ride-card input[type="radio"] {
+            display: none;
+        }
+
+        .ride-card h4 {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .ride-card p {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .book-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin-top: 1.5rem;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .book-btn:hover {
+            background: #0056b3;
+        }
+
+        /* Message Box Styling (Instead of alert()) */
+        .message-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            z-index: 1000;
+            text-align: center;
+            display: none; /* Hidden by default */
+        }
+        .message-box h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+        }
+        .message-box .close-btn {
+            background: var(--primary-color);
+            color: var(--white);
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Desktop Optimization */
+        @media (min-width: 768px) {
+            main {
+                max-width: 800px; /* Increased max width to fit more cards */
+                margin: 0 auto;
+                padding-top: 3rem;
+            }
+            .map-placeholder {
+                height: 300px;
+            }
+            .ride-options {
+                justify-content: center;
+                gap: 1.5rem; /* Reduced gap slightly to fit more */
+            }
+            .ride-card {
+                flex: 0 0 150px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="main-header">
+        <a href="index.html" class="logo">NELL</a>
+        <nav class="desktop-nav">
+            <ul>
+                <li><a href="rides.html">Rides</a></li>
+                <li><a href="food.html">Foods</a></li>
+                <!-- ... other links ... -->
+            </ul>
+        </nav>
+        <!-- Mobile menu icon hidden -->
+    </header>
+
+    <main>
+        <div class="map-placeholder">
+            Mock Map View: Showing current location.
+        </div>
+        
+        <div class="booking-form">
+            <h2>Where to?</h2>
+            
+            <div class="location-input pickup">
+                <span class="icon">📍</span>
+                <input type="text" id="pickup" placeholder="Enter Pickup Location" value="Current Location">
+            </div>
+
+            <div class="location-input destination">
+                <span class="icon">🏁</span>
+                <input type="text" id="destination" placeholder="Enter Destination">
+            </div>
+            
+            <h3>Choose Your Ride</h3>
+            <div class="ride-options">
+                <!-- Standard Ride -->
+                <label class="ride-card selected" for="standard">
+                    <input type="radio" id="standard" name="rideType" value="standard" checked>
+                    <span class="icon" style="font-size: 2rem; display: block;">🚗</span>
+                    <h4>Standard</h4>
+                    <p>3 min | $12.50</p>
+                </label>
+
+                <!-- Premium Ride -->
+                <label class="ride-card" for="premium">
+                    <input type="radio" id="premium" name="rideType" value="premium">
+                    <span class="icon" style="font-size: 2rem; display: block;">🏎️</span>
+                    <h4>Premium</h4>
+                    <p>5 min | $25.00</p>
+                </label>
+                
+                <!-- Van Ride (XL) -->
+                <label class="ride-card" for="van">
+                    <input type="radio" id="van" name="rideType" value="van">
+                    <span class="icon" style="font-size: 2rem; display: block;">🚐</span>
+                    <h4>Van (XL)</h4>
+                    <p>5 min | $18.00</p>
+                </label>
+
+                <!-- Shared Ride -->
+                <label class="ride-card" for="share">
+                    <input type="radio" id="share" name="rideType" value="share">
+                    <span class="icon" style="font-size: 2rem; display: block;">👥</span>
+                    <h4>Share</h4>
+                    <p>7 min | $8.00</p>
+                </label>
+                
+                <!-- Helicopter Ride -->
+                <label class="ride-card" for="helicopter">
+                    <input type="radio" id="helicopter" name="rideType" value="helicopter">
+                    <span class="icon" style="font-size: 2rem; display: block;">🚁</span>
+                    <h4>Helicopter</h4>
+                    <p>15 min | $500.00</p>
+                </label>
+            </div>
+            
+            <button class="book-btn" onclick="requestRide()">Request Ride</button>
+        </div>
+    </main>
+
+    <!-- Message Box -->
+    <div class="message-box" id="messageBox">
+        <h3>Request Confirmed!</h3>
+        <p id="messageText">Searching for a Standard driver to Current Location...</p>
+        <button class="close-btn" onclick="closeMessageBox()">OK</button>
+    </div>
+
+    <footer>
+        <p>Book with NELL Rides. Fast, Safe, Reliable.</p>
+    </footer>
+
+    <script>
+        function selectRideCard(card) {
+            // Remove 'selected' from all cards
+            document.querySelectorAll('.ride-card').forEach(c => c.classList.remove('selected'));
+            // Add 'selected' to the clicked card
+            card.classList.add('selected');
+            // Check the corresponding radio button
+            card.querySelector('input[type="radio"]').checked = true;
+        }
+
+        document.querySelectorAll('.ride-card').forEach(card => {
+            card.addEventListener('click', () => selectRideCard(card));
+        });
+
+
+        function requestRide() {
+            const pickup = document.getElementById('pickup').value.trim();
+            const destination = document.getElementById('destination').value.trim();
+            const selectedRide = document.querySelector('input[name="rideType"]:checked');
+            const messageBox = document.getElementById('messageBox');
+            const messageText = document.getElementById('messageText');
+
+            if (!destination) {
+                messageText.innerHTML = "Please enter your destination before booking.";
+                messageBox.querySelector('h3').textContent = "Input Required";
+            } else if (!selectedRide) {
+                 messageText.innerHTML = "Please select a ride type.";
+                messageBox.querySelector('h3').textContent = "Selection Required";
+            } else {
+                const rideType = selectedRide.value.charAt(0).toUpperCase() + selectedRide.value.slice(1);
+                messageText.innerHTML = `Searching for a **${rideType}** driver to ${destination}...<br><br>Estimated wait: 4 minutes.`;
+                messageBox.querySelector('h3').textContent = "Request Confirmed!";
+            }
+
+            messageBox.style.display = 'block';
+        }
+
+        function closeMessageBox() {
+            document.getElementById('messageBox').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
