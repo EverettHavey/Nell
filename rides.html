@@ -19,6 +19,7 @@
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative; 
         }
         h1 {
             text-align: center;
@@ -48,15 +49,15 @@
             box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
         }
         .map-large {
-            height: 350px; /* Larger map for the in-ride view */
+            height: 350px; 
         }
-        .vehicle-options {
+        .vehicle-options, .payment-options {
             display: flex;
             flex-direction: column;
             gap: 10px;
             margin-bottom: 20px;
         }
-        .vehicle-card {
+        .vehicle-card, .payment-card {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -67,20 +68,20 @@
             transition: all 0.2s ease-in-out;
             background-color: #f9f9f9;
         }
-        .vehicle-card:hover {
+        .vehicle-card:hover, .payment-card:hover {
             border-color: #1e88e5;
             background-color: #e3f2fd;
         }
-        .vehicle-card.selected {
+        .vehicle-card.selected, .payment-card.selected {
             border-color: #1e88e5;
             background-color: #e3f2fd;
             box-shadow: 0 0 10px rgba(30, 136, 229, 0.4);
         }
-        .vehicle-info {
+        .vehicle-info, .payment-info {
             display: flex;
             flex-direction: column;
         }
-        .vehicle-name {
+        .vehicle-name, .payment-name {
             font-weight: bold;
             font-size: 1.1em;
             color: #333;
@@ -114,7 +115,30 @@
             opacity: 0.7;
         }
 
-        /* --- STYLES FOR IN-RIDE VIEW --- */
+        /* --- NOTIFICATION STYLES --- */
+        #notification-banner {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100%); 
+            width: 90%;
+            padding: 15px 20px;
+            background-color: #4caf50; 
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            border-radius: 0 0 8px 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            opacity: 0;
+            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
+        }
+        #notification-banner.show {
+            transform: translateX(-50%) translateY(0); 
+            opacity: 1;
+        }
+
+        /* --- IN-RIDE VIEW STYLES --- */
         #in-ride-view {
             text-align: center;
         }
@@ -183,6 +207,10 @@
 
 <div class="container">
     <h1>🚕 Ride Booking</h1>
+    
+    <div id="notification-banner">
+        🎉 Ride Accepted! Driver is confirmed and arriving soon.
+    </div>
 
     <div id="booking-view">
         <div class="map-placeholder">
@@ -196,8 +224,11 @@
         <div id="vehicle-options-container" class="vehicle-options" role="radiogroup">
             </div>
 
+        <h2>Payment Method</h2>
+        <div id="payment-options-container" class="payment-options" role="radiogroup">
+            </div>
         <button id="book-ride-button" class="book-button" disabled onclick="bookRide()">
-            Please enter locations and select a vehicle
+            Please enter locations, select a vehicle, and a payment method
         </button>
     </div>
 
@@ -213,9 +244,10 @@
             <div class="driver-info">
                 <div class="driver-photo-placeholder"></div>
                 <div>
-                    <p><strong>Driver:</strong> <span id="driver-name">Sarah J.</span></p>
-                    <p><strong>Vehicle:</strong> <span id="vehicle-details">Black Sedan • ABC-123</span></p>
-                    <p><strong>Rating:</strong> ⭐️ 4.9</p>
+                    <p><strong>Driver:</strong> <span id="driver-name"></span></p>
+                    <p><strong>Vehicle:</strong> <span id="vehicle-details"></span></p>
+                    <p><strong>Rating:</strong> ⭐️ <span id="driver-rating">4.9</span></p>
+                    <p><strong>Payment:</strong> <span id="payment-summary"></span></p>
                 </div>
             </div>
 
@@ -230,7 +262,7 @@
 </div>
 
 <script>
-    // --- UPDATED MOCK DATA FOR VEHICLES, MATCHING THE IMAGE ---
+    // --- MOCK DATA ---
     const vehicles = [
         { id: 'standard', name: 'Standard 🚗', price: 15.00, category: 'Standard', eta: '10 min' },
         { id: 'xl', name: 'XL 🚌', price: 37.50, category: 'XL', eta: '10 min' },
@@ -248,17 +280,56 @@
         { id: 'walk', name: 'Walk 🚶', price: 2.50, category: 'Budget', eta: '40 min' },
         { id: 'bike', name: 'Bike 🚲', price: 5.60, category: 'Budget', eta: '20 min' }
     ];
-    // ----------------------------------------
 
+    const paymentMethods = [
+        { id: 'visa', name: 'Visa **** 1234', icon: '💳' },
+        { id: 'paypal', name: 'PayPal (Primary)', icon: '💰' },
+        { id: 'cash', name: 'Cash', icon: '💵' }
+    ];
+    // ----------------------------------------
+    
     let selectedVehicleId = null;
+    let selectedPaymentId = null;
 
     /**
-     * Renders the vehicle options dynamically.
-     * Note: The vehicle name now includes the emoji for a better look.
+     * Provides mock driver details based on the selected ride ID.
      */
+    function getDriverDetails(vehicleId) {
+        switch (vehicleId) {
+            case 'standard':
+            case 'xl':
+                return { name: 'Sarah J.', rating: '4.9', plate: 'T-800' };
+            case 'premium':
+            case 'luxury':
+                return { name: 'James B.', rating: '5.0', plate: 'L-007' };
+            case 'heli_ride':
+                return { name: 'Captain Viper', rating: '4.8', plate: 'H-911' };
+            case 'airplane':
+                return { name: 'Pilot Amelia', rating: '5.0', plate: 'F-14-J' };
+            case 'ice_cream':
+                return { name: 'Scoops M.', rating: '4.7', plate: 'I-C-3' };
+            case 'garbage_truck':
+                return { name: 'Refuse Rick', rating: '4.5', plate: 'G-ARB' };
+            case 'fire_truck':
+                return { name: 'Chief Blaze', rating: '4.9', plate: 'F-999' };
+            case 'exotic':
+                return { name: 'Racer Ken', rating: '4.9', plate: 'Z-010' };
+            case 'golf_cart':
+                return { name: 'Caddy Max', rating: '4.6', plate: 'G-OLF' };
+            case 'walk':
+                return { name: 'Speedy Sam', rating: '4.4', plate: 'N/A' };
+            case 'bike':
+                return { name: 'Wheels Willy', rating: '4.7', plate: 'B-ICY' };
+            default:
+                return { name: 'Driver D.', rating: '4.8', plate: 'X-777' };
+        }
+    }
+
+    // --- VEHICLE SELECTION LOGIC ---
+
     function renderVehicles() {
         const container = document.getElementById('vehicle-options-container');
-        container.innerHTML = ''; // Clear previous content
+        container.innerHTML = ''; 
 
         vehicles.forEach(vehicle => {
             const isSelected = vehicle.id === selectedVehicleId;
@@ -281,82 +352,122 @@
         checkBookingReadiness();
     }
 
-    /**
-     * Selects a vehicle and updates the UI.
-     * @param {string} id The ID of the selected vehicle.
-     */
     function selectVehicle(id) {
         selectedVehicleId = id;
-        renderVehicles(); // Re-render to update the 'selected' state
+        renderVehicles();
     }
 
-    /**
-     * Checks if the required inputs are filled and enables/disables the Book Ride button.
-     */
+    // --- PAYMENT SELECTION LOGIC (NEW) ---
+
+    function renderPaymentMethods() {
+        const container = document.getElementById('payment-options-container');
+        container.innerHTML = ''; 
+
+        paymentMethods.forEach(method => {
+            const isSelected = method.id === selectedPaymentId;
+            const card = document.createElement('div');
+            card.className = `payment-card ${isSelected ? 'selected' : ''}`;
+            card.setAttribute('data-id', method.id);
+            card.setAttribute('role', 'radio');
+            card.setAttribute('aria-checked', isSelected ? 'true' : 'false');
+            card.onclick = () => selectPaymentMethod(method.id);
+
+            card.innerHTML = `
+                <div class="payment-info">
+                    <div class="payment-name">${method.icon} ${method.name}</div>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+        checkBookingReadiness();
+    }
+
+    function selectPaymentMethod(id) {
+        selectedPaymentId = id;
+        renderPaymentMethods();
+    }
+
+    // --- BOOKING LOGIC ---
+
     function checkBookingReadiness() {
         const pickup = document.getElementById('pickup-input').value;
         const dropoff = document.getElementById('dropoff-input').value;
         const button = document.getElementById('book-ride-button');
 
-        const isReady = pickup && dropoff && selectedVehicleId;
+        const isReady = pickup && dropoff && selectedVehicleId && selectedPaymentId;
         button.disabled = !isReady;
 
         if (isReady) {
             const selectedVehicle = vehicles.find(v => v.id === selectedVehicleId);
-            // We use a simplified name for the button text (removing emojis/extra text)
             const buttonName = selectedVehicle.name.split(' ')[0]; 
             button.textContent = `Book ${buttonName} for $${selectedVehicle.price.toFixed(2)}`;
         } else {
-            button.textContent = 'Please enter locations and select a vehicle';
+            button.textContent = 'Please enter locations, select a vehicle, and a payment method';
         }
     }
 
-    /**
-     * Handles the ride booking process.
-     * Transitions to the In-Ride View on success.
-     */
+    function showNotification() {
+        const banner = document.getElementById('notification-banner');
+        banner.classList.add('show');
+        
+        setTimeout(() => {
+            banner.classList.remove('show');
+        }, 3000);
+    }
+
     function bookRide() {
         const pickup = document.getElementById('pickup-input');
         const dropoff = document.getElementById('dropoff-input');
 
-        if (pickup.value && dropoff.value && selectedVehicleId) {
+        if (pickup.value && dropoff.value && selectedVehicleId && selectedPaymentId) {
             
-            // --- 1. Successful Booking Simulation ---
-            console.log(`Booking confirmed: ${selectedVehicleId} from ${pickup.value} to ${dropoff.value}`);
+            showNotification();
 
-            // Get the selected vehicle object to populate the details
             const selectedVehicle = vehicles.find(v => v.id === selectedVehicleId);
+            const selectedPayment = paymentMethods.find(p => p.id === selectedPaymentId);
+            const driverInfo = getDriverDetails(selectedVehicleId);
             
-            // --- 2. Transition Views ---
-            document.getElementById('booking-view').style.display = 'none';
-            document.getElementById('in-ride-view').style.display = 'block';
-            
-            // --- 3. Populate In-Ride View Details ---
-            document.getElementById('driver-name').textContent = 'Sarah J.'; // Mock data
-            // Use the full name including emoji and a mock license plate
-            document.getElementById('vehicle-details').textContent = `${selectedVehicle.name} • ABC-123`; 
-            document.getElementById('summary-pickup').textContent = pickup.value;
-            document.getElementById('summary-dropoff').textContent = dropoff.value;
+            // Wait a moment for the notification to be visible before changing the view
+            setTimeout(() => {
+                
+                // --- Transition Views ---
+                document.getElementById('booking-view').style.display = 'none';
+                document.getElementById('in-ride-view').style.display = 'block';
+                
+                // --- Populate In-Ride View Details ---
+                document.getElementById('driver-name').textContent = driverInfo.name;
+                document.getElementById('driver-rating').textContent = driverInfo.rating;
+                document.getElementById('vehicle-details').textContent = `${selectedVehicle.name.replace(/(\s\w+)$/, '')} • ${driverInfo.plate}`; 
+                document.getElementById('payment-summary').textContent = `${selectedPayment.icon} ${selectedPayment.name}`; // NEW
+                document.getElementById('summary-pickup').textContent = pickup.value;
+                document.getElementById('summary-dropoff').textContent = dropoff.value;
 
-            // --- 4. Start Ride Simulation (Dynamic Status Updates) ---
-            simulateRide();
+                // --- Start Ride Simulation ---
+                simulateRide();
+
+            }, 500); 
 
         } else {
-            alert('Please enter both locations and select a vehicle to book.');
+            alert('Please enter both locations and select a vehicle and a payment method to book.');
         }
     }
 
     /**
-     * Simulates the ride progression and updates the status message.
+     * Simulates the ride progression with realistic timing.
      */
     function simulateRide() {
         const statusElement = document.getElementById('ride-status-message');
         const mapPlaceholder = document.querySelector('#in-ride-view .map-placeholder p');
         
+        // Stages are defined in milliseconds (1 second = 1000ms)
         const stages = [
+            // Driver is confirmed and moving
             { message: 'Driver is arriving in 5 min.', mapText: 'Driver is approaching. Estimated time: 3 minutes', delay: 5000, color: '#ff9800' },
-            { message: 'Driver has arrived at pickup location! Step outside.', mapText: 'Driver is at your location!', delay: 10000, color: '#2196f3' },
+            // Driver arrives and waits for the user (The delay here is longer to give the user "3 minutes" to get to the car)
+            { message: 'Driver has arrived at pickup! You have 3 minutes to board.', mapText: 'Driver is at your location! Please head to the curb.', delay: 180000, color: '#2196f3' }, // 3 minutes = 180,000ms
+            // User boards and the ride starts
             { message: 'You are on the way to your destination.', mapText: 'On the road. Route progress: 60%', delay: 15000, color: '#1e88e5' },
+            // Final arrival
             { message: 'You have arrived! Trip is complete.', mapText: 'Trip Complete. Thank you for riding!', delay: 5000, color: '#388e3c' }
         ];
 
@@ -372,7 +483,7 @@
                 currentStage++;
                 setTimeout(nextStage, stage.delay);
             } else {
-                // After the trip is complete, automatically transition back to booking view after a delay
+                // After the trip is complete, transition back to booking view after a delay
                 setTimeout(() => {
                     alert('Your ride is complete! We hope you enjoyed it.');
                     // Reset to booking view
@@ -383,7 +494,9 @@
                     document.getElementById('pickup-input').value = '';
                     document.getElementById('dropoff-input').value = '';
                     selectedVehicleId = null;
+                    selectedPaymentId = null; // Reset payment
                     renderVehicles();
+                    renderPaymentMethods();
                 }, 5000);
             }
         }
@@ -391,9 +504,6 @@
         nextStage();
     }
 
-    /**
-     * Handles the cancel ride button.
-     */
     function cancelRide() {
         if(confirm('Are you sure you want to cancel your ride?')) {
             // Reset to booking view
@@ -404,13 +514,18 @@
             document.getElementById('pickup-input').value = '';
             document.getElementById('dropoff-input').value = '';
             selectedVehicleId = null;
+            selectedPaymentId = null; // Reset payment
             renderVehicles();
+            renderPaymentMethods();
             alert('Your ride has been cancelled.');
         }
     }
 
-    // Initialize the vehicle options when the page loads
-    window.onload = renderVehicles;
+    // Initialize all options when the page loads
+    window.onload = () => {
+        renderVehicles();
+        renderPaymentMethods();
+    };
 </script>
 
 </body>
