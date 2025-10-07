@@ -402,6 +402,16 @@ footer {
         margin-bottom: 0;
     }
 
+        /* Accent for the Rides block (Primary/Blue) */
+    .service-block.ride-block {
+        border-left: 5px solid var(--primary-color); 
+    }
+
+    /* Accent for the Foods block (Secondary/Orange) */
+    .service-block.foods-block {
+        border-left: 5px solid var(--secondary-color);
+    }
+
     /* CITY.HTML: Already fixed for 3 columns in previous response */
     /* ... (city.html styles remain the same) ... */
     
