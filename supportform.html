@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nell | Contact Support</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+        /* --- Navigation Button (Back to Support) --- */
+        .nav-header {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .btn-back {
+            background-color: #6c757d;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+        /* --- Header Styles --- */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #007bff; /* Nell Blue */
+            font-size: 2em;
+            margin: 0;
+        }
+        .header p {
+            font-size: 1em;
+            color: #555;
+            margin-top: 5px;
+        }
+        /* --- Form Styling --- */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #555;
+        }
+        input[type="text"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: #007bff;
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+        }
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        /* Submit Button */
+        .submit-group {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .btn-submit {
+            background-color: #ff9900; /* Nell Orange */
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-submit:hover {
+            background-color: #e68a00;
+        }
+
+        /* --- Confirmation Styling --- */
+        #submissionResult {
+            text-align: center;
+            padding: 20px 0;
+        }
+        .confirmation-box {
+            background-color: #f7f7f7;
+            border: 1px solid #ddd;
+            padding: 40px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+            border-left: 5px solid #007bff;
+        }
+        .confirmation-box h2 {
+            font-size: 1.8em;
+            color: #007bff;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+        .confirmation-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px dashed #eee;
+        }
+        .confirmation-detail:last-child {
+            border-bottom: none;
+        }
+        .confirmation-label {
+            color: #6c757d;
+            font-weight: 500;
+        }
+        .confirmation-value {
+            font-weight: bold;
+            color: #333;
+        }
+        .success-message {
+            margin-top: 30px;
+            font-size: 1.1em;
+            font-weight: 500;
+            line-height: 1.4;
+            color: #155724;
+            background-color: #d4edda;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Back to Support Button -->
+        <div class="nav-header">
+            <a href="support.html" class="btn-back">← Back to Support</a>
+        </div>
+        
+        <!-- Support Form Content -->
+        <div id="formContent">
+            <div class="header">
+                <h1>Submit a Support Ticket</h1>
+                <p>We're here to help. Please fill out the details below.</p>
+            </div>
+
+            <form id="supportForm" onsubmit="handleSubmission(event)">
+
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Issue Category</label>
+                    <select id="category" name="category" required>
+                        <option value="">Select a Category</option>
+                        <option value="Rides">Nell Rides (Booking, Driver, Safety)</option>
+                        <option value="Foods">Nell Foods (Order, Delivery, Restaurant)</option>
+                        <option value="Account">Account & Billing</option>
+                        <option value="Partner">Driver/Courier Partner Support</option>
+                        <option value="Other">Other Inquiry</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="subject">Subject</label>
+                    <input type="text" id="subject" name="subject" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Detailed Description of the Issue</label>
+                    <textarea id="description" name="description" required></textarea>
+                </div>
+
+                <div class="submit-group">
+                    <button type="submit" class="btn-submit">Submit Ticket</button>
+                </div>
+
+            </form>
+        </div>
+        
+        <!-- Submission Result Message Area (Hidden by default) -->
+        <div id="submissionResult" style="display: none;"></div>
+
+    </div>
+
+    <script>
+        /**
+         * Generates a unique, readable ticket ID (e.g., NELL-X7Y9-A1B3)
+         */
+        function generateTicketId() {
+            const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let id = 'NELL-';
+            for (let i = 0; i < 8; i++) {
+                if (i === 4) id += '-';
+                id += chars[Math.floor(Math.random() * chars.length)];
+            }
+            return id;
+        }
+
+        /**
+         * Handles form submission, shows confirmation, and displays ticket details.
+         */
+        function handleSubmission(event) {
+            event.preventDefault(); 
+            
+            const form = document.getElementById('supportForm');
+            const resultDiv = document.getElementById('submissionResult');
+            const formContent = document.getElementById('formContent');
+            
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+
+            // Gather form data
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const categoryText = document.getElementById('category').options[document.getElementById('category').selectedIndex].text;
+            const subject = document.getElementById('subject').value;
+            
+            const ticketID = generateTicketId();
+            const submissionTime = new Date().toLocaleString();
+
+            // --- GENERATE CONFIRMATION UI ---
+            let confirmationHTML = `
+                <div class="header">
+                    <h1>Ticket Submitted Successfully</h1>
+                </div>
+                <div class="confirmation-box">
+                    <div class="confirmation-detail">
+                        <span class="confirmation-label">Ticket ID</span>
+                        <span class="confirmation-value" style="color: #ff9900; font-size: 1.1em;">${ticketID}</span>
+                    </div>
+                    
+                    <div class="confirmation-detail">
+                        <span class="confirmation-label">Submission Time</span>
+                        <span class="confirmation-value">${submissionTime}</span>
+                    </div>
+
+                    <div class="confirmation-detail">
+                        <span class="confirmation-label">Submitted By</span>
+                        <span class="confirmation-value">${fullName}</span>
+                    </div>
+                    
+                    <div class="confirmation-detail">
+                        <span class="confirmation-label">Contact Email</span>
+                        <span class="confirmation-value">${email}</span>
+                    </div>
+                    
+                    <div class="confirmation-detail">
+                        <span class="confirmation-label">Issue Category</span>
+                        <span class="confirmation-value">${categoryText}</span>
+                    </div>
+
+                    <div class="confirmation-detail">
+                        <span class="confirmation-label">Subject</span>
+                        <span class="confirmation-value">${subject}</span>
+                    </div>
+                    
+                    <p class="success-message">
+                        We have received your request. Please reference **Ticket ID ${ticketID}** in any future correspondence. We aim to respond within 24 hours.
+                    </p>
+                </div>
+            `;
+            
+            // Hide the form and display the result
+            formContent.style.display = 'none';
+            resultDiv.innerHTML = confirmationHTML;
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+
+</body>
+</html>
