@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NELL Rides - Book Your Trip</title>
+    <title>NELL - Rideshare Service</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
         /* Shared Styles */
         :root {
             --primary-color: #007bff; /* Nell Blue */
-            --secondary-color: #ff9900; /* Foods Orange */
+            --secondary-color: #1abc9c; /* Rides Green/Teal */
             --text-color: #333;
-            --bg-color: #f4f4f9;
+            --bg-color: #f4f7f9;
             --white: #ffffff;
+            --danger-color: #e74c3c;
             --font-stack: 'Inter', sans-serif;
         }
 
@@ -26,141 +28,112 @@
             line-height: 1.6;
             color: var(--text-color);
             background: var(--bg-color);
+            min-height: 100vh;
         }
 
-        a {
-            text-decoration: none;
-            color: var(--primary-color);
+        .hidden {
+            display: none !important;
         }
 
-        ul {
-            list-style: none;
-        }
-
-        /* Header & Navigation */
+        /* Header */
         .main-header {
             background: var(--white);
             padding: 1rem 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            text-align: center;
         }
 
         .logo {
             font-size: 1.5rem;
-            font-weight: bold;
+            font-weight: 800;
             color: var(--primary-color);
         }
 
-        .desktop-nav, .mobile-menu-icon {
-            /* Hiding for simplicity in this prototype, but they exist in the full MPA */
-            display: none; 
-        }
-
-        main {
+        /* Main Container */
+        .container {
             padding: 1.5rem;
-        }
-
-        /* Footer */
-        footer {
-            background: var(--text-color);
-            color: var(--white);
-            text-align: center;
-            padding: 1.5rem;
-            font-size: 0.9rem;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
-
-        /* Rides Specific Styles */
-        .map-placeholder {
-            background: #ccc;
-            height: 200px;
-            width: 100%;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #666;
-            font-weight: bold;
-        }
-
-        .booking-form {
-            background: var(--white);
-            padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .location-input {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 0.5rem;
-        }
-
-        .location-input input {
-            flex-grow: 1;
-            padding: 0.75rem;
-            border: none;
-            outline: none;
-            font-size: 1rem;
-            border-radius: 4px;
-        }
-
-        .icon {
-            color: var(--primary-color);
-            margin-right: 10px;
-            font-size: 1.2rem;
-            width: 20px;
-            text-align: center;
-        }
-
-        .ride-options {
-            display: flex;
-            gap: 1rem;
-            overflow-x: auto;
-            padding: 1rem 0;
+            max-width: 600px;
+            margin: 0 auto;
         }
         
-        /* Custom styled radio cards */
-        .ride-card {
-            flex: 0 0 120px; /* Fixed width for mobile scrolling */
-            text-align: center;
-            padding: 1rem 0.5rem;
-            border: 2px solid transparent;
+        /* Ride Card Styling (Booking & Confirmation) */
+        .card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+        }
+        
+        /* Form Inputs */
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-color);
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
             border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        /* Vehicle Selection */
+        .vehicle-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Adjusted grid for more services */
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .vehicle-option {
+            border: 2px solid #eee;
+            border-radius: 10px;
+            padding: 0.75rem;
+            text-align: center;
             cursor: pointer;
             transition: all 0.2s;
-            background: var(--bg-color);
         }
 
-        .ride-card.selected {
-            border-color: var(--primary-color);
-            background: #e6f0ff;
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.2);
+        .vehicle-option:hover {
+            border-color: #ccc;
         }
 
-        .ride-card input[type="radio"] {
-            display: none;
+        .vehicle-option.selected {
+            border-color: var(--secondary-color);
+            background: #e6f7f3; /* Light teal background */
+            box-shadow: 0 0 10px rgba(26, 188, 156, 0.2);
         }
 
-        .ride-card h4 {
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-            margin-bottom: 0.2rem;
+        .vehicle-icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
         }
 
-        .ride-card p {
-            font-size: 0.8rem;
-            color: #666;
+        .vehicle-price {
+            font-weight: 800;
+            color: var(--text-color);
         }
 
-        .book-btn {
+        /* Buttons */
+        .book-btn, .confirm-btn {
             display: block;
             width: 100%;
             padding: 1rem;
@@ -169,17 +142,98 @@
             border: none;
             border-radius: 8px;
             font-size: 1.1rem;
-            font-weight: bold;
-            margin-top: 1.5rem;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: background 0.3s, transform 0.1s;
         }
 
-        .book-btn:hover {
+        .book-btn:hover, .confirm-btn:hover {
             background: #0056b3;
+            transform: translateY(-1px);
+        }
+        
+        .book-btn:disabled {
+            background: #999;
+            cursor: not-allowed;
         }
 
-        /* Message Box Styling (Instead of alert()) */
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            margin-bottom: 1rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Confirmation View Specific Styles */
+        #confirm-view h2 {
+            color: var(--secondary-color);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .summary-details .summary-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .summary-details .summary-line:last-of-type {
+            border-bottom: none;
+            font-weight: 600;
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            padding-top: 1rem;
+        }
+        
+        /* Payment Section Styling */
+        .payment-section {
+            margin-top: 1.5rem;
+            padding-top: 1rem;
+            border-top: 1px solid #ddd;
+        }
+
+        .payment-section h3 {
+            font-size: 1.2rem;
+            color: var(--text-color);
+            margin-bottom: 1rem;
+        }
+
+        .promo-code-group {
+            display: flex; 
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .promo-code-group input {
+            flex-grow: 1; 
+            padding: 0.75rem; 
+            border-radius: 5px; 
+            border: 1px solid #ccc;
+        }
+        
+        .promo-code-group button {
+            background: var(--secondary-color); 
+            color: var(--white); 
+            padding: 0.75rem 1rem; 
+            border: none; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        
+        .promo-code-group button:hover {
+            background: #159c7b;
+        }
+
+        /* Message Box Styling (for Confirmation) */
         .message-box {
             position: fixed;
             top: 50%;
@@ -187,42 +241,33 @@
             transform: translate(-50%, -50%);
             background: var(--white);
             padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             z-index: 1000;
             text-align: center;
-            display: none; /* Hidden by default */
+            width: 90%;
+            max-width: 400px;
+            display: none; 
+            border-top: 5px solid var(--secondary-color);
         }
         .message-box h3 {
-            color: var(--primary-color);
+            color: var(--secondary-color);
             margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        .message-box p {
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            text-align: left;
         }
         .message-box .close-btn {
             background: var(--primary-color);
             color: var(--white);
-            padding: 0.5rem 1rem;
+            padding: 0.75rem 1.5rem;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
-        }
-
-        /* Desktop Optimization */
-        @media (min-width: 768px) {
-            main {
-                max-width: 800px; /* Increased max width to fit more cards */
-                margin: 0 auto;
-                padding-top: 3rem;
-            }
-            .map-placeholder {
-                height: 300px;
-            }
-            .ride-options {
-                justify-content: center;
-                gap: 1.5rem; /* Reduced gap slightly to fit more */
-            }
-            .ride-card {
-                flex: 0 0 150px;
-            }
+            font-weight: 600;
         }
 
     </style>
@@ -230,133 +275,441 @@
 <body>
 
     <header class="main-header">
-        <a href="index.html" class="logo">NELL</a>
-        <nav class="desktop-nav">
-            <ul>
-                <li><a href="rides.html">Rides</a></li>
-                <li><a href="food.html">Foods</a></li>
-                <!-- ... other links ... -->
-            </ul>
-        </nav>
-        <!-- Mobile menu icon hidden -->
+        <div class="logo">NELL - Rides</div>
     </header>
 
-    <main>
-        <div class="map-placeholder">
-            Mock Map View: Showing current location.
-        </div>
+    <div class="container">
         
-        <div class="booking-form">
-            <h2>Where to?</h2>
-            
-            <div class="location-input pickup">
-                <span class="icon">📍</span>
-                <input type="text" id="pickup" placeholder="Enter Pickup Location" value="Current Location">
-            </div>
-
-            <div class="location-input destination">
-                <span class="icon">🏁</span>
-                <input type="text" id="destination" placeholder="Enter Destination">
-            </div>
-            
-            <h3>Choose Your Ride</h3>
-            <div class="ride-options">
-                <!-- Standard Ride -->
-                <label class="ride-card selected" for="standard">
-                    <input type="radio" id="standard" name="rideType" value="standard" checked>
-                    <span class="icon" style="font-size: 2rem; display: block;">🚗</span>
-                    <h4>Standard</h4>
-                    <p>3 min | $12.50</p>
-                </label>
-
-                <!-- Premium Ride -->
-                <label class="ride-card" for="premium">
-                    <input type="radio" id="premium" name="rideType" value="premium">
-                    <span class="icon" style="font-size: 2rem; display: block;">🏎️</span>
-                    <h4>Premium</h4>
-                    <p>5 min | $25.00</p>
-                </label>
-                
-                <!-- Van Ride (XL) -->
-                <label class="ride-card" for="van">
-                    <input type="radio" id="van" name="rideType" value="van">
-                    <span class="icon" style="font-size: 2rem; display: block;">🚐</span>
-                    <h4>Van (XL)</h4>
-                    <p>5 min | $18.00</p>
-                </label>
-
-                <!-- Shared Ride -->
-                <label class="ride-card" for="share">
-                    <input type="radio" id="share" name="rideType" value="share">
-                    <span class="icon" style="font-size: 2rem; display: block;">👥</span>
-                    <h4>Share</h4>
-                    <p>7 min | $8.00</p>
-                </label>
-                
-                <!-- Helicopter Ride -->
-                <label class="ride-card" for="helicopter">
-                    <input type="radio" id="helicopter" name="rideType" value="helicopter">
-                    <span class="icon" style="font-size: 2rem; display: block;">🚁</span>
-                    <h4>Helicopter</h4>
-                    <p>15 min | $500.00</p>
-                </label>
+        <!-- -------------------- RIDE BOOKING VIEW -------------------- -->
+        <section id="booking-view">
+            <div class="card">
+                <h2 style="color: var(--primary-color); margin-bottom: 1.5rem;">Where to?</h2>
+                <div class="input-group">
+                    <label for="pickupLocation">Pickup Location</label>
+                    <!-- Removed default value -->
+                    <input type="text" id="pickupLocation" value="" placeholder="Enter pickup location" required>
+                </div>
+                <div class="input-group">
+                    <label for="dropoffLocation">Dropoff Location</label>
+                    <!-- Removed default value -->
+                    <input type="text" id="dropoffLocation" value="" placeholder="Enter dropoff location" required>
+                </div>
             </div>
             
-            <button class="book-btn" onclick="requestRide()">Request Ride</button>
-        </div>
-    </main>
+            <div class="card">
+                <!-- RENAMED HEADING: "Select Vehicle" changed to "Select Travel Mode" -->
+                <h3 style="color: var(--text-color); margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">Select Travel Mode</h3>
+                <!-- Main Vehicle Selection (Includes Exotic Category Trigger) -->
+                <div class="vehicle-selection" id="mainVehicleSelection">
+                    <!-- Options injected by JS -->
+                </div>
 
-    <!-- Message Box -->
+                <!-- Exotic Sub-Menu (Hidden by default) -->
+                <div id="exoticSubMenu" class="hidden" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed #ddd;">
+                    <h4 style="margin-bottom: 0.8rem; font-weight: 600; color: var(--secondary-color);">Choose Your Exotic Ride:</h4>
+                    <div class="vehicle-selection" id="exoticVehicleSelection">
+                        <!-- Exotic Sub-Options injected by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <button class="book-btn" onclick="bookRide()" id="bookRideBtn" disabled>
+                Book Ride
+            </button>
+        </section>
+        
+        <!-- -------------------- RIDE CONFIRMATION VIEW -------------------- -->
+        <section id="confirm-view" class="hidden">
+            <button class="back-btn" onclick="showView('booking-view')">&larr; Change Ride</button>
+            <div class="card">
+                <h2>Confirm Your Ride</h2>
+
+                <div class="summary-details">
+                    <div class="summary-line">
+                        <span>Travel Mode:</span>
+                        <span id="confirmVehicleType"></span>
+                    </div>
+                    <div class="summary-line">
+                        <span>Pickup:</span>
+                        <span id="confirmPickup"></span>
+                    </div>
+                    <div class="summary-line">
+                        <span>Dropoff:</span>
+                        <span id="confirmDropoff"></span>
+                    </div>
+                    <div class="summary-line">
+                        <span>Estimated Distance:</span>
+                        <span id="confirmDistance"></span>
+                    </div>
+                    <div class="summary-line">
+                        <span>Estimated Time:</span>
+                        <span id="confirmTime"></span>
+                    </div>
+                </div>
+
+                <!-- Payment Section -->
+                <div class="payment-section">
+                    <h3>Payment & Total</h3>
+
+                    <div class="input-group">
+                        <label for="paymentMethod">Select Payment Type:</label>
+                        <select id="paymentMethod">
+                            <option value="card">Credit/Debit Card</option>
+                            <option value="wallet">NELL Wallet</option>
+                            <option value="cash">Cash in Vehicle</option>
+                        </select>
+                    </div>
+
+                    <div class="promo-code-group">
+                        <input type="text" id="ridePromoCode" placeholder="Enter Promo Code (Try NELLRIDE)">
+                        <button id="applyPromoBtn" onclick="applyPromo()">Apply</button>
+                    </div>
+                    <p id="promoMessage" style="font-size: 0.85rem; margin-top: -0.5rem; margin-bottom: 1rem;"></p>
+
+                    <!-- Cost Breakdown -->
+                    <div class="summary-details">
+                        <div class="summary-line">
+                            <span>Base Fare:</span>
+                            <span id="confirmBaseFare"></span>
+                        </div>
+                        <div class="summary-line">
+                            <span>Surge/Fee:</span>
+                            <span id="confirmSurgeFee">$0.00</span>
+                        </div>
+                        <!-- Discount line placeholder -->
+                        <div class="summary-line hidden" id="discountLine">
+                            <span>Promo Discount:</span>
+                            <span id="confirmDiscount" style="color: var(--danger-color); font-weight: 700;">-$0.00</span>
+                        </div>
+                        <div class="summary-line">
+                            <span>Ride Total:</span>
+                            <span id="confirmTotal" style="color: var(--secondary-color);"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <button class="confirm-btn" onclick="confirmBooking()">
+                Confirm & Pay <span id="finalPaymentAmount"></span>
+            </button>
+        </section>
+        
+    </div>
+
+    <!-- Message Box (Confirmation) -->
     <div class="message-box" id="messageBox">
-        <h3>Request Confirmed!</h3>
-        <p id="messageText">Searching for a Standard driver to Current Location...</p>
-        <button class="close-btn" onclick="closeMessageBox()">OK</button>
+        <h3 id="messageTitle">Ride Confirmed!</h3>
+        <p id="messageText"></p>
+        <button class="close-btn" onclick="closeMessageBox()">Got It</button>
     </div>
 
     <footer>
-        <p>Book with NELL Rides. Fast, Safe, Reliable.</p>
+        <p style="text-align: center; color: #888; font-size: 0.8rem; padding: 1rem;">Powered by NELL</p>
     </footer>
 
     <script>
-        function selectRideCard(card) {
-            // Remove 'selected' from all cards
-            document.querySelectorAll('.ride-card').forEach(c => c.classList.remove('selected'));
-            // Add 'selected' to the clicked card
-            card.classList.add('selected');
-            // Check the corresponding radio button
-            card.querySelector('input[type="radio"]').checked = true;
+        // --- DATA ---
+        const allVehicles = [
+            { id: 'standard', name: 'Standard', icon: '🚗', basePrice: 15.00, multiplier: 1.0 },
+            { id: 'xl', name: 'XL', icon: '🚙', basePrice: 25.00, multiplier: 1.5 },
+            { id: 'premium', name: 'Premium', icon: '💎', basePrice: 35.00, multiplier: 2.0 },
+            { id: 'luxury', name: 'Luxury', icon: '✨', basePrice: 50.00, multiplier: 2.5 },
+            // AIR TRAVEL
+            { id: 'helicopter', name: 'Heli-Ride', icon: '🚁', basePrice: 150.00, multiplier: 3.0 },
+            { id: 'airplane', name: 'Airplane', icon: '✈️', basePrice: 500.00, multiplier: 5.0 },
+            // SPECIALTY & TRUCKS (NEW ADDITIONS)
+            { id: 'icetruck', name: 'Ice Cream Truck', icon: '🍦', basePrice: 30.00, multiplier: 1.2 },
+            { id: 'garbagetruck', name: 'Garbage Truck', icon: '🚛', basePrice: 45.00, multiplier: 1.1 },
+            { id: 'firetruck', name: 'Fire Truck', icon: '🚒', basePrice: 100.00, multiplier: 1.5 },
+            // EXOTIC CATEGORY TRIGGER (NEW)
+            // Note: basePrice/multiplier here are just for display on the button before sub-option is chosen
+            { id: 'exotic_category', name: 'Exotic Sportscar', icon: '🏎️', basePrice: 75.00, multiplier: 2.5, isCategory: true },
+            // EXOTIC SUB-OPTIONS (NEW) - marked as sub-options
+            { id: 'bugatti', name: 'Bugatti Chiron', icon: '💨', basePrice: 200.00, multiplier: 4.0, isSubOption: true },
+            { id: 'lamborghini', name: 'Lamborghini Aventador', icon: '🔥', basePrice: 180.00, multiplier: 3.8, isSubOption: true },
+            { id: 'ferrari', name: 'Ferrari F8', icon: '⚡', basePrice: 170.00, multiplier: 3.5, isSubOption: true },
+            // HUMAN-POWERED
+            { id: 'golfcart', name: 'Golf Cart', icon: '⛳', basePrice: 10.00, multiplier: 0.8 },
+            { id: 'walk', name: 'Walk', icon: '🚶', basePrice: 5.00, multiplier: 0.5 }, 
+            { id: 'bike', name: 'Bike', icon: '🚲', basePrice: 8.00, multiplier: 0.7 }
+        ];
+
+        const mainVehicles = allVehicles.filter(v => !v.isSubOption);
+        const exoticSubVehicles = allVehicles.filter(v => v.isSubOption);
+
+
+        // --- GLOBAL STATE ---
+        let selectedVehicle = null;
+        let rideDetails = {
+            pickup: '',
+            dropoff: '',
+            // Distance remains hardcoded for the demo
+            distance: '3.2 mi', 
+            // Time is now dynamic and set upon vehicle selection
+            time: '', 
+            baseFare: 0.00,
+            surgeFee: 0.00,
+            promoDiscount: 0.00
+        };
+
+        // --- TIME CALCULATION LOGIC ---
+        function getEtaInMinutes(vehicleId) {
+            // Establishes a mock Estimated Time of Arrival (ETA) based on a 3.2-mile trip
+            switch (vehicleId) {
+                case 'walk': return '40 min';
+                case 'bike': return '20 min';
+                case 'golfcart': return '15 min';
+                case 'helicopter': return '5 min';
+                case 'airplane': return '1 hour'; 
+                case 'icetruck': return '35 min (slow stops!)';
+                case 'garbagetruck': return '45 min (many stops!)';
+                case 'firetruck': return '15 min (with sirens)';
+                case 'bugatti':
+                case 'lamborghini':
+                case 'ferrari':
+                case 'exotic_category': return '8 min (if traffic allows)'; 
+                default: return '10 min'; // Standard cars, XL, Premium, Luxury
+            }
         }
 
-        document.querySelectorAll('.ride-card').forEach(card => {
-            card.addEventListener('click', () => selectRideCard(card));
-        });
-
-
-        function requestRide() {
-            const pickup = document.getElementById('pickup').value.trim();
-            const destination = document.getElementById('destination').value.trim();
-            const selectedRide = document.querySelector('input[name="rideType"]:checked');
-            const messageBox = document.getElementById('messageBox');
-            const messageText = document.getElementById('messageText');
-
-            if (!destination) {
-                messageText.innerHTML = "Please enter your destination before booking.";
-                messageBox.querySelector('h3').textContent = "Input Required";
-            } else if (!selectedRide) {
-                 messageText.innerHTML = "Please select a ride type.";
-                messageBox.querySelector('h3').textContent = "Selection Required";
-            } else {
-                const rideType = selectedRide.value.charAt(0).toUpperCase() + selectedRide.value.slice(1);
-                messageText.innerHTML = `Searching for a **${rideType}** driver to ${destination}...<br><br>Estimated wait: 4 minutes.`;
-                messageBox.querySelector('h3').textContent = "Request Confirmed!";
-            }
-
-            messageBox.style.display = 'block';
+        // --- VIEW MANAGEMENT ---
+        function showView(viewId) {
+            document.getElementById('booking-view').classList.add('hidden');
+            document.getElementById('confirm-view').classList.add('hidden');
+            document.getElementById(viewId).classList.remove('hidden');
         }
 
         function closeMessageBox() {
             document.getElementById('messageBox').style.display = 'none';
         }
+
+        // --- BOOKING VIEW LOGIC ---
+        function renderVehicles() {
+            const mainContainer = document.getElementById('mainVehicleSelection');
+            mainContainer.innerHTML = '';
+
+            // 1. Render main vehicles (excluding sub-options)
+            mainVehicles.forEach(v => {
+                const price = (v.basePrice * v.multiplier).toFixed(2);
+                const option = document.createElement('div');
+                option.classList.add('vehicle-option');
+                option.setAttribute('data-id', v.id);
+                option.onclick = () => selectVehicle(v);
+
+                option.innerHTML = `
+                    <div class="vehicle-icon">${v.icon}</div>
+                    <div class="vehicle-name" style="font-size: 0.9rem;">${v.name}</div>
+                    <div class="vehicle-price">$${price}</div>
+                `;
+                mainContainer.appendChild(option);
+            });
+
+            // 2. Render exotic sub-options into their hidden container
+            const exoticContainer = document.getElementById('exoticVehicleSelection');
+            exoticContainer.innerHTML = '';
+            
+            exoticSubVehicles.forEach(v => {
+                const price = (v.basePrice * v.multiplier).toFixed(2);
+                const option = document.createElement('div');
+                option.classList.add('vehicle-option');
+                option.setAttribute('data-id', v.id);
+                option.onclick = () => selectVehicle(v); // Sub-options use the same select function
+
+                option.innerHTML = `
+                    <div class="vehicle-icon">${v.icon}</div>
+                    <div class="vehicle-name" style="font-size: 0.9rem;">${v.name}</div>
+                    <div class="vehicle-price">$${price}</div>
+                `;
+                exoticContainer.appendChild(option);
+            });
+        }
+
+        function selectVehicle(vehicle) {
+            // 1. Clear previous selection visuals (main selection)
+            document.querySelectorAll('#mainVehicleSelection .vehicle-option').forEach(opt => opt.classList.remove('selected'));
+            // 2. Clear previous selection visuals (exotic selection)
+            document.querySelectorAll('#exoticVehicleSelection .vehicle-option').forEach(opt => opt.classList.remove('selected'));
+
+            if (vehicle.isCategory) {
+                // If Exotic Category is chosen, show the submenu and select the category visually
+                selectedVehicle = null; // Clear actual vehicle selection
+                document.getElementById('exoticSubMenu').classList.remove('hidden');
+                document.querySelector(`#mainVehicleSelection .vehicle-option[data-id="${vehicle.id}"]`).classList.add('selected');
+                
+                // Disable book button until a sub-option is selected
+                document.getElementById('bookRideBtn').disabled = true;
+                document.getElementById('bookRideBtn').textContent = 'Select Exotic Car...';
+                return;
+            } 
+            
+            // If a regular vehicle or exotic sub-vehicle is chosen
+            selectedVehicle = vehicle;
+            rideDetails.time = getEtaInMinutes(vehicle.id); 
+
+            // Update visuals
+            const currentContainerId = vehicle.isSubOption ? 'exoticVehicleSelection' : 'mainVehicleSelection';
+            document.querySelector(`#${currentContainerId} .vehicle-option[data-id="${vehicle.id}"]`).classList.add('selected');
+            
+            // If an exotic sub-option was chosen, make sure the category remains visually selected and the submenu is visible
+            if (vehicle.isSubOption) {
+                document.querySelector(`#mainVehicleSelection .vehicle-option[data-id="exotic_category"]`).classList.add('selected');
+                document.getElementById('exoticSubMenu').classList.remove('hidden');
+            } else {
+                // If a standard vehicle is chosen, hide the exotic submenu
+                document.getElementById('exoticSubMenu').classList.add('hidden');
+            }
+
+            // Enable and update button
+            const price = (vehicle.basePrice * vehicle.multiplier).toFixed(2);
+            const btn = document.getElementById('bookRideBtn');
+            btn.textContent = `Book ${vehicle.name} ($${price})`;
+            btn.disabled = false;
+        }
+
+        function calculateRideTotal() {
+            if (!selectedVehicle) return 0.00;
+            const subtotal = selectedVehicle.basePrice * selectedVehicle.multiplier;
+            const total = Math.max(0, subtotal + rideDetails.surgeFee - rideDetails.promoDiscount);
+            return { subtotal, total };
+        }
+
+        function bookRide() {
+            const pickup = document.getElementById('pickupLocation').value;
+            const dropoff = document.getElementById('dropoffLocation').value;
+
+            if (!selectedVehicle || !pickup || !dropoff) {
+                alertUser("Missing Information", "Please select a travel mode and enter valid locations.");
+                return;
+            }
+
+            // Update rideDetails with current inputs
+            rideDetails.pickup = pickup;
+            rideDetails.dropoff = dropoff;
+            rideDetails.baseFare = (selectedVehicle.basePrice * selectedVehicle.multiplier);
+            rideDetails.promoDiscount = 0.00; // Reset discount on new booking
+
+            // Transition to confirmation view
+            renderConfirmationDetails();
+            showView('confirm-view');
+        }
+        
+        // --- CONFIRMATION VIEW LOGIC ---
+        function renderConfirmationDetails() {
+            const { subtotal, total } = calculateRideTotal();
+
+            // Updated label for Vehicle Type to Travel Mode
+            document.getElementById('confirmVehicleType').textContent = selectedVehicle.name;
+            document.getElementById('confirmPickup').textContent = rideDetails.pickup;
+            document.getElementById('confirmDropoff').textContent = rideDetails.dropoff;
+            document.getElementById('confirmDistance').textContent = rideDetails.distance;
+            // The ETA is now dynamically updated here
+            document.getElementById('confirmTime').textContent = rideDetails.time; 
+            
+            document.getElementById('confirmBaseFare').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('confirmSurgeFee').textContent = `$${rideDetails.surgeFee.toFixed(2)}`;
+
+            // Update discount line
+            const discountLine = document.getElementById('discountLine');
+            if (rideDetails.promoDiscount > 0) {
+                discountLine.classList.remove('hidden');
+                document.getElementById('confirmDiscount').textContent = `-$${rideDetails.promoDiscount.toFixed(2)}`;
+            } else {
+                discountLine.classList.add('hidden');
+            }
+
+            document.getElementById('confirmTotal').textContent = `$${total.toFixed(2)}`;
+            document.getElementById('finalPaymentAmount').textContent = `($${total.toFixed(2)})`;
+        }
+
+        function applyPromo() {
+            const code = document.getElementById('ridePromoCode').value.toUpperCase().trim();
+            const messageElement = document.getElementById('promoMessage');
+            
+            rideDetails.promoDiscount = 0.00; // Reset discount
+            messageElement.style.color = '#cc0000'; // Default to error color (red)
+            
+            // Mock Promo Code Logic
+            if (code === 'NELLRIDE') {
+                rideDetails.promoDiscount = 5.00; // Mock $5 off
+                messageElement.textContent = '$5 discount applied!';
+                // FIX: CSS variables must be wrapped in a string literal in JS style assignment
+                messageElement.style.color = 'var(--secondary-color)';
+            } else if (code) {
+                messageElement.textContent = 'Invalid promo code.';
+            } else {
+                 messageElement.textContent = '';
+            }
+
+            renderConfirmationDetails(); // Re-render to show new total
+        }
+
+        function confirmBooking() {
+            const { total } = calculateRideTotal();
+            const paymentName = document.getElementById('paymentMethod').options[document.getElementById('paymentMethod').selectedIndex].text;
+            
+            // Mock Driver Assignment (Random ID)
+            const driverId = Math.random().toString(36).substring(2, 8).toUpperCase();
+            
+            // Prepare confirmation message
+            document.getElementById('messageTitle').textContent = "Booking Confirmed!";
+            
+            let confirmationMessage = '';
+            // Determine the appropriate message based on the travel mode
+            if (selectedVehicle.id === 'walk') {
+                 confirmationMessage = `
+                    <p><strong>Your Walking Companion is arriving shortly!</strong></p>
+                    <p><strong>Companion ID:</strong> ${driverId}</p>
+                    <p><strong>Meet at:</strong> ${rideDetails.pickup}</p>
+                    <p><strong>Destination:</strong> ${rideDetails.dropoff}</p>
+                    <p><strong>Estimated Walk Time:</strong> ${rideDetails.time}</p>
+                `;
+            } else if (selectedVehicle.id === 'airplane') {
+                 confirmationMessage = `
+                    <p><strong>Your ${selectedVehicle.name} charter is being arranged!</strong></p>
+                    <p><strong>Flight ID:</strong> ${driverId}</p>
+                    <p><strong>Departure from:</strong> ${rideDetails.pickup}</p>
+                    <p><strong>Arrival at:</strong> ${rideDetails.dropoff}</p>
+                    <p><strong>Estimated Flight Time:</strong> ${rideDetails.time}</p>
+                `;
+            } else {
+                 confirmationMessage = `
+                    <p><strong>Your ${selectedVehicle.name} is on its way!</strong></p>
+                    <p><strong>Driver ID:</strong> ${driverId}</p>
+                    <p><strong>Pickup:</strong> ${rideDetails.pickup}</p>
+                    <p><strong>Dropoff:</strong> ${rideDetails.dropoff}</p>
+                    <p><strong>Time:</strong> ${rideDetails.time} ETA</p>
+                `;
+            }
+
+            document.getElementById('messageText').innerHTML = confirmationMessage + 
+                `<p style="margin-top: 1rem;"><strong>Charged to ${paymentName}:</strong> $${total.toFixed(2)}</p>`;
+            
+            document.getElementById('messageBox').style.display = 'block';
+
+            // Reset state to start a new booking (optional, for a simple prototype)
+            selectedVehicle = null;
+            document.getElementById('bookRideBtn').disabled = true;
+            document.getElementById('bookRideBtn').textContent = 'Book Ride';
+            document.querySelectorAll('.vehicle-option').forEach(opt => opt.classList.remove('selected'));
+            document.getElementById('exoticSubMenu').classList.add('hidden');
+            document.getElementById('ridePromoCode').value = '';
+            document.getElementById('promoMessage').textContent = '';
+            
+            // Go back to the initial booking view in the background
+            showView('booking-view'); 
+        }
+
+        function alertUser(title, message) {
+            document.getElementById('messageTitle').textContent = title;
+            document.getElementById('messageText').innerHTML = message;
+            document.getElementById('messageBox').style.display = 'block';
+        }
+
+        // --- INITIALIZATION ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderVehicles();
+            showView('booking-view');
+        });
     </script>
 </body>
 </html>
