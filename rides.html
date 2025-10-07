@@ -30,12 +30,12 @@
             position: relative; 
         }
         
-        /* HEADER STYLES (Restored to original structure but with Nell Rides branding) */
+        /* HEADER STYLES */
         .text-3xl {
             font-size: 2.25rem !important;
             font-weight: 700 !important;
         }
-        /* Color override for Nell Rides logo (was originally red in the provided snippet) */
+        /* Color override for Nell Rides logo */
         .text-red-600, .hover\:text-red-500:hover { 
             color: var(--primary-blue) !important; 
         }
@@ -85,8 +85,6 @@
             width: 100%;
             height: 180px;
             background-color: #f0f0f0;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23f7f7f7"/><line x1="0" y1="50" x2="100" y2="50" stroke="%23ccc" stroke-width="2"/><line x1="50" y1="0" x2="50" y2="100" stroke="%23ccc" stroke-width="2"/><circle cx="50" cy="50" r="10" fill="%230076ff"/></svg>');
-            background-size: 100% 100%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -94,16 +92,19 @@
             border-radius: 10px;
             color: #333;
             font-weight: 600;
+            /* Simple map visualization */
+            background-image: linear-gradient(135deg, #f7f7f7 25%, transparent 25%),
+                              linear-gradient(225deg, #f7f7f7 25%, transparent 25%),
+                              linear-gradient(45deg, #f7f7f7 25%, #ccc 25%),
+                              linear-gradient(315deg, #f7f7f7 25%, #ccc 25%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 0, 10px -10px, 0px 10px;
         }
 
-        /* DYNAMIC CONTENT VISIBILITY */
+        /* DYNAMIC CONTENT VISIBILITY (Now defaults to active/visible) */
         .selection-section { 
-            display: none; 
-            opacity: 0;
-            transition: opacity 0.5s ease-in-out;
-        }
-        .selection-section.active {
-            display: block;
+            /* Kept classes but set to block for immediate visibility */
+            display: block; 
             opacity: 1;
         }
         
@@ -139,7 +140,7 @@
             box-shadow: 0 0 0 2px rgba(0, 118, 255, 0.3);
         }
         .vehicle-icon {
-            font-size: 35px; /* Slightly smaller icon size */
+            font-size: 35px;
             line-height: 1;
             margin-bottom: 5px;
         }
@@ -158,7 +159,7 @@
         }
         .vehicle-eta {
             font-size: 0.8em;
-            color: var(--primary-blue); /* ETA in blue */
+            color: var(--primary-blue); 
             margin-top: 2px;
             line-height: 1.2;
         }
@@ -185,7 +186,7 @@
             background-color: #e6f0ff; 
         }
 
-        /* BUTTONS, IN-RIDE, MODAL STYLES (Blue theme adjustments) */
+        /* BUTTONS, IN-RIDE, MODAL STYLES */
         .book-button {
             background-color: var(--primary-blue);
             box-shadow: 0 4px 10px rgba(0, 118, 255, 0.3);
@@ -206,6 +207,86 @@
         .modal-confirm-button { background-color: var(--primary-blue); }
         .modal-content input { padding: 12px; }
 
+        /* Notification Banner Style */
+        #notification-banner {
+            position: absolute;
+            top: -50px; /* Hidden above view */
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--success-green);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            z-index: 1000;
+            transition: top 0.5s ease-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            display: none; /* Hidden by default */
+        }
+        #notification-banner.show {
+            top: 20px; /* Slide into view */
+            display: block;
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none; /* Hidden by default */
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 400px;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #333;
+        }
+        .modal-header h3 {
+            margin-top: 0;
+            color: var(--primary-dark);
+            font-size: 1.5em;
+        }
+        .modal-price-display {
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        .modal-price-display span {
+            display: block;
+            font-size: 0.5em;
+            font-weight: normal;
+            color: #6c757d;
+        }
+        .modal-confirm-button {
+            width: 100%;
+            padding: 12px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -248,7 +329,7 @@
             <input type="text" id="dropoff-input" placeholder="Enter Destination" oninput="checkLocationInput()">
         </div>
         
-        <div id="dynamic-booking-content" class="selection-section">
+        <div id="dynamic-booking-content" class="selection-section active">
             <h2>Choose Your Ride</h2>
             <div id="vehicle-options-container" class="vehicle-options" role="radiogroup">
                 </div>
@@ -349,8 +430,8 @@
     ];
     // ----------------------------------------
     
-    let selectedVehicleId = null;
-    let selectedPaymentId = null;
+    let selectedVehicleId = vehicles[0].id; // Default selection for a smooth start
+    let selectedPaymentId = paymentMethods[2].id; // Default to Cash
 
     // --- DRIVER DETAILS LOGIC ---
     function getDriverDetails(vehicleId) {
@@ -365,30 +446,7 @@
     
     // --- LOCATION CHECK / DYNAMIC CONTENT VISIBILITY ---
     function checkLocationInput() {
-        const pickup = document.getElementById('pickup-input').value;
-        const dropoff = document.getElementById('dropoff-input').value;
-        const dynamicContent = document.getElementById('dynamic-booking-content');
-        
-        const isLocationReady = pickup.length > 2 && dropoff.length > 2;
-
-        if (isLocationReady) {
-            if (!dynamicContent.classList.contains('active')) {
-                 // Set initial selections for a smooth first reveal
-                if (!selectedVehicleId) {
-                    selectedVehicleId = vehicles[0].id;
-                }
-                if (!selectedPaymentId) {
-                    selectedPaymentId = paymentMethods[2].id; // Default to Cash
-                }
-
-                renderVehicles();
-                renderPaymentMethods();
-                dynamicContent.classList.add('active');
-            }
-        } else {
-            dynamicContent.classList.remove('active');
-            document.getElementById('book-ride-button').disabled = true;
-        }
+        // This function now only checks readiness, the content is always visible
         checkBookingReadiness();
     }
 
@@ -525,6 +583,7 @@
         const dropoff = document.getElementById('dropoff-input').value;
         const button = document.getElementById('book-ride-button');
 
+        // Check for content (at least 3 characters to simulate a valid search)
         const isLocationReady = pickup.length > 2 && dropoff.length > 2;
         const vehicleSelected = !!selectedVehicleId;
         
@@ -627,10 +686,12 @@
                     
                     document.getElementById('pickup-input').value = '';
                     document.getElementById('dropoff-input').value = '';
-                    selectedVehicleId = null;
-                    selectedPaymentId = null; 
+                    selectedVehicleId = vehicles[0].id; // Reset to default vehicle
+                    selectedPaymentId = paymentMethods[2].id; // Reset to Cash
                     
-                    document.getElementById('dynamic-booking-content').classList.remove('active');
+                    renderVehicles(); // Re-render to ensure correct vehicle/payment selection is shown
+                    renderPaymentMethods();
+
                 }, 5000);
             }
         }
@@ -650,14 +711,17 @@
             
             document.getElementById('pickup-input').value = '';
             document.getElementById('dropoff-input').value = '';
-            selectedVehicleId = null;
-            selectedPaymentId = null;
+            selectedVehicleId = vehicles[0].id;
+            selectedPaymentId = paymentMethods[2].id;
             
-            document.getElementById('dynamic-booking-content').classList.remove('active');
+            renderVehicles();
+            renderPaymentMethods();
+
             alert('Your ride has been cancelled.');
         }
     }
 
+    // Initialize the app: render vehicles and payments immediately
     window.onload = () => {
         renderVehicles();
         renderPaymentMethods();
