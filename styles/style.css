@@ -103,7 +103,8 @@ section {
     justify-content: space-between;
     align-items: center;
     padding: 0 var(--spacing-md);
-    z-index: 1000; /* High Z-index */
+    /* INCREASE THIS VALUE to ensure it's on top */
+    z-index: 9999; 
 }
 
 .logo {
