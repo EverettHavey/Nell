@@ -20,6 +20,7 @@
             --border-radius-md: 8px;
             --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
         
         body {
@@ -28,6 +29,7 @@
             color: var(--color-dark);
             margin: 0;
             padding-top: 60px; /* Space for fixed header */
+            transition: padding-top 0.3s;
         }
         
         /* Header/Nav Styles */
@@ -41,7 +43,7 @@
             align-items: center;
             padding: 10px 20px;
             background-color: var(--color-dark);
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow-md);
             z-index: 500;
         }
 
@@ -52,7 +54,7 @@
             text-decoration: none;
         }
 
-        .desktop-nav ul, .mobile-nav ul {
+        .desktop-nav ul {
             list-style: none;
             padding: 0;
             margin: 0;
@@ -69,12 +71,23 @@
         }
 
         .desktop-nav li a:hover {
-            background-color: rgba(255, 255, 255, 0.1);
+            background-color: rgba(255, 255, 255, 0.15);
         }
         
-        .mobile-nav, .mobile-menu-icon {
-            display: none;
+        /* Mobile Navigation Enhancements */
+        .mobile-menu-icon {
+            display: none; /* Hide by default, show on mobile */
+            font-size: 1.8rem;
+            color: var(--color-secondary);
+            cursor: pointer;
+            padding: 5px;
+            user-select: none;
         }
+        
+        .mobile-nav {
+            display: none; /* Hide by default */
+        }
+
 
         /* Button Styles (CTA) */
         .btn {
@@ -83,7 +96,11 @@
             border: none;
             font-weight: 600;
             cursor: pointer;
-            transition: background-color 0.2s, opacity 0.2s;
+            transition: background-color 0.2s, opacity 0.2s, transform 0.1s;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
         }
 
         .cta-primary {
@@ -130,16 +147,21 @@
             background-color: var(--color-light);
             border-radius: var(--border-radius-md);
             box-shadow: var(--shadow-sm);
+            flex-wrap: wrap; /* Ensure controls wrap on small screens */
+            gap: var(--spacing-md); /* Spacing between groups */
         }
 
         .filter-group {
             display: flex;
-            flex-wrap: wrap; /* Allow wrapping for many buttons */
+            flex-wrap: wrap; 
+            gap: var(--spacing-sm); /* Gap between buttons */
+            flex-grow: 1; /* Allow filter group to take up space */
+            justify-content: flex-start;
         }
         
         .filter-group button {
-            margin-left: var(--spacing-sm);
-            margin-bottom: var(--spacing-sm); /* Added margin for wrapped buttons */
+            /* Overriding existing margins to use gap for cleanliness */
+            margin: 0; 
             background-color: var(--color-secondary);
             color: var(--color-dark);
             padding: 8px 12px;
@@ -147,11 +169,33 @@
             font-weight: 500;
             border: none;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s, color 0.2s;
+            white-space: nowrap; /* Prevent button text from breaking */
         }
 
         .filter-group button:hover {
             background-color: #fbb329;
+        }
+        
+        .sort-group {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        #sortSelect {
+            padding: 8px 12px;
+            border-radius: var(--border-radius-sm);
+            border: 1px solid #ccc;
+            background-color: var(--color-light);
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        #sortSelect:focus {
+            border-color: var(--color-primary);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(30, 64, 175, 0.2);
         }
 
         .restaurant-grid {
@@ -172,8 +216,8 @@
         }
 
         .restaurant-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-lg);
         }
 
         .card-image {
@@ -181,7 +225,20 @@
             width: 100%;
             background-size: cover;
             background-position: center;
+            /* Added subtle gradient for depth */
+            position: relative;
         }
+        
+        .card-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 70%, rgba(0,0,0,0.1));
+        }
+
 
         .card-details {
             padding: var(--spacing-md);
@@ -200,6 +257,10 @@
             color: #6b7280;
         }
         
+        .card-details strong {
+            color: var(--color-primary);
+        }
+        
         .load-more-container {
             text-align: center;
             margin-top: var(--spacing-lg);
@@ -207,17 +268,66 @@
         
         /* Responsive controls */
         @media (max-width: 768px) {
+            body {
+                padding-top: 70px; /* Adjust padding for slightly larger mobile header */
+            }
+            .main-header {
+                padding: 10px 15px;
+            }
+            .desktop-nav {
+                display: none;
+            }
+            .mobile-menu-icon {
+                display: block;
+            }
+            
+            .mobile-nav {
+                /* Initially hidden off-screen to the right */
+                position: fixed;
+                top: 60px; /* Below header */
+                left: 0;
+                width: 100%;
+                height: calc(100vh - 60px); /* Fill remaining viewport */
+                background-color: var(--color-dark);
+                z-index: 490;
+                transform: translateX(100%);
+                transition: transform 0.3s ease-in-out;
+                padding: 0;
+                display: block; /* Ensure it is block to use transform */
+            }
+            
+            .mobile-nav.open {
+                transform: translateX(0); /* Slide into view */
+            }
+
+            .mobile-nav ul {
+                flex-direction: column;
+                padding: var(--spacing-md);
+                padding-top: 0;
+            }
+            
+            .mobile-nav li a {
+                color: var(--color-light);
+                padding: 15px 0;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                text-align: center;
+                width: 100%;
+                display: block;
+                border-radius: 0;
+            }
+            .mobile-nav li:last-child a {
+                border-bottom: none;
+            }
+
             .controls {
                 flex-direction: column;
                 align-items: stretch;
             }
             .filter-group {
-                margin-top: var(--spacing-md);
-                display: flex;
-                justify-content: flex-start; /* Aligned left for wrapping buttons */
+                justify-content: center; /* Center buttons when wrapped */
             }
-            .filter-group button {
-                margin-left: var(--spacing-sm);
+            .sort-group {
+                justify-content: space-between;
             }
         }
     </style>
@@ -285,21 +395,26 @@
             // Render only visible items
             const toRender = currentRestaurants.slice(0, visibleCount);
 
-            toRender.forEach(r => {
-                const card = document.createElement('a');
-                // IMPORTANT: Link to items.html with the restaurant name
-                card.href = `items.html?restaurant=${encodeURIComponent(r.name)}`;
-                card.className = 'restaurant-card';
-                card.innerHTML = `
-                    <div class="card-image" style="background-image: url('https://placehold.co/400x180/${r.color}/ffffff?text=${r.text}')"></div>
-                    <div class="card-details">
-                        <h3>${r.name}</h3>
-                        <p>Category: ${r.category}</p>
-                        <p>Rating: <strong>${r.rating.toFixed(1)}</strong> &#9733; | Delivery: ${r.delivery} min</p>
-                    </div>
-                `;
-                restaurantGrid.appendChild(card);
-            });
+            if (toRender.length === 0) {
+                restaurantGrid.innerHTML = '<p style="text-align: center; font-size: 1.2rem; color: #6b7280; padding: 40px 0;">No restaurants found for the selected category. Try a different filter!</p>';
+            } else {
+                toRender.forEach(r => {
+                    const card = document.createElement('a');
+                    // IMPORTANT: Link to items.html with the restaurant name
+                    card.href = `items.html?restaurant=${encodeURIComponent(r.name)}`;
+                    card.className = 'restaurant-card';
+                    // Use a more dynamic placeholder image URL for visual variety
+                    card.innerHTML = `
+                        <div class="card-image" style="background-image: url('https://placehold.co/400x180/${r.color}/ffffff?text=${r.text}')"></div>
+                        <div class="card-details">
+                            <h3>${r.name}</h3>
+                            <p>Category: ${r.category}</p>
+                            <p>Rating: <strong>${r.rating.toFixed(1)}</strong> &#9733; | Delivery: ${r.delivery} min</p>
+                        </div>
+                    `;
+                    restaurantGrid.appendChild(card);
+                });
+            }
 
             // Update Load More button visibility
             if (!loadMoreBtn) return; // Check if element has been initialized
@@ -319,10 +434,12 @@
             } else {
                 currentRestaurants = ALL_RESTAURANTS.filter(r => r.category === category);
             }
+            
+            // Update button colors for active state
             document.querySelectorAll('.filter-group button').forEach(btn => {
-                // Set button colors based on active filter
-                btn.style.backgroundColor = btn.textContent === category ? 'var(--color-primary)' : 'var(--color-secondary)';
-                btn.style.color = btn.textContent === category ? 'var(--color-light)' : 'var(--color-dark)';
+                const isActive = btn.textContent === category;
+                btn.style.backgroundColor = isActive ? 'var(--color-primary)' : 'var(--color-secondary)';
+                btn.style.color = isActive ? 'var(--color-light)' : 'var(--color-dark)';
             });
             renderRestaurants();
         };
@@ -339,6 +456,21 @@
             restaurantGrid = document.getElementById('restaurantGrid');
             loadMoreBtn = document.getElementById('loadMoreBtn');
             sortSelect = document.getElementById('sortSelect');
+
+            // Mobile Nav Toggle Logic
+            const mobileMenuIcon = document.querySelector('.mobile-menu-icon');
+            const mobileNav = document.querySelector('.mobile-nav');
+            
+            mobileMenuIcon.addEventListener('click', () => {
+                mobileNav.classList.toggle('open');
+            });
+
+            // Close mobile menu when a link is clicked
+            mobileNav.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileNav.classList.remove('open');
+                });
+            });
 
             // Initial render
             renderRestaurants(); 
@@ -361,7 +493,10 @@
             loadMoreBtn.addEventListener('click', loadMore);
 
             // Initial Filter color setup (Set 'All' to active)
-            document.querySelector('#filterGroup button:first-child').click();
+            const initialAllButton = document.querySelector('#filterGroup button:first-child');
+            if (initialAllButton) {
+                applyFilter('All');
+            }
         });
     </script>
 </head>
@@ -379,11 +514,21 @@
                 <li><a href="career.html">Careers</a></li>
             </ul>
         </nav>
+        <!-- Mobile Menu Icon for toggling the mobile nav -->
         <div class="mobile-menu-icon">&#9776;</div>
     </header>
     
+    <!-- Mobile Navigation Structure (Now populated) -->
     <nav class="mobile-nav">
-        <!-- Mobile nav links... -->
+        <ul>
+            <li><a href="index.html">Home</a></li> 
+            <li><a href="services.html">Services</a></li>
+            <li><a href="city.html">Cities</a></li>
+            <li><a href="food.html" style="background-color: var(--color-primary);">Order Food</a></li>
+            <li><a href="aboutus.html">About Us</a></li>
+            <li><a href="support.html">Support</a></li>
+            <li><a href="career.html">Careers</a></li>
+        </ul>
     </nav>
 
     <main class="page-content">
@@ -393,6 +538,7 @@
             <!-- Filter and Sort Controls (Working!) -->
             <div class="controls">
                 <div id="filterGroup" class="filter-group">
+                    <!-- Buttons are managed and styled by JS in applyFilter function -->
                     <button class="btn">All</button>
                     <button class="btn">Fast Food</button>
                     <button class="btn">Burgers</button>
@@ -436,4 +582,3 @@
     </footer>
 </body>
 </html>
-

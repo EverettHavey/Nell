@@ -225,10 +225,16 @@
         const showFeedback = (message) => {
             const feedbackBox = document.getElementById('feedbackBox');
             feedbackBox.textContent = message;
-            feedbackBox.classList.remove('hidden');
+            feedbackBox.classList.remove('hidden', 'opacity-0');
+            feedbackBox.classList.add('opacity-100');
             
             setTimeout(() => {
-                feedbackBox.classList.add('hidden');
+                feedbackBox.classList.remove('opacity-100');
+                feedbackBox.classList.add('opacity-0');
+                // Hide fully after transition
+                setTimeout(() => {
+                    feedbackBox.classList.add('hidden');
+                }, 300);
             }, 2000);
         };
 
@@ -256,9 +262,8 @@
             if (selectedPaymentMethod === 'credit') {
                 const cardNumber = document.getElementById('cardNumber').value;
                 if (!/^\d{16}$/.test(cardNumber)) {
-                    // Note: Using window.alert for input validation errors only, as it's outside the main app flow.
-                    // For production, this would be a custom modal. Sticking to simple alert for quick demo validation.
-                    window.alert('Please enter a valid 16-digit card number.'); 
+                    // Replaced window.alert with showFeedback
+                    showFeedback('Error: Please enter a valid 16-digit card number.'); 
                     return;
                 }
                 message = `Processing Credit Card payment of $${orderTotals.finalTotal.toFixed(2)}... Success!`;
@@ -283,7 +288,12 @@
             const isCredit = method === 'credit';
             document.getElementById('creditCardForm').classList.toggle('hidden', !isCredit);
             document.getElementById('cashPaymentBtn').classList.toggle('hidden', isCredit);
-            document.getElementById('creditCardPayBtn').textContent = `Pay Now $${orderTotals.finalTotal.toFixed(2)}`;
+            
+            // Update button text
+            const payBtn = document.getElementById('creditCardPayBtn');
+            if(payBtn) {
+                 payBtn.textContent = `Pay Now $${orderTotals.finalTotal.toFixed(2)}`;
+            }
         };
         
         // --- VIEW RENDERING ---
@@ -334,13 +344,13 @@
                     <span id="cartTotal" class="text-blue-700">$${orderTotals.finalTotal.toFixed(2)}</span>
                 </div>
                 
-                <!-- Action Buttons -->
-                <div class="mt-8 flex justify-between space-x-4">
-                    <button onclick="toggleOrderModal(false)" class="w-1/2 py-3 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition duration-150">
+                <!-- Action Buttons: Enhanced for Mobile Responsiveness (Stacking on small screens) -->
+                <div class="mt-8 flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4">
+                    <button onclick="toggleOrderModal(false)" class="w-full sm:w-1/2 py-3 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition duration-150">
                         Continue Shopping
                     </button>
                     <button id="modalCheckoutBtn" onclick="updateDeliveryState('payment')" 
-                            class="w-1/2 py-3 bg-blue-700 text-white rounded-lg font-semibold hover:bg-blue-800 transition duration-150 ${cart.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}"
+                            class="w-full sm:w-1/2 py-3 bg-blue-700 text-white rounded-lg font-semibold hover:bg-blue-800 transition duration-150 ${cart.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}"
                             ${cart.length === 0 ? 'disabled' : ''}>
                         Proceed to Payment
                     </button>
@@ -372,7 +382,7 @@
 
                 <!-- Credit Card Form -->
                 <form id="creditCardForm" onsubmit="processPayment(event)" class="mt-8 space-y-4">
-                    <h3 class="font-bold text-gray-700">Card Details</h3>
+                    <h3 class="font-bold text-gray-700">Card Details (Demo Validation)</h3>
                     <input type="text" id="cardNumber" placeholder="Card Number (16 digits)" required pattern="\d{16}" maxlength="16" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
                     <div class="flex space-x-4">
                         <input type="text" id="expiry" placeholder="MM/YY" required pattern="(0[1-9]|1[0-2])\/[0-9]{2}" maxlength="5" class="w-1/2 p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
@@ -386,7 +396,7 @@
                 </form>
                 
                 <!-- Cash Button -->
-                 <button type="button" id="cashPaymentBtn" onclick="processPayment()" class="w-full py-3 bg-blue-700 text-white font-extrabold rounded-lg hover:bg-blue-800 transition duration-150 mt-16 hidden">
+                   <button type="button" id="cashPaymentBtn" onclick="processPayment()" class="w-full py-3 bg-blue-700 text-white font-extrabold rounded-lg hover:bg-blue-800 transition duration-150 mt-16 hidden">
                     Place Order (Pay Cash $${orderTotals.finalTotal.toFixed(2)} on Delivery)
                 </button>
 
@@ -468,9 +478,8 @@
         
         // --- INITIALIZATION ---
         const generateMenu = (restaurantName, category) => {
-            // ... (Menu generation logic remains the same)
              const items = [];
-            const bases = {
+             const bases = {
                 'Fast Food': ['Burger', 'Fries', 'Shake', 'Wrap', 'Nuggets'],
                 'Burgers': ['Gourmet Burger', 'Classic Cheeseburger', 'Veggie Patty', 'Onion Rings', 'Milkshake'],
                 'Asian': ['Noodle Dish', 'Fried Rice', 'Spring Rolls', 'Dim Sum', 'Soup'],
@@ -583,7 +592,8 @@
     <main class="container mx-auto px-4 py-8">
         
         <!-- Feedback Message Box -->
-        <div id="feedbackBox" class="hidden fixed top-20 right-4 p-3 bg-green-500 text-white rounded-lg shadow-xl z-50 transition duration-300">
+        <!-- Added opacity classes for smooth transition instead of instant hidden/show -->
+        <div id="feedbackBox" class="hidden fixed top-20 right-4 p-3 bg-green-500 text-white rounded-lg shadow-xl z-50 transition duration-300 opacity-0">
             <!-- Message injected here -->
         </div>
 
@@ -600,7 +610,8 @@
     
     <!-- Order Modal (Combines Cart, Payment, and Tracking) -->
     <div id="orderModal" class="order-modal fixed inset-0 hidden z-[100] flex items-center justify-center">
-        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-8">
+        <!-- Ensure modal uses full width on mobile devices -->
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-8 mx-4 sm:mx-0">
              <div id="modalContentContainer">
                  <!-- Cart, Payment, Matching, or Confirmed views injected here -->
              </div>
