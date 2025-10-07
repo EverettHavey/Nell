@@ -11,6 +11,7 @@
     --light-bg-primary: #e6f0ff; /* Light blue (used in About Us) */
     --light-bg-secondary: #e9e9f1; /* Light grey/blue (used in City Feature) */
     --light-bg-tertiary: #f1f1f9; /* Even lighter (used in Support CTA) */
+    --header-height: 60px; /* Define header height for calc() */
 }
 
 * {
@@ -24,6 +25,8 @@ body {
     line-height: 1.6;
     color: var(--text-color);
     background: var(--bg-color);
+    /* FIX: Add top padding equal to the header height to prevent content from hiding under the fixed header */
+    padding-top: calc(var(--header-height) + 4px); /* A small buffer for padding */
 }
 
 a {
@@ -44,7 +47,7 @@ ul {
     background-color: var(--secondary-color);
 }
 
-/* --- Header & Navigation (Mobile) --- */
+/* --- Header & Navigation (Mobile) - FIXED --- */
 .main-header {
     background: var(--white);
     padding: 1rem 1.5rem;
@@ -52,6 +55,13 @@ ul {
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* FIX 1: Make header fixed and full width */
+    position: fixed; 
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: var(--header-height); /* Set a fixed height */
+    z-index: 20; /* Ensure header is above everything */
 }
 
 .logo {
@@ -72,24 +82,26 @@ ul {
 }
 
 .mobile-nav {
-    position: absolute;
-    /* * NOTE: Using a fixed value like 60px is brittle. 
-     * It's often better to ensure the header has a fixed height, 
-     * or use JS to calculate this value, or use a fixed header.
-     * I'll stick with your original value for simplicity of the fix.
-     */
-    top: 60px; 
+    /* FIX 2: Change to fixed position and use calc() for height */
+    position: fixed; 
+    top: var(--header-height); /* Starts right below the header */
     left: 0;
     width: 100%;
+    /* FIX 3: Fills the entire remaining viewport height */
+    height: calc(100vh - var(--header-height)); 
     background: var(--white);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 10;
     transition: transform 0.3s ease-in-out;
-    transform: translateY(-100%); /* Start hidden above the screen */
+    /* Hide above the screen using 100vh */
+    transform: translateY(-100vh); 
+    /* FIX 4: Allows scrolling if links exceed screen height */
+    overflow-y: auto; 
 }
 
 .mobile-nav.visible {
-    transform: translateY(0); /* Slide down to show */
+    /* Slides down to cover the visible viewport below the header */
+    transform: translateY(0); 
 }
 
 .mobile-nav ul {
@@ -119,7 +131,7 @@ ul {
     background: #0056b3;
 }
 
-/* --- Hero Section --- */
+/* --- Hero Section (Homepage) --- */
 .hero-section {
     background: var(--primary-color);
     color: var(--white);
@@ -194,7 +206,7 @@ ul {
 .city-feature {
     padding: 2rem 1.5rem;
     text-align: center;
-    background: var(--light-bg-secondary); /* Used new variable */
+    background: var(--light-bg-secondary); 
 }
 
 .btn-link {
@@ -213,8 +225,20 @@ footer {
 }
 
 
+/* ------------------------------------------------------------------------- */
 /* --- 2. DESKTOP/TABLET OPTIMIZATION (Media Query) --- */
+/* ------------------------------------------------------------------------- */
 @media (min-width: 768px) {
+    
+    /* Reset body padding for desktop if header is no longer fixed (optional, but clean) */
+    body {
+        padding-top: 0; 
+    }
+
+    .main-header {
+        position: static; /* Make header static on desktop for standard flow */
+        height: auto;
+    }
     
     .mobile-menu-icon {
         /* Hide hamburger on tablet/desktop */
@@ -223,7 +247,7 @@ footer {
 
     .mobile-nav {
         /* Ensure mobile nav is always hidden on desktop */
-        display: none; 
+        display: none !important; /* Use !important to override fixed/visible state */
     }
 
     .desktop-nav {
@@ -335,7 +359,6 @@ footer {
     }
 
     .service-block img {
-        /* Better to use flex or grid for layout, but keeping your float fix */
         float: left; 
         margin-right: 1rem;
     }
@@ -431,7 +454,7 @@ footer {
 
 .value-card {
     padding: 1.5rem;
-    background: var(--light-bg-primary); /* Used new variable */
+    background: var(--light-bg-primary); 
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
     text-align: center;
@@ -459,7 +482,7 @@ footer {
 .city-search {
     padding: 1.5rem;
     text-align: center;
-    background: #ddd; /* Keeping fixed grey, as it's a unique search bar background */
+    background: #ddd; 
 }
 
 #citySearchInput {
@@ -486,7 +509,7 @@ footer {
 
 .city-list ul {
     padding: 1rem 0;
-    list-style: disc; /* Use a default list style for this page */
+    list-style: disc; 
     margin-left: 20px;
 }
 
@@ -527,18 +550,12 @@ footer {
 .contact-cta {
     padding: 3rem 1.5rem;
     text-align: center;
-    background: var(--light-bg-tertiary); /* Used new variable */
+    background: var(--light-bg-tertiary);
 }
 
 .contact-cta .cta-primary {
-    /* Using the existing .cta-primary style for the button */
     margin-top: 1rem;
-    /* NOTE: The original had 'background: var(--primary-color);' here, 
-     * which overrides the existing .cta-primary (secondary color). 
-     * I've kept your intent to make it blue on this specific CTA, but
-     * consider if this should be a new class for consistency.
-     */
-    background: var(--primary-color); 
+    background: var(--primary-color);
 }
 
 /* Support Desktop optimization */
