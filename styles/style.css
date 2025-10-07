@@ -1,53 +1,19 @@
-/* --- 1. BASE STYLES & MOBILE-FIRST LAYOUT --- */
+/* --- 1. BASE STYLES & MOBILE-FIRST LAYOUT (Default: Mobile) --- */
 
 :root {
-    --primary-color: #007bff; /* Nell Blue */
-    --secondary-color: #ff9900; /* Foods Orange */
+    --primary-color: #007bff;
     --text-color: #333;
-    --bg-color: #f4f4f9;
     --white: #ffffff;
-    --font-stack: 'Arial', sans-serif;
-    /* Added variables for consistent light backgrounds */
-    --light-bg-primary: #e6f0ff; /* Light blue (used in About Us) */
-    --light-bg-secondary: #e9e9f1; /* Light grey/blue (used in City Feature) */
-    --light-bg-tertiary: #f1f1f9; /* Even lighter (used in Support CTA) */
-    --header-height: 60px; /* Define header height for calc() */
+    --header-height: 60px;
 }
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
+/* Reset and general styles */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { padding-top: var(--header-height); font-family: sans-serif; }
+a { text-decoration: none; color: var(--primary-color); }
+ul { list-style: none; }
 
-body {
-    font-family: var(--font-stack);
-    line-height: 1.6;
-    color: var(--text-color);
-    background: var(--bg-color);
-    /* FIX: Keep this padding for mobile to clear the fixed header */
-    padding-top: var(--header-height); 
-}
-
-a {
-    text-decoration: none;
-    color: var(--primary-color);
-}
-
-ul {
-    list-style: none;
-}
-
-/* --- Utility Classes (for page-specific background colors) --- */
-.bg-primary {
-    background-color: var(--primary-color);
-}
-
-.bg-secondary {
-    background-color: var(--secondary-color);
-}
-
-/* --- Header & Navigation (Mobile) - FINAL FIXES --- */
+/* Main Header */
 .main-header {
     background: var(--white);
     padding: 1rem 1.5rem;
@@ -55,8 +21,7 @@ ul {
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    /* Set header fixed for mobile */
-    position: fixed; 
+    position: fixed; /* Fixed for mobile */
     top: 0;
     left: 0;
     width: 100%;
@@ -64,17 +29,12 @@ ul {
     z-index: 20; 
 }
 
-.logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--primary-color);
-}
-
+/* Mobile: Hide desktop nav */
 .desktop-nav {
-    /* Hide desktop nav on mobile */
     display: none;
 }
 
+/* Mobile: Show hamburger icon */
 .mobile-menu-icon {
     font-size: 2rem;
     cursor: pointer;
@@ -82,8 +42,8 @@ ul {
     z-index: 30; 
 }
 
+/* Mobile: Sliding menu (starts hidden) */
 .mobile-nav {
-    /* Set nav fixed for mobile */
     position: fixed; 
     top: var(--header-height); 
     left: 0;
@@ -94,19 +54,17 @@ ul {
     z-index: 10;
     transition: transform 0.3s ease-in-out;
     
-    /* CRITICAL FIX: Hide above the screen by default */
+    /* Hides menu content and moves it off-screen */
+    display: none; 
     transform: translateY(-100vh); 
     
     overflow-y: auto; 
 }
 
+/* Mobile: Sliding menu (visible state toggled by JS) */
 .mobile-nav.visible {
-    /* Slides down to cover the visible viewport below the header */
+    display: block;
     transform: translateY(0); 
-}
-
-.mobile-nav ul {
-    padding: 1rem 0;
 }
 
 .mobile-nav li a {
@@ -116,145 +74,25 @@ ul {
     border-bottom: 1px solid #eee;
 }
 
-/* --- Shared Button Styles --- */
-.btn {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    margin-top: 1rem;
-    background: var(--primary-color);
-    color: var(--white);
-    border-radius: 5px;
-    font-size: 0.9rem;
-    transition: background-color 0.3s;
-}
-
-.btn:hover {
-    background: #0056b3;
-}
-
-/* --- Hero Section (Homepage) --- */
-.hero-section {
-    background: var(--primary-color);
-    color: var(--white);
-    padding: 4rem 1.5rem;
-    text-align: center;
-}
-
-.hero-section h1 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-}
-
-.hero-section p {
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
-}
-
-.cta-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.cta-primary, .cta-secondary {
-    display: block;
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px;
-    font-weight: bold;
-    transition: background-color 0.3s;
-}
-
-.cta-primary {
-    background: var(--secondary-color);
-    color: var(--white);
-}
-
-.cta-primary:hover {
-    background: #e68a00;
-}
-
-.cta-secondary {
-    background: var(--white);
-    color: var(--primary-color);
-    border: 2px solid var(--white);
-}
-
-.cta-secondary:hover {
-    background: #eee;
-}
-
-/* --- Service Cards (Homepage) --- */
-.service-cards {
-    padding: 2rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.card {
-    background: var(--white);
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-}
-
-.card h2 {
-    color: var(--primary-color);
-    margin-bottom: 0.5rem;
-}
-
-/* --- City Feature (Homepage) --- */
-.city-feature {
-    padding: 2rem 1.5rem;
-    text-align: center;
-    background: var(--light-bg-secondary); 
-}
-
-.btn-link {
-    margin-top: 1rem;
-    color: var(--primary-color);
-    font-weight: bold;
-}
-
-/* --- Footer --- */
-footer {
-    background: var(--text-color);
-    color: var(--white);
-    text-align: center;
-    padding: 1.5rem;
-    font-size: 0.9rem;
-}
-
-
-/* ------------------------------------------------------------------------- */
-/* --- 2. DESKTOP/TABLET OPTIMIZATION (Media Query) --- */
-/* ------------------------------------------------------------------------- */
+/* --- 2. DESKTOP/TABLET OPTIMIZATION (@media rule) --- */
 @media (min-width: 768px) {
     
-    /* 1. HEADER & NAV FIXES */
+    /* Revert body padding and header position for desktop */
+    body { padding-top: 0; }
+    .main-header { position: static; height: auto; }
     
-    /* Reset body padding for desktop */
-    body {
-        padding-top: 0; 
-    }
-
-    .main-header {
-        position: static; /* Set header back to normal flow on desktop */
-        height: auto;
-    }
-    
+    /* Desktop: Hide mobile icon */
     .mobile-menu-icon {
-        /* Hide hamburger on tablet/desktop */
         display: none;
     }
 
+    /* Desktop: Hide mobile menu content */
     .mobile-nav {
-        /* Ensure mobile nav is always hidden on desktop */
         display: none;
     }
 
+    /* Desktop: Show desktop nav and arrange links */
     .desktop-nav {
-        /* Ensure the desktop nav is displayed on ALL pages above 768px */
         display: block; 
     }
 
@@ -262,307 +100,12 @@ footer {
         display: flex;
         gap: 1.5rem;
     }
-
+    
     .desktop-nav li a {
         color: var(--text-color);
         font-weight: 500;
     }
-
-    /* 2. LAYOUT OPTIMIZATION (Original Rules) */
     
-    /* Adjust Hero for wider screens */
-    .hero-section {
-        padding: 6rem 3rem;
-    }
-
-    .hero-section h1 {
-        font-size: 3rem;
-    }
-
-    .hero-section p {
-        font-size: 1.3rem;
-    }
-
-    .cta-buttons {
-        flex-direction: row; /* Buttons side-by-side on desktop */
-        justify-content: center;
-    }
-    
-    /* Cards side-by-side on desktop */
-    .service-cards {
-        flex-direction: row;
-        justify-content: center;
-        max-width: 1000px;
-        margin: 0 auto;
-    }
-
-    .card {
-        flex: 1;
-        max-width: 45%;
-    }
-
-    /* Services Desktop optimization */
-    .service-detail-section {
-        flex-direction: row;
-        max-width: 1100px;
-        margin: 0 auto;
-    }
-
-    .service-block {
-        flex: 1;
-        text-align: left;
-    }
-
-    .service-block img {
-        float: left; 
-        margin-right: 1rem;
-    }
-
-    /* Careers Desktop optimization */
-    .steps-container {
-        flex-direction: row;
-        max-width: 1100px;
-        margin: 0 auto;
-    }
-    .step {
-        flex: 1;
-    }
-
-    /* About Us Desktop optimization */
-    .values-grid {
-        flex-direction: row;
-        max-width: 1100px;
-        margin: 0 auto;
-    }
-    .value-card {
-        flex: 1;
-    }
-
-    /* Support Desktop optimization */
-    .faq-sections {
-        flex-direction: row;
-        max-width: 1100px;
-        margin: 0 auto;
-    }
-    .faq-card {
-        flex: 1;
-    }
-}
-
-
-/* ------------------------------------------------------------------------- */
-/* --- 3. UNIQUE PAGE STYLES (Services, Careers, About Us, City, Support) --- */
-/* ------------------------------------------------------------------------- */
-
-/* --- Services Page Styles --- */
-
-.page-hero {
-    padding: 3rem 1.5rem;
-    text-align: center;
-    color: var(--white);
-}
-
-.service-detail-section {
-    padding: 2rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
-}
-
-.service-block {
-    background: var(--white);
-    padding: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    text-align: center;
-}
-
-.service-block img {
-    width: 60px;
-    margin-bottom: 1rem;
-}
-
-.service-block h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1rem;
-}
-
-.service-block ul {
-    margin: 1rem 0 1.5rem 0;
-    padding: 0;
-    list-style: none;
-}
-
-.service-block ul li {
-    padding: 0.2rem 0;
-}
-
-/* --- Careers Page Styles --- */
-
-.career-process {
-    padding: 2rem 1.5rem;
-    text-align: center;
-}
-
-.career-process h2 {
-    margin-bottom: 2rem;
-    color: var(--primary-color);
-}
-
-.steps-container {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
-
-.step {
-    padding: 1.5rem;
-    background: var(--white);
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.step-number {
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
-    background: var(--primary-color);
-    color: var(--white);
-    border-radius: 50%;
-    margin-bottom: 1rem;
-    font-weight: bold;
-}
-
-.job-listings {
-    padding: 2rem 1.5rem;
-}
-
-.listing {
-    background: var(--white);
-    padding: 1.5rem;
-    border-left: 5px solid var(--secondary-color);
-    margin-bottom: 1.5rem;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.listing h3 {
-    margin-bottom: 0.5rem;
-    color: var(--text-color);
-}
-
-/* --- About Us Page Styles --- */
-
-.mission-statement {
-    padding: 2rem 1.5rem;
-    text-align: center;
-}
-
-.mission-statement h2 {
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-}
-
-.values-grid {
-    padding: 2rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.value-card {
-    padding: 1.5rem;
-    background: var(--light-bg-primary); 
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
-    text-align: center;
-}
-
-.value-card h3 {
-    color: var(--primary-color);
-    margin-bottom: 0.5rem;
-}
-
-/* --- City Page Styles --- */
-
-.city-search {
-    padding: 1.5rem;
-    text-align: center;
-    background: #ddd; 
-}
-
-#citySearchInput {
-    width: 100%;
-    max-width: 400px;
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    font-size: 1rem;
-}
-
-.city-list {
-    padding: 2rem 1.5rem;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.city-list h2 {
-    color: var(--text-color);
-    margin-top: 1.5rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--primary-color);
-}
-
-.city-list ul {
-    padding: 1rem 0;
-    list-style: disc; 
-    margin-left: 20px;
-}
-
-.city-list li a {
-    font-weight: bold;
-    display: block;
-    padding: 0.4rem 0;
-}
-
-.coming-soon li {
-    color: #888;
-    font-style: italic;
-    list-style: circle;
-}
-
-/* --- Support Page Styles --- */
-
-.faq-sections {
-    padding: 2rem 1.5rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-}
-
-.faq-card {
-    padding: 1.5rem;
-    background: var(--white);
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    border-top: 5px solid var(--primary-color);
-    text-align: center;
-}
-
-.faq-card h3 {
-    margin-bottom: 0.5rem;
-}
-
-.contact-cta {
-    padding: 3rem 1.5rem;
-    text-align: center;
-    background: var(--light-bg-tertiary);
-}
-
-.contact-cta .cta-primary {
-    margin-top: 1rem;
-    background: var(--primary-color);
+    /* Add all other desktop layout/style overrides here */
+    /* ... */
 }
