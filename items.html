@@ -3,34 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NELL - Select Items</title>
+    <title>Menu: Items & Checkout</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Shared CSS Variables (Mocking an external style.css) */
-        :root {
-            --color-primary: #1e40af; /* Tailwind blue-700 */
-            --color-secondary: #fcd34d; /* Tailwind amber-300 */
-            --color-dark: #1f2937; /* Tailwind gray-800 */
-            --color-light: #ffffff;
-            --color-food-accent: #f5c531; 
-            --color-starbucks-green: #00704A;
-            --spacing-xs: 4px;
-            --spacing-sm: 8px;
-            --spacing-md: 16px;
-            --spacing-lg: 32px;
-            --border-radius-sm: 4px;
-            --border-radius-md: 8px;
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-        }
-        
+        /* Custom styles for Inter font and general layout */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f3f4f6;
-            color: var(--color-dark);
-            margin: 0;
-            padding-top: 60px; /* Space for fixed header */
+            color: #1f2937;
+            padding-top: 64px; /* Space for the fixed header */
         }
         
-        /* Header/Nav Styles */
         .main-header {
             position: fixed;
             top: 0;
@@ -40,7 +24,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 20px;
-            background-color: var(--color-dark);
+            background-color: #1f2937; /* Dark gray background */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             z-index: 500;
         }
@@ -48,569 +32,584 @@
         .logo {
             font-size: 1.5rem;
             font-weight: bold;
-            color: var(--color-secondary);
+            color: #fcd34d; /* Amber-300 */
             text-decoration: none;
-        }
-
-        .desktop-nav ul, .mobile-nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
-        }
-
-        .desktop-nav li a {
-            color: var(--color-light);
-            text-decoration: none;
-            padding: 8px 15px;
-            display: block;
-            border-radius: var(--border-radius-sm);
-            transition: background-color 0.2s;
-        }
-
-        .desktop-nav li a:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .mobile-nav, .mobile-menu-icon {
-            display: none;
-        }
-
-        /* Button Styles (CTA) */
-        .btn {
-            padding: 10px 20px;
-            border-radius: var(--border-radius-md);
-            border: none;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s, opacity 0.2s;
-        }
-
-        .cta-primary {
-            background-color: var(--color-primary);
-            color: var(--color-light);
-        }
-        
-        .cta-secondary {
-            background-color: #e5e7eb; /* Tailwind gray-200 */
-            color: var(--color-dark);
-        }
-
-        .cta-primary:hover:not(:disabled) {
-            background-color: #1d4ed8; /* Tailwind blue-800 */
-        }
-        
-        .cta-secondary:hover:not(:disabled) {
-            background-color: #d1d5db; /* Tailwind gray-300 */
-        }
-
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        
-        /* Footer */
-        footer {
-            text-align: center;
-            padding: var(--spacing-md);
-            margin-top: var(--spacing-lg);
-            background-color: var(--color-dark);
-            color: var(--color-light);
-            font-size: 0.8rem;
-        }
-        
-        /* Media Queries for Mobile Nav */
-        @media (max-width: 768px) {
-            .desktop-nav {
-                display: none;
-            }
-            .mobile-menu-icon {
-                display: block;
-                color: var(--color-light);
-                font-size: 1.5rem;
-                cursor: pointer;
-            }
-            .mobile-nav {
-                position: fixed;
-                top: 60px;
-                left: 0;
-                width: 100%;
-                background-color: var(--color-dark);
-                z-index: 499;
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-                /* Hide initially */
-                display: none; 
-                flex-direction: column;
-            }
-            .mobile-nav ul {
-                flex-direction: column;
-                padding: 10px 0;
-            }
-            .mobile-nav li a {
-                color: var(--color-light);
-                padding: 10px 20px;
-                width: 100%;
-                box-sizing: border-box;
-                text-align: left;
-            }
-        }
-        
-        /* File Specific Styles */
-
-        .item-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: var(--spacing-lg) var(--spacing-md);
-        }
-
-        .restaurant-hero {
-            background-color: var(--color-light);
-            background-image: url('https://placehold.co/1200x300/f0f0f0/333333?text=Restaurant+Banner');
-            background-size: cover;
-            background-position: center;
-            height: 300px;
-            display: flex;
-            align-items: flex-end;
-            padding: var(--spacing-lg);
-            border-radius: var(--border-radius-md);
-            margin-bottom: var(--spacing-lg);
-            position: relative;
-        }
-        
-        .restaurant-hero::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.1));
-            border-radius: var(--border-radius-md);
-        }
-
-        .restaurant-info {
-            z-index: 10;
-            color: white;
-        }
-
-        .restaurant-info h1 {
-            margin-bottom: var(--spacing-xs);
-            font-size: 2.5rem;
         }
 
         .menu-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: var(--spacing-lg);
-        }
-        
-        .item-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: var(--spacing-md);
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
         }
 
-        .menu-item {
-            background-color: white;
-            border: 1px solid #eee;
-            border-radius: var(--border-radius-md);
-            overflow: hidden;
-            box-shadow: var(--shadow-sm);
+        .item-card {
             transition: transform 0.2s, box-shadow 0.2s;
-            /* Ensure the item itself doesn't navigate */
-            cursor: pointer; 
         }
 
-        .menu-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .item-image-container {
-            height: 150px;
-            width: 100%;
-            overflow: hidden;
+        .item-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
         
-        .item-image-container img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        .back-button {
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .back-button:hover {
+            background-color: #fcd34d; /* Amber-300 */
+            color: #1f2937;
         }
 
-        .item-details {
-            padding: var(--spacing-md);
-        }
-
-        .item-details h4 {
-            font-size: 1.1rem;
-            margin-top: 0;
-            margin-bottom: var(--spacing-xs);
-        }
-
-        .item-details p {
-            font-size: 0.85rem;
-            color: #777;
-            margin-bottom: var(--spacing-sm);
+        /* Cart/Checkout styles */
+        .order-modal {
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
         }
         
-        .add-to-cart {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .item-price {
-            font-weight: bold;
-            color: var(--color-dark);
-            font-size: 1.1rem;
-        }
-        
-        .add-btn {
-            background-color: var(--color-food-accent);
-            color: var(--color-dark);
-            border: none;
-            padding: 8px 12px;
-            border-radius: var(--border-radius-sm);
-            font-weight: bold;
+        .payment-option-card {
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
+            border: 2px solid transparent;
         }
-        
-        .add-btn:hover {
-            background-color: #e5b42d;
+        .payment-option-card:hover {
+            border-color: #93c5fd; /* Blue-300 */
         }
-
-        .cart-sidebar {
-            background-color: var(--color-light);
-            border-radius: var(--border-radius-md);
-            padding: var(--spacing-md);
-            height: fit-content;
-            position: sticky;
-            top: 100px;
-        }
-        
-        .cart-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: var(--spacing-sm) 0;
-            border-bottom: 1px dashed #ccc;
-        }
-        
-        .cart-item-info {
-            flex-grow: 1;
+        .payment-option-card.selected {
+            border-color: #1e40af; /* Blue-700 */
+            box-shadow: 0 4px 6px -1px rgba(30, 64, 175, 0.3);
+            background-color: #eff6ff; /* Blue-50 */
         }
 
-        .cart-item-info span {
-            font-size: 0.9rem;
-            color: #555;
-            display: block;
+        /* Spinner for driver matching */
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #1e40af; 
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            animation: spin 1s linear infinite;
         }
-        
-        .cart-total {
-            margin-top: var(--spacing-md);
-            font-size: 1.25rem;
-            display: flex;
-            justify-content: space-between;
-            font-weight: bold;
-            padding-top: var(--spacing-sm);
-            border-top: 2px solid #ccc;
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
-        
-        /* Responsive Cart Layout */
-        @media (max-width: 900px) {
+
+        /* Responsive adjustments */
+        @media (max-width: 640px) {
             .menu-grid {
                 grid-template-columns: 1fr;
-            }
-            .cart-sidebar {
-                position: relative;
-                top: auto;
-                margin-top: var(--spacing-lg);
             }
         }
     </style>
     
     <script>
-        // Data model for dynamic menu items
-        const RESTAURANT_MENUS = {
-            'Starbucks': [
-                { name: 'Iced Caramel Macchiato', description: 'Espresso, vanilla syrup, milk, and caramel drizzle.', price: 5.45, imageText: 'Starbucks Latte' },
-                { name: 'Matcha Tea Latte', description: 'Smooth matcha combined with milk over ice.', price: 4.80, imageText: 'Matcha Drink' },
-                { name: 'Bacon, Gouda & Egg Sandwich', description: 'Artisan roll with bacon, aged Gouda, and a fried egg.', price: 4.75, imageText: 'Breakfast Sandwich' },
-                { name: 'Double-Smoked Bacon Cheddar & Egg Sandwich', description: 'Hearty sandwich with double-smoked bacon and melted cheddar.', price: 5.25, imageText: 'Breakfast Sandwich' }
-            ],
-            'McDonalds': [
-                { name: 'Big Mac', description: 'Two 100% beef patties, special sauce, lettuce, cheese, pickles, onions on a sesame seed bun.', price: 5.99, imageText: 'Big Mac' },
-                { name: 'Quarter Pounder with Cheese', description: 'One quarter pound of 100% fresh beef and two slices of cheese.', price: 6.29, imageText: 'Quarter Pounder' },
-                { name: 'Medium Fries', description: 'World famous fries, hot and crispy.', price: 3.49, imageText: 'Fries' },
-                { name: 'McNuggets (10 piece)', description: 'Tender, juicy, all-white meat chicken.', price: 6.59, imageText: 'McNuggets' }
-            ],
-            'The Grill Hub': [
-                { name: 'Hub Classic Burger', description: 'Single patty, signature sauce, American cheese, LTO.', price: 11.50, imageText: 'Classic Burger' },
-                { name: 'Sweet Potato Fries', description: 'Crispy sweet potato fries with honey mustard dip.', price: 5.50, imageText: 'Sweet Potato Fries' },
-                { name: 'Hub Milkshake (Vanilla)', description: 'Thick and creamy vanilla milkshake.', price: 7.00, imageText: 'Milkshake' },
-                { name: 'The Veggie Stack', description: 'Grilled portobello mushroom, feta, arugula, and balsamic glaze.', price: 10.99, imageText: 'Veggie Sandwich' }
-            ],
-            'Fresh Fries': [
-                { name: 'Signature Curly Fries', description: 'Freshly cut potatoes seasoned and curled.', price: 4.99, imageText: 'Curly Fries' },
-                { name: 'Truffle Aioli Fries', description: 'Hand-cut fries tossed with truffle oil and served with aioli.', price: 7.50, imageText: 'Truffle Fries' },
-                { name: 'Chili Cheese Fries', description: 'Classic fries smothered in beef chili and melted cheddar.', price: 8.99, imageText: 'Chili Fries' },
-                { name: 'Cajun Spiced Fries', description: 'Fries tossed in a spicy, smoky Cajun blend.', price: 4.50, imageText: 'Cajun Fries' }
-            ],
-            'Nell Grocers': [
-                { name: 'Organic Gala Apples (1 lb)', description: 'Crisp, sweet, and locally sourced organic apples.', price: 3.99, imageText: 'Apples' },
-                { name: 'Whole Milk (1 Gallon)', description: 'Farm-fresh 100% whole vitamin D milk.', price: 4.50, imageText: 'Milk' },
-                { name: 'Artisan Sourdough Loaf', description: 'Hand-crafted sourdough, slow-fermented for perfect tang.', price: 6.75, imageText: 'Bread' },
-                { name: 'Fresh Salmon Fillet (1 lb)', description: 'Sustainably sourced Atlantic salmon, perfect for grilling.', price: 18.99, imageText: 'Salmon' }
-            ],
-            'Wok Around The Clock': [
-                { name: 'Spicy Kung Pao Chicken', description: 'Diced chicken, peanuts, vegetables, and chili peppers.', price: 14.50, imageText: 'Kung Pao' },
-                { name: 'Vegetable Lo Mein Noodles', description: 'Stir-fried soft noodles with a mix of fresh seasonal vegetables.', price: 12.00, imageText: 'Lo Mein' },
-                { name: 'Shrimp Fried Rice', description: 'Classic fried rice with large succulent shrimp and egg.', price: 15.25, imageText: 'Fried Rice' },
-                { name: 'Pork Egg Rolls (3 pcs)', description: 'Crispy rolls filled with seasoned pork and cabbage.', price: 5.99, imageText: 'Egg Rolls' }
-            ],
-            'Artisan Pizza Co.': [
-                { name: 'Margherita Pizza', description: 'Tomato, fresh mozzarella, basil, and olive oil.', price: 17.00, imageText: 'Margherita Pizza' },
-                { name: 'Pepperoni Diavolo', description: 'Spicy pepperoni, chili flakes, and hot honey drizzle.', price: 19.50, imageText: 'Pepperoni' },
-                { name: 'Garlic Knots (6 pcs)', description: 'Served with a side of house-made marinara sauce.', price: 7.00, imageText: 'Garlic Knots' },
-                { name: 'House Garden Salad', description: 'Mixed greens, cucumber, tomatoes, and balsamic dressing.', price: 8.50, imageText: 'Salad' }
-            ],
-            'Taqueria del Sol': [
-                { name: 'Carne Asada Tacos (2)', description: 'Grilled marinated steak, onions, cilantro, and salsa verde.', price: 9.50, imageText: 'Carne Asada Tacos' },
-                { name: 'Chicken Burrito Bowl', description: 'Rice, black beans, grilled chicken, pico de gallo, and sour cream.', price: 12.99, imageText: 'Burrito Bowl' },
-                { name: 'Chips & Guacamole', description: 'Freshly fried tortilla chips served with chunky guacamole.', price: 7.99, imageText: 'Guacamole' },
-                { name: 'Horchata (Large)', description: 'Traditional creamy rice milk beverage with cinnamon.', price: 4.00, imageText: 'Horchata' }
-            ],
-            // Fallback menu for any future or unlisted restaurants
-            'default': [
-                { name: 'Chef\'s Special Dish', description: 'A delightful dish unique to this local establishment.', price: 15.00, imageText: 'Special Dish' },
-                { name: 'House Drink', description: 'Refreshing house-made lemonade.', price: 4.00, imageText: 'Drink' },
-                { name: 'Side Salad', description: 'Fresh seasonal greens with vinaigrette.', price: 6.00, imageText: 'Salad' },
-                { name: 'Molten Lava Cake', description: 'Warm chocolate cake with a gooey center.', price: 6.50, imageText: 'Dessert' }
-            ]
+        // --- DATA SETUP ---
+        const ALL_RESTAURANTS = [
+            { name: 'Starbucks', category: 'Fast Food', color: '00704A' }, { name: 'McDonalds', category: 'Fast Food', color: 'FFC72C' },
+            { name: 'The Grill Hub', category: 'Burgers', color: '333333' }, { name: 'Fresh Fries', category: 'Fast Food', color: '8B4513' },
+            { name: 'Nell Grocers', category: 'Grocery', color: '4CAF50' }, { name: 'Wok Around The Clock', category: 'Asian', color: 'A0522D' },
+            { name: 'Artisan Pizza Co.', category: 'Pizza', color: 'ff5a5f' }, { name: 'Taqueria del Sol', category: 'Mexican', color: '007bff' },
+            { name: 'Juice Bar Express', category: 'Health', color: '06B6D4' }, { name: 'Italian Trattoria', category: 'Italian', color: 'DC2626' },
+            { name: 'Doughnut Delight', category: 'Dessert', color: 'F9A8D4' }, { name: 'Sushi Samurai', category: 'Asian', color: '1F2937' },
+            { name: 'Burger King', category: 'Fast Food', color: 'DC2626' }, { name: 'KFC', category: 'Fast Food', color: '991B1F' },
+            { name: 'Chipotle', category: 'Mexican', color: '6A0808' }, { name: 'Five Guys', category: 'Burgers', color: 'E3000E' },
+            { name: 'Subway', category: 'Health', color: '008C36' }, { name: 'Taco Bell', category: 'Fast Food', color: '581C87' },
+            { name: 'Panda Express', category: 'Asian', color: 'D97706' }, { name: 'Domino\'s', category: 'Pizza', color: '006491' },
+            { name: 'Saffron Spice', category: 'Indian', color: 'FF9933' }, { name: 'Cheesecake Factory', category: 'Dessert', color: '6B21A8' },
+            { name: 'Seafood Shack', category: 'Seafood', color: '10B981' }, { name: 'The Vegan Spot', category: 'Health', color: '10B981' },
+            { name: 'Dunkin\'', category: 'Fast Food', color: 'E91E63' }, { name: 'Fresh Bagel Bakery', category: 'Bakery', color: '78350F' },
+            { name: 'Mediterranean Feast', category: 'Mediterranean', color: '3B82F6' }, { name: 'Pho Saigon', category: 'Asian', color: '581C87' },
+            { name: 'Ice Cream Dream', category: 'Dessert', color: 'FBBF24' }
+        ];
+        
+        const DELIVERY_DRIVERS = [
+            { name: 'Chloe K.', vehicle: 'Scooter (Red)', license: '789-ABC', eta: '25-30 min', rating: 4.9 },
+            { name: 'Jordan P.', vehicle: 'Toyota Prius', license: '123-XYZ', eta: '30-35 min', rating: 4.7 },
+            { name: 'Sam M.', vehicle: 'Electric Bike', license: 'BKE-456', eta: '20-25 min', rating: 4.8 },
+            { name: 'Lee H.', vehicle: 'Ford Focus', license: 'FOC-007', eta: '35-40 min', rating: 4.6 },
+        ];
+
+
+        // --- GLOBAL STATE ---
+        let cart = [];
+        let restaurantColor = '1e40af'; 
+        let currentRestaurantName = '';
+        let selectedPaymentMethod = 'credit';
+        let deliveryState = 'cart'; // States: 'cart', 'payment', 'driver_matching', 'confirmed'
+        let currentDriver = null;
+        let orderTotals = { subtotal: 0, deliveryFee: 5.00, tax: 0, finalTotal: 0 };
+
+
+        // --- CART/ORDER MANAGEMENT FUNCTIONS ---
+
+        const calculateTotals = () => {
+            orderTotals.subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            orderTotals.tax = orderTotals.subtotal * 0.08; // Placeholder 8% tax
+            orderTotals.finalTotal = orderTotals.subtotal + orderTotals.deliveryFee + orderTotals.tax;
+        };
+
+        const updateCartUI = () => {
+            calculateTotals();
+            const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+            
+            // Update header summary
+            document.getElementById('cartSummary').innerHTML = `
+                <button onclick="toggleOrderModal(true, 'cart')" class="bg-amber-300 text-gray-800 px-4 py-2 rounded-lg font-bold hover:bg-amber-400 transition duration-150 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M3 1a1 1 0 000 2h1.22l.305 1.25H16.74a1 1 0 00.745-.391l2.5-3.25a1 1 0 00-.083-1.268l-.013-.005A1 1 0 0017.07 1H3zM7 16a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z" />
+                    </svg>
+                    Cart: ${totalItems} items ($${orderTotals.subtotal.toFixed(2)})
+                </button>
+            `;
+            
+            // If the modal is open, re-render it
+            if (!document.getElementById('orderModal').classList.contains('hidden')) {
+                renderModalContent();
+            }
+        };
+
+        const addToCart = (id, name, price) => {
+            const existingItem = cart.find(item => item.id === id);
+            
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({ id, name, price, quantity: 1 });
+            }
+            
+            updateCartUI();
+            showFeedback(`${name} added!`);
+        };
+
+        const updateQuantity = (id, delta) => {
+            const itemIndex = cart.findIndex(item => item.id === id);
+            if (itemIndex > -1) {
+                cart[itemIndex].quantity += delta;
+                if (cart[itemIndex].quantity <= 0) {
+                    cart.splice(itemIndex, 1); // Remove item if quantity hits 0 or less
+                }
+            }
+            updateCartUI();
+        };
+
+        // --- UI/Modal Functions ---
+        
+        const updateDeliveryState = (newState) => {
+            deliveryState = newState;
+            renderModalContent();
+            
+            if (newState === 'driver_matching') {
+                startMatching();
+            }
+            
+            if (newState === 'confirmed') {
+                // Clear the cart only after driver is confirmed
+                cart = [];
+                updateCartUI();
+            }
+        };
+
+        const toggleOrderModal = (show, state = 'cart') => {
+            document.getElementById('orderModal').classList.toggle('hidden', !show);
+            if (show) {
+                // Only reset to cart state if we're not currently tracking a confirmed order
+                if (deliveryState !== 'confirmed') {
+                    updateDeliveryState(state);
+                }
+                
+                // Ensure payment method state is initialized for payment view
+                selectPaymentMethod(selectedPaymentMethod); 
+            }
         };
         
-        document.addEventListener('DOMContentLoaded', () => {
-            const params = new URLSearchParams(window.location.search);
-            const encodedRestaurantName = params.get('restaurant') || 'Unknown Restaurant';
-            const restaurantName = decodeURIComponent(encodedRestaurantName.replace(/\+/g, ' '));
+        const showFeedback = (message) => {
+            const feedbackBox = document.getElementById('feedbackBox');
+            feedbackBox.textContent = message;
+            feedbackBox.classList.remove('hidden');
             
-            const titleElement = document.getElementById('restaurantTitle');
-            if (titleElement) {
-                titleElement.textContent = restaurantName;
+            setTimeout(() => {
+                feedbackBox.classList.add('hidden');
+            }, 2000);
+        };
+
+        const startMatching = () => {
+            currentDriver = DELIVERY_DRIVERS[Math.floor(Math.random() * DELIVERY_DRIVERS.length)];
+            
+            // Simulate driver matching time
+            setTimeout(() => {
+                updateDeliveryState('confirmed');
+            }, 3000); // 3 second delay
+        };
+
+        const processPayment = (event) => {
+            if (event && event.preventDefault) {
+                event.preventDefault(); // Prevent form submission for credit card
             }
             
-            const menuListContainer = document.getElementById('itemList');
-            const menuToRender = RESTAURANT_MENUS[restaurantName] || RESTAURANT_MENUS['default'];
+            if (cart.length === 0) {
+                showFeedback('Cart is empty. Please add items.');
+                return;
+            }
             
-            // --- Cart State and Elements ---
-            let cartItems = [];
-            const cartList = document.getElementById('cartList');
-            const cartTotal = document.getElementById('cartTotal');
-            const checkoutBtn = document.getElementById('checkoutBtn');
+            let message = '';
+            
+            if (selectedPaymentMethod === 'credit') {
+                const cardNumber = document.getElementById('cardNumber').value;
+                if (!/^\d{16}$/.test(cardNumber)) {
+                    // Note: Using window.alert for input validation errors only, as it's outside the main app flow.
+                    // For production, this would be a custom modal. Sticking to simple alert for quick demo validation.
+                    window.alert('Please enter a valid 16-digit card number.'); 
+                    return;
+                }
+                message = `Processing Credit Card payment of $${orderTotals.finalTotal.toFixed(2)}... Success!`;
+            } else if (selectedPaymentMethod === 'cash') {
+                message = `Order confirmed! Payment of $${orderTotals.finalTotal.toFixed(2)} due cash on arrival.`;
+            }
+            
+            showFeedback(message);
+            
+            // Proceed to driver matching
+            updateDeliveryState('driver_matching');
+        };
 
-            menuListContainer.innerHTML = ''; 
-            menuToRender.forEach(item => {
-                const itemElement = document.createElement('div');
-                itemElement.className = 'menu-item';
-                itemElement.setAttribute('data-name', item.name);
-                itemElement.setAttribute('data-price', item.price.toFixed(2));
+        const selectPaymentMethod = (method) => {
+            selectedPaymentMethod = method;
+            document.getElementById('creditOption').classList.remove('selected');
+            document.getElementById('cashOption').classList.remove('selected');
+            
+            document.getElementById(`${method}Option`).classList.add('selected');
+            
+            // Toggle credit card details form visibility and buttons
+            const isCredit = method === 'credit';
+            document.getElementById('creditCardForm').classList.toggle('hidden', !isCredit);
+            document.getElementById('cashPaymentBtn').classList.toggle('hidden', isCredit);
+            document.getElementById('creditCardPayBtn').textContent = `Pay Now $${orderTotals.finalTotal.toFixed(2)}`;
+        };
+        
+        // --- VIEW RENDERING ---
 
-                itemElement.innerHTML = `
-                    <div class="item-image-container">
-                        <img src="https://placehold.co/300x150/6E3845/ffffff?text=${item.imageText}" alt="${item.name}">
+        const renderCartView = (container) => {
+            container.innerHTML = `
+                <h2 class="text-3xl font-bold mb-6 border-b pb-2 text-gray-800">Your Order</h2>
+                
+                <div id="cartList" class="divide-y divide-gray-100 min-h-[100px]">
+                    ${cart.length === 0 ? 
+                        '<p class="text-center text-gray-500 py-4">Your cart is empty.</p>' :
+                        cart.map(item => `
+                            <div class="flex justify-between items-center py-2 border-b last:border-b-0">
+                                <div class="flex-grow">
+                                    <p class="font-semibold text-gray-800">${item.name}</p>
+                                    <p class="text-sm text-gray-500">$${item.price.toFixed(2)} ea</p>
+                                </div>
+                                <div class="flex items-center space-x-2">
+                                    <button onclick="updateQuantity('${item.id}', -1)" class="w-6 h-6 bg-gray-200 rounded-full text-gray-800 hover:bg-gray-300">-</button>
+                                    <span class="font-bold w-4 text-center">${item.quantity}</span>
+                                    <button onclick="updateQuantity('${item.id}', 1)" class="w-6 h-6 bg-blue-100 rounded-full text-blue-700 hover:bg-blue-200">+</button>
+                                </div>
+                                <span class="font-bold text-right w-16">$${(item.price * item.quantity).toFixed(2)}</span>
+                            </div>
+                        `).join('')
+                    }
+                </div>
+
+                <!-- Totals -->
+                <div class="mt-6 space-y-2 border-t pt-4">
+                    <div class="flex justify-between text-gray-600">
+                        <span>Subtotal</span>
+                        <span id="cartSubtotal" class="font-semibold">$${orderTotals.subtotal.toFixed(2)}</span>
                     </div>
-                    <div class="item-details">
-                        <h4>${item.name}</h4>
-                        <p>${item.description}</p>
-                        <div class="add-to-cart">
-                            <span class="item-price">$${item.price.toFixed(2)}</span>
-                            <button class="add-btn">Add</button>
+                    <div class="flex justify-between text-gray-600">
+                        <span>Delivery Fee</span>
+                        <span id="cartDeliveryFee" class="font-semibold">$${orderTotals.deliveryFee.toFixed(2)}</span>
+                    </div>
+                    <div class="flex justify-between text-gray-600">
+                        <span>Tax (8%)</span>
+                        <span id="cartTax" class="font-semibold">$${orderTotals.tax.toFixed(2)}</span>
+                    </div>
+                </div>
+
+                <!-- Total -->
+                <div class="flex justify-between text-2xl font-extrabold mt-4 pt-4 border-t border-blue-100">
+                    <span>Total</span>
+                    <span id="cartTotal" class="text-blue-700">$${orderTotals.finalTotal.toFixed(2)}</span>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="mt-8 flex justify-between space-x-4">
+                    <button onclick="toggleOrderModal(false)" class="w-1/2 py-3 bg-gray-200 text-gray-800 rounded-lg font-semibold hover:bg-gray-300 transition duration-150">
+                        Continue Shopping
+                    </button>
+                    <button id="modalCheckoutBtn" onclick="updateDeliveryState('payment')" 
+                            class="w-1/2 py-3 bg-blue-700 text-white rounded-lg font-semibold hover:bg-blue-800 transition duration-150 ${cart.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}"
+                            ${cart.length === 0 ? 'disabled' : ''}>
+                        Proceed to Payment
+                    </button>
+                </div>
+            `;
+        };
+
+        const renderPaymentView = (container) => {
+             container.innerHTML = `
+                <h2 class="text-3xl font-bold mb-6 text-blue-700">Select Payment Method</h2>
+                
+                <div class="space-y-4">
+                    <!-- Credit Card Option -->
+                    <div id="creditOption" onclick="selectPaymentMethod('credit')" class="payment-option-card p-4 rounded-xl bg-white shadow-sm border-2 border-gray-300">
+                        <div class="flex items-center space-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-700" viewBox="0 0 20 20" fill="currentColor"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" /><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 110-2 1 1 0 010 2zm10-1a1 1 0 100 2h1a1 1 0 100-2h-1z" clip-rule="evenodd" /></svg>
+                            <p class="font-semibold text-lg">Credit/Debit Card</p>
                         </div>
                     </div>
-                `;
-                menuListContainer.appendChild(itemElement);
-            });
-            
-            // Generate mock banner image based on restaurant name
-            const hero = document.getElementById('restaurantHero');
-            if (hero) {
-                let color = 'f0f0f0';
-                if (restaurantName.includes('Starbucks')) color = '00704A';
-                if (restaurantName.includes('McDonald')) color = 'FFC72C';
-                if (restaurantName.includes('Grill Hub')) color = '333333';
-                if (restaurantName.includes('Fresh Fries')) color = '8B4513';
-                if (restaurantName.includes('Grocers')) color = '4CAF50';
-                if (restaurantName.includes('Wok')) color = 'A0522D';
-                if (restaurantName.includes('Pizza')) color = 'ff5a5f';
-                if (restaurantName.includes('Taqueria')) color = '007bff';
-                
-                hero.style.backgroundImage = `url('https://placehold.co/1200x300/${color}/333333?text=${restaurantName.toUpperCase()}')`;
-            }
-            
-            const updateCart = () => {
-                let total = 0;
-                cartList.innerHTML = '';
-                
-                if (cartItems.length === 0) {
-                    cartList.innerHTML = '<p class="text-center" style="font-style:italic; color: #777;">Your cart is empty.</p>';
-                    checkoutBtn.disabled = true;
-                    checkoutBtn.textContent = 'Add items to checkout';
-                    checkoutBtn.classList.remove('cta-primary');
-                    checkoutBtn.classList.add('cta-secondary');
-                } else {
-                    cartItems.forEach(item => {
-                        const price = parseFloat(item.price.replace('$', ''));
-                        total += price * item.quantity;
-                        
-                        const itemElement = document.createElement('div');
-                        itemElement.className = 'cart-item';
-                        itemElement.innerHTML = `
-                            <div class="cart-item-info">
-                                <strong>${item.name}</strong>
-                                <span>$${price.toFixed(2)} x ${item.quantity}</span>
-                            </div>
-                            <strong>$${(price * item.quantity).toFixed(2)}</strong>
-                        `;
-                        cartList.appendChild(itemElement);
-                    });
-                    checkoutBtn.disabled = false;
-                    checkoutBtn.textContent = `Proceed to Delivery ($${total.toFixed(2)})`;
-                    checkoutBtn.classList.add('cta-primary');
-                    checkoutBtn.classList.remove('cta-secondary');
-                }
-                
-                cartTotal.textContent = `$${total.toFixed(2)}`;
-            };
 
-            const addItemToCart = (name, priceText) => {
-                const price = parseFloat(priceText.replace('$', ''));
-                const existingItem = cartItems.find(item => item.name === name);
-                
-                if (existingItem) {
-                    existingItem.quantity += 1;
-                } else {
-                    cartItems.push({ name, price: priceText, quantity: 1 });
-                }
-                
-                updateCart();
-            };
+                    <!-- Cash on Delivery Option -->
+                    <div id="cashOption" onclick="selectPaymentMethod('cash')" class="payment-option-card p-4 rounded-xl bg-white shadow-sm border-2 border-gray-300">
+                        <div class="flex items-center space-x-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1h4a1 1 0 011 1v5a1 1 0 01-1 1h-.828l1.768 1.768A1 1 0 0114 15h-4.172l.939-.939A7.001 7.001 0 0013 4a1 1 0 112 0 5.001 5.001 0 01-5 5H4a1 1 0 110-2h6V2zm-2 9a1 1 0 100 2h4a1 1 0 100-2H8z" clip-rule="evenodd" /></svg>
+                            <p class="font-semibold text-lg">Cash on Delivery (COD)</p>
+                        </div>
+                    </div>
+                </div>
 
-            // Attach event listeners to all dynamically created 'Add' buttons (FIXED ITEM CLICK BUG)
-            menuListContainer.addEventListener('click', (e) => {
-                // Ensure if a user clicks anywhere on the item card, it adds to cart (if not explicitly clicking the Add button)
-                const itemElement = e.target.closest('.menu-item');
-                if (itemElement) {
-                    e.preventDefault(); 
+                <!-- Credit Card Form -->
+                <form id="creditCardForm" onsubmit="processPayment(event)" class="mt-8 space-y-4">
+                    <h3 class="font-bold text-gray-700">Card Details</h3>
+                    <input type="text" id="cardNumber" placeholder="Card Number (16 digits)" required pattern="\d{16}" maxlength="16" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    <div class="flex space-x-4">
+                        <input type="text" id="expiry" placeholder="MM/YY" required pattern="(0[1-9]|1[0-2])\/[0-9]{2}" maxlength="5" class="w-1/2 p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                        <input type="text" id="cvc" placeholder="CVC" required pattern="\d{3,4}" maxlength="4" class="w-1/2 p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <input type="text" id="cardName" placeholder="Name on Card" required class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
                     
-                    // Check if they clicked the main body of the card or the dedicated 'Add' button
-                    if (e.target.classList.contains('add-btn') || e.target.closest('.menu-item')) {
-                        const itemName = itemElement.querySelector('h4').textContent;
-                        const itemPrice = itemElement.querySelector('.item-price').textContent;
-                        addItemToCart(itemName, itemPrice);
-                    }
-                }
-            });
-
-            // --- Checkout Logic (UPDATED TO REDIRECT) ---
-            checkoutBtn.addEventListener('click', () => {
-                if (cartItems.length === 0) return; 
-
-                const orderDetails = {
-                    id: 'ORDER-' + Math.random().toString(36).substring(2, 9).toUpperCase(),
-                    restaurant: restaurantName,
-                    items: cartItems,
-                    total: cartTotal.textContent,
-                    time: new Date().toLocaleTimeString(),
-                };
+                    <button type="submit" id="creditCardPayBtn" class="w-full py-3 bg-blue-700 text-white font-extrabold rounded-lg hover:bg-blue-800 transition duration-150 mt-6">
+                        Pay Now $${orderTotals.finalTotal.toFixed(2)}
+                    </button>
+                </form>
                 
-                // Save order details to localStorage
-                localStorage.setItem('nell_current_order', JSON.stringify(orderDetails));
+                <!-- Cash Button -->
+                 <button type="button" id="cashPaymentBtn" onclick="processPayment()" class="w-full py-3 bg-blue-700 text-white font-extrabold rounded-lg hover:bg-blue-800 transition duration-150 mt-16 hidden">
+                    Place Order (Pay Cash $${orderTotals.finalTotal.toFixed(2)} on Delivery)
+                </button>
 
-                // Redirect to the new tracking page
-                window.location.href = 'tracking.html';
+
+                <button type="button" onclick="updateDeliveryState('cart')" class="w-full py-2 text-blue-700 font-semibold rounded-lg hover:underline transition duration-150 mt-4">
+                    &larr; Back to Cart Summary
+                </button>
+            `;
+            // Re-apply selection state after rendering
+            selectPaymentMethod(selectedPaymentMethod);
+        };
+        
+        const renderMatchingView = (container) => {
+            container.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full text-center py-20 space-y-6">
+                    <div class="spinner"></div>
+                    <h2 class="text-3xl font-bold text-gray-800">Assigning Delivery Driver...</h2>
+                    <p class="text-gray-500">Please wait, your order is being prepared while we find the fastest driver.</p>
+                    
+                    <button onclick="toggleOrderModal(false)" class="mt-8 py-2 px-4 text-blue-700 font-semibold hover:underline">
+                        Hide Tracker
+                    </button>
+                </div>
+            `;
+        };
+
+        const renderConfirmedView = (container) => {
+             container.innerHTML = `
+                <div class="space-y-6 text-center">
+                    <div class="text-6xl mb-4 text-green-500">🚀</div>
+                    <h2 class="text-3xl font-bold text-green-600">Order Confirmed!</h2>
+                    <p class="text-xl text-gray-700">Your food is on its way!</p>
+
+                    <!-- Driver Card -->
+                    <div class="p-6 bg-white rounded-xl shadow-lg border-t-4 border-amber-500 mx-auto max-w-sm">
+                        <p class="text-2xl font-extrabold text-gray-800">${currentDriver.name}</p>
+                        <p class="text-gray-600">${currentDriver.vehicle} (License: ${currentDriver.license})</p>
+                        <p class="text-blue-600 font-bold mt-2">${currentDriver.rating} &#9733; Rating</p>
+                        <div class="mt-4 pt-3 border-t">
+                             <p class="font-semibold text-lg">Estimated Arrival: <span class="text-red-500">${currentDriver.eta}</span></p>
+                             <p class="text-sm text-gray-500">Payment: ${selectedPaymentMethod === 'cash' ? 'Cash on Delivery' : 'Card Paid'}</p>
+                        </div>
+                    </div>
+
+                    <button onclick="window.location.reload()" class="w-full max-w-xs py-3 bg-blue-700 text-white font-semibold rounded-xl hover:bg-blue-800 transition duration-150 mt-8">
+                        Place Another Order
+                    </button>
+                    <button onclick="toggleOrderModal(false)" class="w-full max-w-xs py-2 text-gray-600 font-semibold rounded-xl hover:underline">
+                        Close
+                    </button>
+                </div>
+            `;
+        };
+
+        const renderModalContent = () => {
+            const container = document.getElementById('modalContentContainer');
+            if (!container) return;
+            
+            // Recalculate totals before rendering any view
+            calculateTotals(); 
+
+            switch (deliveryState) {
+                case 'cart':
+                    renderCartView(container);
+                    break;
+                case 'payment':
+                    renderPaymentView(container);
+                    break;
+                case 'driver_matching':
+                    renderMatchingView(container);
+                    break;
+                case 'confirmed':
+                    renderConfirmedView(container);
+                    break;
+                default:
+                    renderCartView(container);
+            }
+        };
+        
+        // --- INITIALIZATION ---
+        const generateMenu = (restaurantName, category) => {
+            // ... (Menu generation logic remains the same)
+             const items = [];
+            const bases = {
+                'Fast Food': ['Burger', 'Fries', 'Shake', 'Wrap', 'Nuggets'],
+                'Burgers': ['Gourmet Burger', 'Classic Cheeseburger', 'Veggie Patty', 'Onion Rings', 'Milkshake'],
+                'Asian': ['Noodle Dish', 'Fried Rice', 'Spring Rolls', 'Dim Sum', 'Soup'],
+                'Mexican': ['Taco', 'Burrito', 'Quesadilla', 'Nachos', 'Enchilada'],
+                'Pizza': ['Pizza Slice', 'Side Dish', 'Garlic Knots', 'Soda', 'Dessert Pizza'],
+                'Italian': ['Pasta Dish', 'Lasagna', 'Tiramisu', 'Bruschetta', 'Ravioli'],
+                'Dessert': ['Cake Slice', 'Ice Cream Scoop', 'Brownie', 'Milkshake', 'Cookie'],
+                'Health': ['Salad Bowl', 'Smoothie', 'Protein Wrap', 'Juice Cleanse', 'Fruit Cup'],
+                'Grocery': ['Fresh Bread', 'Milk Carton', 'Dozen Eggs', 'Apples', 'Chicken Breast'],
+                'Indian': ['Curry', 'Naan Bread', 'Samosa', 'Rice Pilaf', 'Chai Tea'],
+                'Seafood': ['Grilled Salmon', 'Shrimp Scampi', 'Fish Tacos', 'Clam Chowder', 'Fries'],
+                'Bakery': ['Croissant', 'Muffin', 'Scone', 'Espresso', 'Loaf of Bread'],
+                'Mediterranean': ['Gyro', 'Hummus Plate', 'Falafel Wrap', 'Greek Salad', 'Pita Bread']
+            };
+            
+            const itemBases = bases[category] || ['Specialty Dish', 'Side', 'Drink', 'Dessert', 'Appetizer'];
+
+            for (let i = 1; i <= 15; i++) {
+                const baseIndex = (i - 1) % itemBases.length;
+                const baseName = itemBases[baseIndex];
+                
+                let itemName = `${baseName} ${Math.floor(i / itemBases.length) > 0 ? 'Combo ' + Math.floor(i / itemBases.length) : ''} (${i})`;
+                let price = (Math.random() * (15 - 5) + 5).toFixed(2);
+                let description = `Delicious ${baseName.toLowerCase()} from ${restaurantName}. Made with fresh ingredients.`;
+
+                if (restaurantName === 'Starbucks') {
+                    const sbItems = ['Caramel Macchiato', 'Pumpkin Spice Latte', 'Double Shot Espresso', 'Cheese Danish', 'Iced Matcha Tea'];
+                    itemName = sbItems[(i - 1) % sbItems.length] + ` (Size ${i % 3 === 0 ? 'L' : 'M'})`;
+                    price = (Math.random() * (7 - 4) + 4).toFixed(2);
+                } else if (restaurantName === 'McDonalds' && baseName === 'Burger') {
+                    itemName = ['Big Mac', 'Quarter Pounder', 'McChicken', 'McFlurry'][baseIndex % 4];
+                }
+
+                items.push({
+                    id: `${restaurantName.replace(/\s/g, '-')}-${i}`,
+                    name: itemName.trim(),
+                    description: description,
+                    price: parseFloat(price),
+                });
+            }
+            return items;
+        };
+
+
+        const initMenuPage = () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            currentRestaurantName = urlParams.get('restaurant');
+            
+            const headerElement = document.getElementById('restaurantHeader');
+            const menuContainer = document.getElementById('menuContainer');
+
+            if (!currentRestaurantName) {
+                headerElement.textContent = "Error: Restaurant Not Found";
+                menuContainer.innerHTML = '<p class="text-center text-gray-500 mt-8">Please go back to the <a href="food.html" class="text-blue-600 font-semibold hover:underline">Restaurant List</a> and select a location.</p>';
+                return;
+            }
+
+            const restaurant = ALL_RESTAURANTS.find(r => r.name === currentRestaurantName);
+            const category = restaurant ? restaurant.category : 'General';
+            restaurantColor = restaurant ? restaurant.color : '1e40af'; 
+
+            headerElement.textContent = currentRestaurantName;
+            document.title = `Menu: ${currentRestaurantName}`;
+            headerElement.style.color = `#${restaurantColor}`;
+
+            const menuItems = generateMenu(currentRestaurantName, category);
+            
+            menuContainer.innerHTML = '';
+            menuItems.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'item-card bg-white p-6 rounded-xl shadow-lg border-t-4 hover:border-blue-600 transition duration-300';
+                card.style.borderColor = `#${restaurantColor}`;
+                card.innerHTML = `
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-xl font-bold text-gray-800">${item.name}</h3>
+                        <span class="text-2xl font-extrabold text-blue-700">$${item.price.toFixed(2)}</span>
+                    </div>
+                    <p class="text-gray-500 mt-2 text-sm">${item.description}</p>
+                    <button 
+                        class="mt-4 w-full py-2 bg-blue-700 text-white font-semibold rounded-lg hover:bg-blue-800 transition duration-150"
+                        onclick="addToCart('${item.id}', '${item.name}', ${item.price})"
+                    >
+                        Add to Cart
+                    </button>
+                `;
+                menuContainer.appendChild(card);
             });
-            // ------------------------------------
+            
+            updateCartUI(); // Initial UI update
+        };
 
-            // Initial cart load
-            updateCart();
-        });
+        document.addEventListener('DOMContentLoaded', initMenuPage);
     </script>
 </head>
 <body>
+    <!-- Fixed Header -->
     <header class="main-header">
-        <a href="index.html" class="logo">NELL</a>
-        <nav class="desktop-nav">
-            <ul>
-                <li><a href="index.html">Home</a></li> 
-                <li><a href="services.html">Services</a></li>
-                <li><a href="city.html">Cities</a></li>
-                <!-- Pointing this directly to food.html to allow testing of that file -->
-                <li><a href="food.html">Order Food</a></li> 
-                <li><a href="aboutus.html">About Us</a></li>
-                <li><a href="support.html">Support</a></li>
-            </ul>
-        </nav>
-        <div class="mobile-menu-icon">&#9776;</div>
+        <div class="flex items-center space-x-4">
+            <a href="food.html" class="back-button text-white px-3 py-1 rounded-full text-sm bg-blue-700">
+                &larr; Back to Restaurants
+            </a>
+            <a href="index.html" class="logo">NELL</a>
+        </div>
+        <div id="cartSummary" class="text-white">
+            <!-- Cart Button and Summary injected here -->
+        </div>
     </header>
-    
-    <nav class="mobile-nav">
-        <ul>
-            <li><a href="index.html">Home</a></li> 
-            <li><a href="services.html">Services</a></li>
-            <li><a href="city.html">Cities</a></li>
-            <li><a href="food.html">Order Food</a></li>
-            <li><a href="aboutus.html">About Us</a></li>
-            <li><a href="support.html">Support</a></li>
-        </ul>
-    </nav>
 
-        <main class="page-content">
-            <section class="item-container">
-                <!-- Restaurant Hero Section -->
-                <div id="restaurantHero" class="restaurant-hero">
-                    <div class="restaurant-info">
-                        <h1 id="restaurantTitle">Loading...</h1>
-                        <p style="font-size: 1.1rem;">Freshly prepared favorites, delivered quickly.</p>
-                    </div>
-                </div>
-                
-                <div class="menu-grid">
-                    
-                    <!-- Menu Items Section -->
-                    <div class="menu-section">
-                        <h2 style="margin-bottom: var(--spacing-md);">Menu & Specials</h2>
-                        
-                        <div id="itemList" class="item-list">
-                            <!-- Dynamic menu items will be inserted here -->
-                            <p>Loading menu...</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Cart Sidebar -->
-                    <div class="cart-sidebar">
-                        <h3 style="margin-top: 0; border-bottom: 2px solid var(--color-food-accent); padding-bottom: 10px;">Your Order</h3>
-                        
-                        <div id="cartList" style="min-height: 100px;">
-                            <!-- Cart items will be injected here -->
-                        </div>
-                        
-                        <div class="cart-total">
-                            <span>Subtotal</span>
-                            <span id="cartTotal">$0.00</span>
-                        </div>
-                        
-                        <button id="checkoutBtn" class="btn cta-secondary" style="width: 100%; margin-top: var(--spacing-md);" disabled>Add items to checkout</button>
-                    </div>
-                </div>
-            </section>
-        </main>
+    <!-- Page Content -->
+    <main class="container mx-auto px-4 py-8">
+        
+        <!-- Feedback Message Box -->
+        <div id="feedbackBox" class="hidden fixed top-20 right-4 p-3 bg-green-500 text-white rounded-lg shadow-xl z-50 transition duration-300">
+            <!-- Message injected here -->
+        </div>
 
-        <footer>
-            <p>&copy; 2025 NELL, Inc. | All Rights Reserved.</p>
-        </footer>
+        <!-- Restaurant Title -->
+        <h1 id="restaurantHeader" class="text-4xl font-extrabold mb-8 text-center text-blue-700">
+            Loading Menu...
+        </h1>
+
+        <!-- Menu Grid -->
+        <div id="menuContainer" class="menu-grid">
+            <!-- Menu items will be injected here -->
+        </div>
+    </main>
     
+    <!-- Order Modal (Combines Cart, Payment, and Tracking) -->
+    <div id="orderModal" class="order-modal fixed inset-0 hidden z-[100] flex items-center justify-center">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-8">
+             <div id="modalContentContainer">
+                 <!-- Cart, Payment, Matching, or Confirmed views injected here -->
+             </div>
+        </div>
+    </div>
+
+    <footer class="text-center py-4 text-gray-500 text-sm">
+        <p>&copy; 2025 NELL, Inc. | Demo Checkout System</p>
+    </footer>
 </body>
 </html>
 

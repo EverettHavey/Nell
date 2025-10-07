@@ -3,420 +3,340 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nell Rides - Book a Trip</title>
+    <title>NELL Rides</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* BASE STYLES - Set theme to a clean, modern blue/white */
-        :root {
-            --primary-blue: #0076ff; /* Nell Rides Primary Blue */
-            --primary-dark: #1f1f1f;
-            --success-green: #388e3c;
-            --cancel-red: #dc3545;
-        }
-
+        /* Custom styles for Inter font and general layout */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
         body {
-            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f7f7f7; 
-            color: var(--primary-dark);
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: #1f2937;
+            min-height: 100vh;
         }
-        .container {
-            max-width: 700px; 
-            margin: auto;
-            background-color: #ffffff;
-            padding: 24px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            position: relative; 
+
+        .main-header {
+            background-color: #1f2937; /* Dark gray */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fcd34d; /* Amber-300 */
+            text-decoration: none;
         }
         
-        /* HEADER STYLES */
-        .text-3xl {
-            font-size: 2.25rem !important;
-            font-weight: 700 !important;
+        .ride-option-card {
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 2px solid transparent;
         }
-        .text-red-600, .hover\:text-red-500:hover { 
-            color: var(--primary-blue) !important; 
-        }
-
-        h2 {
-            font-size: 1.2em;
-            font-weight: 600;
-            margin-top: 20px;
-            margin-bottom: 12px;
-            color: var(--primary-dark);
-        }
-
-        /* INPUTS */
-        .input-group {
-            position: relative;
-            margin-bottom: 15px;
-        }
-        .input-group input[type="text"], input[type="number"], input[type="email"], input[type="password"] {
-            width: 100%;
-            padding: 14px 14px 14px 45px; 
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            box-sizing: border-box;
-            font-size: 16px;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-        .input-group .icon {
-            position: absolute;
-            top: 50%;
-            left: 15px;
-            transform: translateY(-50%);
-            color: #666;
-            font-size: 18px;
-        }
-
-        /* MAP/IMAGE STYLES */
-        .map-placeholder {
-            width: 100%;
-            height: 180px;
-            background-color: #f0f0f0;
-            display: flex;
-            flex-direction: column; 
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 20px;
-            border-radius: 10px;
-            color: #333;
-            font-weight: 600;
-            overflow: hidden;
-            position: relative; 
+        .ride-option-card.selected {
+            border-color: #1e40af; /* Blue-700 */
+            box-shadow: 0 4px 6px -1px rgba(30, 64, 175, 0.3);
+            background-color: #eff6ff; /* Blue-50 */
         }
         
-        /* TIME SELECTION STYLES */
-        .time-options {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .time-card {
-            flex-grow: 1;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            cursor: pointer;
-            text-align: center;
-            font-weight: 500;
-        }
-        .time-card.selected {
-            border-color: var(--primary-blue);
-            background-color: #e6f0ff; 
-        }
-
-        /* Payment/Vehicle Card Styles (Retained) */
-        .vehicle-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-        .vehicle-card {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px 5px;
-            border: 1px solid #ddd;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            background-color: #fff;
-            text-align: center;
-            min-height: 140px; 
-        }
-        .vehicle-card.selected {
-            border-color: var(--primary-blue);
-            background-color: #e6f0ff; 
-        }
-        .payment-options {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 10px; 
-        }
-        .payment-card {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            cursor: pointer;
-            background-color: #fff;
-        }
-        .payment-card.selected {
-            border-color: var(--primary-blue);
-            background-color: #e6f0ff; 
-        }
-        .driver-line {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .driver-image {
-            width: 40px;
-            height: 40px;
+        /* Spinner for driver matching */
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #1e40af; 
             border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--primary-blue);
+            width: 80px;
+            height: 80px;
+            animation: spin 1s linear infinite;
         }
-        
-        /* ==================== BUTTON STYLES (FIXED/ADDED) ==================== */
-        .book-button, #confirm-payment-btn {
-            background-color: var(--primary-blue);
-            color: white;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            width: 100%;
-            margin-top: 15px;
-            font-weight: 600;
-            font-size: 1.1em;
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Payment selection styles */
+        .payment-option-card-ride {
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: all 0.2s;
+            border: 2px solid transparent;
         }
-        .book-button:disabled {
-            background-color: #b0c4de;
-            cursor: not-allowed;
-        }
-        #cancel-ride-btn {
-            background-color: var(--cancel-red);
-            color: white;
-            padding: 12px;
-            border: none;
-            border-radius: 8px;
-            width: 100%;
-            margin-top: 20px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        /* INLINE PAYMENT FORM INPUT STYLES */
-        #payment-details-form input {
-            width: 100%;
-            padding: 10px 14px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-
-        /* ==================== NOTIFICATION BANNER STYLES (Retained) ==================== */
-        #notification-banner {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: var(--success-green);
-            color: white;
-            text-align: center;
-            padding: 15px 0;
-            font-weight: bold;
-            z-index: 1000;
-            transform: translateY(-100%); /* Start off-screen */
-            transition: transform 0.4s ease-out;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: none; /* Ensure hidden initially */
-        }
-        #notification-banner.show {
-            transform: translateY(0); /* Slide into view */
-        }
-        
-        /* ==================== CUSTOM MODAL STYLES (Retained) ==================== */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-
-        .modal-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 15px;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            animation: fadeIn 0.3s ease-out;
-        }
-        
-        .modal-content h3 {
-            font-size: 1.5em;
-            font-weight: 700;
-            color: var(--cancel-red);
-            margin-bottom: 15px;
-        }
-
-        .modal-content p {
-            font-size: 1em;
-            color: #444;
-            margin-bottom: 25px;
-            line-height: 1.5;
-        }
-
-        .modal-buttons button {
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            width: 100%;
-        }
-
-        #modal-confirm-btn {
-            background-color: var(--cancel-red);
-            color: white;
-            border: none;
-            margin-bottom: 10px;
-        }
-
-        #modal-cancel-btn {
-            background-color: #f0f0f0;
-            color: #333;
-            border: 1px solid #ccc;
-        }
-        
-        /* Fade in animation for modal */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-        /* Remove stray close icon from inline form if present */
-        #payment-details-form .close-icon {
-            display: none;
+        .payment-option-card-ride.selected {
+            border-color: #1e40af; 
+            background-color: #eff6ff;
         }
     </style>
-</head>
-<body>
-
-<div id="custom-modal" class="modal-overlay" style="display: none;">
-    <div class="modal-content">
-        <h3>Confirm Ride Cancellation</h3>
-        <p id="modal-message">
-            Are you sure you wish to cancel this ride? If you proceed, your ride with confirmation number **<span id="modal-confirmation-number"></span>** will be immediately released, and you will be returned to the booking screen.
-        </p>
-        <div class="modal-buttons">
-            <button id="modal-confirm-btn">Confirm Cancellation</button>
-            <button id="modal-cancel-btn">Do Not Cancel</button>
-        </div>
-    </div>
-</div>
-<div class="container">
     
-    <header class="mb-6 flex flex-col md:flex-row md:justify-between md:items-center space-y-3 md:space-y-0">
-        <div onclick="window.location.reload()" class="cursor-pointer flex-shrink-0">
-            <h1 class="text-3xl font-extrabold text-red-600">Nell Rides 🚕</h1> 
-            <p class="text-gray-500">Book your next trip instantly.</p> 
-        </div>
-        <nav class="desktop-nav mt-3 md:mt-0">
-            <ul class="flex space-x-4 overflow-x-auto pb-1 justify-end md:justify-start">
-                <li><a href="services.html" target="_blank" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">Services</a></li>
-                <li><a href="city.html" target="_blank" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">Cities</a></li>
-                <li><a href="career.html" target="_blank" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">Careers</a></li>
-                <li><a href="aboutus.html" target="_blank" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">About Us</a></li>
-                <li><a href="support.html" target="_blank" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">Support</a></li>
-            </ul>
-        </nav>
-    </header>
-    <div id="notification-banner">
-        🎉 Ride Accepted! Driver is confirmed and arriving soon.
-    </div>
+    <script>
+        // --- GLOBAL STATE ---
+        let appState = 'request'; // 'request', 'confirm', 'finding', 'complete'
+        let rideDetails = {
+            pickup: '123 Main St, New City',
+            dropoff: '456 Oak Ave, New City',
+            type: 'Standard',
+            price: 0,
+            distance: 5.5, // simulated distance in miles
+            duration: 15, // simulated duration in minutes
+        };
+        let driver = null;
+        let selectedPaymentMethod = 'credit';
 
-    <div id="booking-view">
+        const RIDE_TYPES = [
+            { name: 'Standard', description: 'Affordable, everyday rides (2-4 pax)', icon: '🧍', multiplier: 1.0, minFare: 5.00 },
+            { name: 'Premium', description: 'Luxury sedans, top rated drivers (2-4 pax)', icon: '💎', multiplier: 1.5, minFare: 8.00 },
+            { name: 'SUV', description: 'Extra room for groups (4-6 pax)', icon: '🚐', multiplier: 1.8, minFare: 10.00 },
+        ];
         
-        <div class="map-placeholder">
-            <img src="Images/Image.webp" alt="Live Map Integration Placeholder" onerror="this.onerror=null; this.alt='🗺️ Live Map Integration - Image Missing'; this.style.backgroundColor='#f0f0f0'; this.style.color='#333'; this.style.textAlign='center'; this.style.display='flex'; this.style.alignItems='center'; this.style.justifyContent='center';">
-        </div>
-        
-        <div class="input-group">
-            <span class="icon">📍</span>
-            <input type="text" id="pickup-input" placeholder="Enter Pickup Location" onblur="checkLocationInput()">
-        </div>
-        <div class="input-group">
-            <span class="icon">🏁</span>
-            <input type="text" id="dropoff-input" placeholder="Enter Destination" onblur="checkLocationInput()">
-        </div>
-        
-        <div id="dynamic-booking-content" class="selection-section active">
+        const DRIVERS = [
+            { name: 'Alex Johnson', car: 'Honda Civic', license: 'XYZ-789', rating: 4.85 },
+            { name: 'Maria Rodriguez', car: 'Toyota Camry', license: 'ABC-123', rating: 4.92 },
+            { name: 'David Lee', car: 'Tesla Model 3', license: 'TES-420', rating: 4.79 },
+            { name: 'Jasmine Chen', car: 'Nissan Rogue', license: 'RGE-901', rating: 4.68 },
+        ];
+
+        // --- CORE FUNCTIONS ---
+
+        const calculatePrice = () => {
+            const baseRate = 2.00;
+            const perMile = 1.80;
+            const type = RIDE_TYPES.find(t => t.name === rideDetails.type);
             
-            <h2>Preferred Time of Departure</h2>
-            <div id="time-options-container" class="time-options">
-                <div id="time-now" class="time-card selected" onclick="selectTime('now')">
-                    Come Now
-                    <p style="font-size: 0.8em; color: #666; margin: 0;">(ASAP: Est. Arrival 5-10 min)</p>
-                </div>
-                <div id="time-later" class="time-card" onclick="selectTime('later')">
-                    Reserve for Later
-                    <p style="font-size: 0.8em; color: #666; margin: 0;">(Book a Specific Time/Date)</p>
-                </div>
-            </div>
-
-            <h2>Choose Your Ride</h2>
-            <div id="vehicle-options-container" class="vehicle-options" role="radiogroup">
-                </div>
-
-            <h2>Payment Method</h2>
-            <div id="payment-options-container" class="payment-options" role="radiogroup">
-                </div>
-
-            <div id="payment-details-form" style="display: none; padding-top: 5px;">
-                <h3 id="payment-form-title">Confirm Payment</h3>
-                <div id="payment-form-inputs">
-                    </div>
-                <div id="payment-price-display" style="text-align: center; margin-bottom: 15px; font-weight: bold;">
-                    $0.00 (Estimated Ride Cost)
-                </div>
-                <button id="confirm-payment-btn" onclick="confirmInlinePayment()">Confirm & Save</button>
-            </div>
-
-
-            <button id="book-ride-button" class="book-button" disabled onclick="bookRide()">
-                Please enter locations, select a vehicle, and confirm your payment
-            </button>
-        </div>
-        
-    </div>
-
-    <div id="in-ride-view" style="display: none;">
-        <div class="map-placeholder map-large">
-            <p id="live-map-message">🗺️ **Live Ride Map**</p>
-            <p>Driver is approaching. Estimated time: 3 minutes</p>
-        </div>
-        <div class="ride-status-card">
-            <h2>Your Ride Status</h2>
-            <div id="ride-status-message" class="status-message">Driver Confirmed!</div>
+            const rawFare = baseRate + (rideDetails.distance * perMile * type.multiplier);
+            const finalFare = Math.max(rawFare, type.minFare);
             
-            <div class="driver-info">
-                <p><strong>Confirmation Number:</strong> <span id="confirmation-number"></span></p>
-                <hr style="margin: 10px 0; border-color: #eee;">
+            rideDetails.price = parseFloat(finalFare.toFixed(2));
+        };
+
+        const updateState = (newState) => {
+            appState = newState;
+            renderApp();
+        };
+
+        const selectRideType = (type) => {
+            rideDetails.type = type;
+            calculatePrice();
+            renderApp();
+        };
+        
+        const selectPaymentMethod = (method) => {
+            selectedPaymentMethod = method;
+            const creditOption = document.getElementById('creditRideOption');
+            const cashOption = document.getElementById('cashRideOption');
+            
+            // Only attempt to update classes if the elements exist (i.e., we are in the 'confirm' view)
+            if (creditOption && cashOption) {
+                creditOption.classList.remove('selected');
+                cashOption.classList.remove('selected');
                 
-                <div class="driver-line">
-                    <img id="driver-img" src="" alt="Driver Profile" class="driver-image" onerror="this.onerror=null;this.src='Images/Image.webp';">
-                    <p style="margin: 0;"><strong>Driver:</strong> <span id="driver-name"></span></p>
+                document.getElementById(`${method}RideOption`).classList.add('selected');
+            }
+        };
+
+        const requestRide = () => {
+            if (!rideDetails.type || rideDetails.price === 0) {
+                // IMPORTANT: Replacing alert() with a console log or custom message
+                console.warn('Please select a ride type.');
+                return;
+            }
+            updateState('confirm');
+        };
+
+        const confirmBooking = () => {
+            updateState('finding');
+            
+            // Simulate driver matching time
+            setTimeout(() => {
+                driver = DRIVERS[Math.floor(Math.random() * DRIVERS.length)];
+                updateState('complete');
+            }, 3000); // 3 second delay
+        };
+        
+        // This function is no longer needed since we are using confirmBooking() directly
+        // const handlePaymentFormSubmission = (event) => {
+        //     event.preventDefault();
+        //     // In a real app, payment would be processed here.
+        //     alert('Payment simulation successful. Ride is confirmed!');
+        //     confirmBooking();
+        // };
+
+        // --- RENDER FUNCTIONS ---
+
+        const renderRequestView = (container) => {
+            container.innerHTML = `
+                <div class="space-y-6">
+                    <h2 class="text-3xl font-bold text-gray-800">Where to?</h2>
+                    
+                    <!-- Location Inputs -->
+                    <div class="space-y-4">
+                        <div class="p-3 bg-white rounded-xl shadow-md flex items-center space-x-3 border-l-4 border-amber-300">
+                            <span class="text-lg">📍</span>
+                            <input type="text" id="pickup" value="${rideDetails.pickup}" class="flex-grow border-none focus:ring-0 p-0 text-gray-700 font-semibold" onchange="rideDetails.pickup = this.value" placeholder="Enter pickup location">
+                        </div>
+                        <div class="p-3 bg-white rounded-xl shadow-md flex items-center space-x-3 border-l-4 border-blue-700">
+                            <span class="text-lg">🏁</span>
+                            <input type="text" id="dropoff" value="${rideDetails.dropoff}" class="flex-grow border-none focus:ring-0 p-0 text-gray-700 font-semibold" onchange="rideDetails.dropoff = this.value" placeholder="Enter destination">
+                        </div>
+                    </div>
+
+                    <!-- Ride Type Selection -->
+                    <div class="pt-4">
+                        <h3 class="text-xl font-semibold mb-3 text-gray-700">Select Your Ride</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            ${RIDE_TYPES.map(type => `
+                                <div onclick="selectRideType('${type.name}')" 
+                                    class="ride-option-card bg-white p-4 rounded-xl shadow-md text-center ${rideDetails.type === type.name ? 'selected' : ''}">
+                                    <span class="text-3xl">${type.icon}</span>
+                                    <p class="font-bold mt-1 text-gray-800">${type.name}</p>
+                                    <p class="text-xs text-gray-500">${type.description}</p>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+
+                    <!-- Price Summary & Button -->
+                    <div class="pt-4 border-t">
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-lg font-semibold">Estimated Fare:</span>
+                            <span class="text-3xl font-extrabold text-blue-700">$${rideDetails.price.toFixed(2)}</span>
+                        </div>
+                        <button onclick="requestRide()" class="w-full py-4 bg-blue-700 text-white font-extrabold rounded-xl hover:bg-blue-800 transition duration-150">
+                            Request ${rideDetails.type}
+                        </button>
+                    </div>
                 </div>
-                <p><strong>Vehicle:</strong> <span id="vehicle-details"></span></p>
-                <p><strong>Payment:</strong> <span id="payment-summary"></span></p>
-                <p><strong>Time Preference:</strong> <span id="time-preference-summary"></span></p>
+            `;
+        };
+
+        const renderConfirmView = (container) => {
+            container.innerHTML = `
+                <div class="space-y-6">
+                    <h2 class="text-3xl font-bold text-gray-800">Confirm & Pay</h2>
+
+                    <!-- Ride Summary -->
+                    <div class="p-4 bg-white rounded-xl shadow-lg space-y-2">
+                        <p class="text-xl font-bold text-gray-800">${rideDetails.type} Ride</p>
+                        <div class="text-gray-600">
+                            <p>From: <span class="font-semibold">${rideDetails.pickup}</span></p>
+                            <p>To: <span class="font-semibold">${rideDetails.dropoff}</span></p>
+                            <p>Est. Time: ${rideDetails.duration} min | Est. Distance: ${rideDetails.distance} miles</p>
+                        </div>
+                        <div class="text-3xl font-extrabold text-blue-700 pt-2 border-t mt-3">Total: $${rideDetails.price.toFixed(2)}</div>
+                    </div>
+                    
+                    <!-- Payment Selection -->
+                    <h3 class="text-xl font-semibold mt-6 text-gray-700">Choose Payment</h3>
+                    <div class="space-y-3">
+                        <div id="creditRideOption" onclick="selectPaymentMethod('credit')" class="payment-option-card-ride p-4 rounded-xl bg-white shadow-sm border-2 border-gray-300">
+                            <div class="flex items-center space-x-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-700" viewBox="0 0 20 20" fill="currentColor"><path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" /><path fill-rule="evenodd" d="M18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9zM4 13a1 1 0 110-2 1 1 0 010 2zm10-1a1 1 0 100 2h1a1 1 0 100-2h-1z" clip-rule="evenodd" /></svg>
+                                <p class="font-semibold text-lg">Credit/Debit Card (on file)</p>
+                            </div>
+                        </div>
+                        <div id="cashRideOption" onclick="selectPaymentMethod('cash')" class="payment-option-card-ride p-4 rounded-xl bg-white shadow-sm border-2 border-gray-300">
+                            <div class="flex items-center space-x-3">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-600" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 2a1 1 0 011 1v1h4a1 1 0 011 1v5a1 1 0 01-1 1h-.828l1.768 1.768A1 1 0 0114 15h-4.172l.939-.939A7.001 7.001 0 0013 4a1 1 0 112 0 5.001 5.001 0 01-5 5H4a1 1 0 110-2h6V2zm-2 9a1 1 0 100 2h4a1 1 0 100-2H8z" clip-rule="evenodd" /></svg>
+                                <p class="font-semibold text-lg">Cash to Driver</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Confirm Button -->
+                    <button onclick="confirmBooking()" class="w-full py-4 bg-amber-300 text-gray-800 font-extrabold rounded-xl hover:bg-amber-400 transition duration-150 mt-6">
+                        Confirm Ride & Find Driver
+                    </button>
+                    <button onclick="updateState('request')" class="w-full py-2 text-blue-700 font-semibold rounded-lg hover:underline transition duration-150">
+                        Edit Ride Details
+                    </button>
+                </div>
+            `;
+            // Set the payment method state immediately after rendering the elements
+            selectPaymentMethod(selectedPaymentMethod);
+        };
+
+        const renderFindingView = (container) => {
+            container.innerHTML = `
+                <div class="flex flex-col items-center justify-center h-full text-center py-20 space-y-6">
+                    <div class="spinner"></div>
+                    <h2 class="text-3xl font-bold text-gray-800">Finding your driver...</h2>
+                    <p class="text-gray-500">Please wait, we are matching you with the nearest ${rideDetails.type} driver.</p>
+                </div>
+            `;
+        };
+
+        const renderCompleteView = (container) => {
+            if (!driver) return; // Should not happen
+            container.innerHTML = `
+                <div class="space-y-6 text-center">
+                    <div class="text-6xl mb-4">✅</div>
+                    <h2 class="text-3xl font-bold text-green-600">Driver Found!</h2>
+                    <p class="text-xl text-gray-700">Your ${rideDetails.type} is on the way.</p>
+
+                    <!-- Driver Card -->
+                    <div class="p-6 bg-white rounded-xl shadow-lg border-t-4 border-green-500 mx-auto max-w-sm">
+                        <p class="text-2xl font-extrabold text-blue-700">${driver.name}</p>
+                        <p class="text-gray-600">${driver.car} (${driver.license})</p>
+                        <p class="text-amber-500 font-bold mt-2">${driver.rating} &#9733; Rating</p>
+                        <div class="mt-4 pt-3 border-t">
+                             <p class="font-semibold text-lg">Fare: $${rideDetails.price.toFixed(2)}</p>
+                             <p class="text-sm text-gray-500">Payment: ${selectedPaymentMethod === 'cash' ? 'Cash to Driver' : 'Card on File'}</p>
+                        </div>
+                    </div>
+
+                    <button onclick="window.location.reload()" class="w-full max-w-xs py-3 bg-gray-200 text-gray-800 font-semibold rounded-xl hover:bg-gray-300 transition duration-150 mt-8">
+                        Start New Ride
+                    </button>
+                </div>
+            `;
+        };
+
+        const renderApp = () => {
+            const mainContent = document.getElementById('rideAppContent');
+            if (!mainContent) return;
+
+            // Clear previous content
+            mainContent.innerHTML = ''; 
+
+            switch (appState) {
+                case 'request':
+                    renderRequestView(mainContent);
+                    break;
+                case 'confirm':
+                    renderConfirmView(mainContent);
+                    break;
+                case 'finding':
+                    renderFindingView(mainContent);
+                    break;
+                case 'complete':
+                    renderCompleteView(mainContent);
+                    break;
+                default:
+                    renderRequestView(mainContent);
+            }
+        };
+
+        // Initialize App on load
+        document.addEventListener('DOMContentLoaded', () => {
+            calculatePrice(); // Initial price calculation
+            renderApp();
+            // Removed the initial selectPaymentMethod call here, as it was causing the error
+            // The payment method will be set when the 'confirm' view is rendered.
+        });
+    </script>
+</head>
+<body class="flex flex-col">
+    <header class="main-header p-4 flex justify-between items-center text-white">
+        <a href="index.html" class="logo">NELL Rides</a>
+        <a href="food.html" class="text-gray-300 hover:text-amber-300 transition duration-150">Order Food</a>
+    </header>
+
+    <main class="container mx-auto px-4 py-8 flex-grow">
+        <div class="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-2xl">
+            <div id="rideAppContent">
+                <!-- Content injected by JavaScript -->
             </div>
-            <button id="cancel-ride-btn" onclick="cancelRide()">Cancel Ride</button>
         </div>
-    </div>
-</div>
+    </main>
 
-<script src="scripts/ridescript.js"></script>
-
+    <footer class="text-center py-4 text-gray-500 text-sm">
+        <p>&copy; 2025 NELL, Inc. | Ride Service Simulation</p>
+    </footer>
 </body>
 </html>
