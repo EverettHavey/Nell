@@ -398,6 +398,17 @@
             border-radius: 5px;
             cursor: pointer;
         }
+        
+        .home-btn {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
 
         /* Desktop Optimization */
         @media (min-width: 768px) {
@@ -443,6 +454,7 @@
                 <div class="search-bar">
                     <input type="text" id="foodSearch" placeholder="Search for cuisine, dish, or store...">
                     <button>Search</button>
+                    <a href="index.html" class="home-btn">← Back to Home</a>
                 </div>
             </div>
 

@@ -43,7 +43,9 @@
             position: sticky;
             top: 0;
             z-index: 50;
-            text-align: center;
+            display: flex; /* Added flex to align logo and back button */
+            justify-content: space-between;
+            align-items: center;
         }
 
         .logo {
@@ -51,6 +53,23 @@
             font-weight: 800;
             color: var(--primary-color);
         }
+        
+        /* New Back to Home Button Style */
+        .home-btn {
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            transition: background-color 0.2s;
+        }
+        
+        .home-btn:hover {
+            background-color: #f0f0f0;
+        }
+
 
         /* Main Container */
         .container {
@@ -276,6 +295,8 @@
 
     <header class="main-header">
         <div class="logo">NELL - Rides</div>
+        <!-- NEW BACK BUTTON TO HOME -->
+        <a href="index.html" class="home-btn">← Back to Home</a>
     </header>
 
     <div class="container">
@@ -417,12 +438,11 @@
             // AIR TRAVEL
             { id: 'helicopter', name: 'Heli-Ride', icon: '🚁', basePrice: 150.00, multiplier: 3.0 },
             { id: 'airplane', name: 'Airplane', icon: '✈️', basePrice: 500.00, multiplier: 5.0 },
-            // SPECIALTY & TRUCKS (NEW ADDITIONS)
+            // SPECIALTY & TRUCKS 
             { id: 'icetruck', name: 'Ice Cream Truck', icon: '🍦', basePrice: 30.00, multiplier: 1.2 },
             { id: 'garbagetruck', name: 'Garbage Truck', icon: '🚛', basePrice: 45.00, multiplier: 1.1 },
             { id: 'firetruck', name: 'Fire Truck', icon: '🚒', basePrice: 100.00, multiplier: 1.5 },
             // EXOTIC CATEGORY TRIGGER (NEW)
-            // Note: basePrice/multiplier here are just for display on the button before sub-option is chosen
             { id: 'exotic_category', name: 'Exotic Sportscar', icon: '🏎️', basePrice: 75.00, multiplier: 2.5, isCategory: true },
             // EXOTIC SUB-OPTIONS (NEW) - marked as sub-options
             { id: 'bugatti', name: 'Bugatti Chiron', icon: '💨', basePrice: 200.00, multiplier: 4.0, isSubOption: true },
