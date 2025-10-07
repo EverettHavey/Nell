@@ -21,7 +21,7 @@
             color: var(--primary-dark);
         }
         .container {
-            max-width: 700px; /* Increased width to better fit the grid */
+            max-width: 700px; 
             margin: auto;
             background-color: #ffffff;
             padding: 24px;
@@ -30,12 +30,13 @@
             position: relative; 
         }
         
-        /* HEADER STYLES */
+        /* HEADER STYLES (Restored to original structure but with Nell Rides branding) */
         .text-3xl {
             font-size: 2.25rem !important;
             font-weight: 700 !important;
         }
-        .text-red-600, .hover\:text-red-500:hover { /* Override red to Nell Blue */
+        /* Color override for Nell Rides logo (was originally red in the provided snippet) */
+        .text-red-600, .hover\:text-red-500:hover { 
             color: var(--primary-blue) !important; 
         }
         .text-gray-500 {
@@ -109,7 +110,7 @@
         /* VEHICLE GRID LAYOUT */
         .vehicle-options {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Responsive Grid */
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* 5 columns max */
             gap: 10px;
             margin-bottom: 20px;
         }
@@ -126,7 +127,7 @@
             background-color: #fff;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
             text-align: center;
-            min-height: 140px; /* Ensure cards are uniform height */
+            min-height: 140px; 
         }
         .vehicle-card:hover {
             border-color: var(--primary-blue);
@@ -138,16 +139,16 @@
             box-shadow: 0 0 0 2px rgba(0, 118, 255, 0.3);
         }
         .vehicle-icon {
-            font-size: 40px; 
+            font-size: 35px; /* Slightly smaller icon size */
             line-height: 1;
             margin-bottom: 5px;
         }
         .vehicle-name {
-            font-weight: bold;
+            font-weight: 600;
             font-size: 0.9em;
             color: #1a1a1a;
             line-height: 1.2;
-            min-height: 2.4em; /* Reserve space for two lines of text */
+            min-height: 2.4em; 
         }
         .vehicle-price {
             font-size: 1.1em;
@@ -157,12 +158,12 @@
         }
         .vehicle-eta {
             font-size: 0.8em;
-            color: #6c757d;
+            color: var(--primary-blue); /* ETA in blue */
             margin-top: 2px;
             line-height: 1.2;
         }
         
-        /* PAYMENT CARDS (List layout remains) */
+        /* PAYMENT CARDS */
         .payment-options {
             display: flex;
             flex-direction: column;
@@ -220,11 +221,11 @@
 
         <nav class="desktop-nav mt-3 md:mt-0">
             <ul class="flex space-x-4 overflow-x-auto pb-1 justify-end md:justify-start">
-                <li><a href="#" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">Drive</a></li> 
-                <li><a href="#" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">Business</a></li>
-                <li><a href="#" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">Safety</a></li>
-                <li><a href="#" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">About</a></li>
-                <li><a href="#" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">Help</a></li>
+                <li><a href="services.html" target="_blank" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">Services</a></li>
+                <li><a href="city.html" target="_blank" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">Cities</a></li>
+                <li><a href="career.html" target="_blank" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">Careers</a></li>
+                <li><a href="aboutus.html" target="_blank" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">About Us</a></li>
+                <li><a href="support.html" target="_blank" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">Support</a></li>
             </ul>
         </nav>
 
@@ -322,7 +323,7 @@
     </div>
 </div>
 <script>
-    // --- MOCK DATA - Updated with ALL options from the provided image ---
+    // --- MOCK DATA - EXACTLY matched to the provided image ---
     const vehicles = [
         { id: 'standard', name: 'Standard', icon: '🚗', price: 15.00, eta: '10 min' },
         { id: 'xl', name: 'XL', icon: '🚌', price: 37.50, eta: '10 min' },
@@ -353,7 +354,6 @@
 
     // --- DRIVER DETAILS LOGIC ---
     function getDriverDetails(vehicleId) {
-        // Updated driver data to match the unique vehicle types
         switch (vehicleId) {
             case 'standard': return { name: 'Sarah J.', rating: '4.9', plate: 'T-800' };
             case 'heli_ride': return { name: 'Captain Viper', rating: '4.8', plate: 'H-911' };
@@ -392,7 +392,7 @@
         checkBookingReadiness();
     }
 
-    // --- VEHICLE SELECTION LOGIC (UPDATED FOR GRID STYLE) ---
+    // --- VEHICLE SELECTION LOGIC (GRID STYLE) ---
     function renderVehicles() {
         const container = document.getElementById('vehicle-options-container');
         container.innerHTML = ''; 
@@ -421,14 +421,12 @@
         selectedVehicleId = id;
         renderVehicles();
         const selectedPayment = paymentMethods.find(p => p.id === selectedPaymentId);
-        // If an unconfirmed card/PayPal is selected, reopen modal to display new price
         if (selectedPayment && !selectedPayment.confirmed && (selectedPayment.id === 'visa' || selectedPayment.id === 'paypal')) {
             openModal(selectedPayment.id);
         }
     }
 
-    // --- PAYMENT SELECTION LOGIC, MODAL LOGIC, BOOKING LOGIC (Remain the same) ---
-    
+    // --- PAYMENT SELECTION LOGIC ---
     function renderPaymentMethods() {
         const container = document.getElementById('payment-options-container');
         container.innerHTML = ''; 
@@ -469,6 +467,7 @@
         renderPaymentMethods();
     }
 
+    // --- MODAL LOGIC ---
     function openModal(type) {
         if (!selectedVehicleId) {
             alert('Please select a ride option first to view the estimated price.');
