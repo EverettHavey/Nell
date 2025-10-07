@@ -463,6 +463,13 @@ function checkout() {
     showTrackingView(); 
 }
 
+// --- NEW FUNCTION: Reload Page ---
+function goToIndexHtml() {
+    // Reloading the page is the most explicit way to simulate navigating back to the root 'index.html' file, 
+    // which effectively resets the application state.
+    window.location.reload();
+}
+
 // --- GLOBAL EXPOSURE (THE FIX) ---
 // Since we are using an ES Module (type="module" in HTML), these functions must be 
 // explicitly attached to the global 'window' object to be accessible from inline 'onclick' attributes.
@@ -474,6 +481,7 @@ window.addItemToCart = addItemToCart;
 window.applyPromo = applyPromo;
 window.checkout = checkout;
 window.closeMessageBox = closeMessageBox;
+window.goToIndexHtml = goToIndexHtml; // Expose the new function
 
 // Also expose state variables needed for inline onclick checks in HTML
 window.currentRestaurant = currentRestaurant;
