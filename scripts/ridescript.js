@@ -32,20 +32,20 @@ const paymentMethods = [
 
 // DRIVER DATA with Image URLs (All use the same placeholder for now)
 const driverData = {
-    'standard': { name: 'Sarah J.', rating: '4.9', plate: 'T-800', image: 'Images/Image.webp' },
-    'xl': { name: 'Mike D.', rating: '4.7', plate: 'XL-200', image: 'Images/Image.webp' }, 
-    'premium': { name: 'Elias K.', rating: '5.0', plate: 'PR-100', image: 'Images/Image.webp' }, 
-    'luxury': { name: 'Victoria M.', rating: '4.9', plate: 'LX-007', image: 'Images/Image.webp' },
-    'heli_ride': { name: 'Captain Viper', rating: '4.8', plate: 'H-911', image: 'Images/Image.webp' },
-    'airplane': { name: 'Amelia Pilot', rating: '4.9', plate: 'JET-01', image: 'Images/Image.webp' },
-    'ice_cream': { name: 'Mr. Freeze', rating: '4.2', plate: 'VAN-IC', image: 'Images/Image.webp' },
-    'garbage_truck': { name: 'Oscar G.', rating: '3.5', plate: 'TRASH-1', image: 'Images/Image.webp' },
-    'fire_truck': { name: 'Chief Red', rating: '4.8', plate: 'FLAME-2', image: 'Images/Image.webp' },
-    'exotic': { name: 'Brock Race', rating: '4.5', plate: 'FAST-4U', image: 'Images/Image.webp' },
-    'golf_cart': { name: 'Caddy Max', rating: '4.6', plate: 'GOLF-18', image: 'Images/Image.webp' },
-    'walk': { name: 'Runner Rick', rating: '5.0', plate: 'FEET-1', image: 'Images/Image.webp' },
-    'bike': { name: 'Wheely Joe', rating: '4.4', plate: 'BIKE-3', image: 'Images/Image.webp' },
-    'default': { name: 'Driver D.', rating: '4.8', plate: 'X-777', image: 'Images/Image.webp' } 
+    'standard': { name: 'Sarah J.', rating: '4.9', plate: 'T-800', image: 'Images/SJ.webp' },
+    'xl': { name: 'Mike D.', rating: '4.7', plate: 'XL-200', image: 'Images/MD.webp' }, 
+    'premium': { name: 'Elias K.', rating: '5.0', plate: 'PR-100', image: 'Images/EK.webp' }, 
+    'luxury': { name: 'Victoria M.', rating: '4.9', plate: 'LX-007', image: 'Images/VM.webp' },
+    'heli_ride': { name: 'Captain Viper', rating: '4.8', plate: 'H-911', image: 'Images/CV.webp' },
+    'airplane': { name: 'Amelia Pilot', rating: '4.9', plate: 'JET-01', image: 'Images/AP.webp' },
+    'ice_cream': { name: 'Mr. Freeze', rating: '4.2', plate: 'VAN-IC', image: 'Images/MF.webp' },
+    'garbage_truck': { name: 'Oscar G.', rating: '3.5', plate: 'TRASH-1', image: 'Images/OG.webp' },
+    'fire_truck': { name: 'Chief Red', rating: '4.8', plate: 'FLAME-2', image: 'Images/CR.webp' },
+    'exotic': { name: 'Brock Race', rating: '4.5', plate: 'FAST-4U', image: 'Images/BR.webp' },
+    'golf_cart': { name: 'Caddy Max', rating: '4.6', plate: 'GOLF-18', image: 'Images/CM.webp' },
+    'walk': { name: 'Runner Rick', rating: '5.0', plate: 'FEET-1', image: 'Images/RR.webp' },
+    'bike': { name: 'Wheely Joe', rating: '4.4', plate: 'BIKE-3', image: 'Images/rider.webp' },
+    'default': { name: 'Driver D.', rating: '4.8', plate: 'X-777', image: 'Images/DDPFP.webp' } 
 };
 // ----------------------------------------
 
