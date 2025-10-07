@@ -20,6 +20,26 @@
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
         }
+        /* --- Navigation Button --- */
+        .nav-header {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .btn-back {
+            background-color: #6c757d;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
         .header {
             text-align: center;
             margin-bottom: 30px;
@@ -111,6 +131,26 @@
         .btn-submit:hover {
             background-color: #e68a00;
         }
+        /* Submission Result Message */
+        #submissionResult {
+            text-align: center;
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 8px;
+            font-size: 1.5em;
+            font-weight: bold;
+            display: none; /* Hidden by default */
+        }
+        .accepted {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .denied {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
 
         /* Content Sections to be toggled by JS */
         #driverFields, #softwareFields {
@@ -130,18 +170,21 @@
 <body>
 
     <div class="container">
-
+        <div class="nav-header">
+            <a href="careers.html" class="btn-back">← Back to Careers</a>
+        </div>
+        
         <div class="header">
             <h1>Nell Application Form</h1>
             <p>Select your desired role to begin.</p>
         </div>
 
-        <form action="/submit-application" method="POST">
+        <form id="applicationForm" onsubmit="handleSubmission(event)">
 
             <div class="form-section">
                 <h2>1. Select Role</h2>
                 <div class="form-group radio-group">
-                    <input type="radio" id="roleDriver" name="applicationRole" value="DriverDelivery" onchange="toggleFields('DriverDelivery')">
+                    <input type="radio" id="roleDriver" name="applicationRole" value="DriverDelivery" onchange="toggleFields('DriverDelivery')" required>
                     <label for="roleDriver">Driver/Delivery Partner (Independent Contractor)</label>
 
                     <input type="radio" id="roleSoftware" name="applicationRole" value="SoftwareEngineer" onchange="toggleFields('SoftwareEngineer')">
@@ -245,22 +288,22 @@
             </div>
 
         </form>
+        
+        <div id="submissionResult"></div>
 
     </div>
 
     <script>
         // --- VEHICLE OPTIONS DEFINITION ---
         const ALL_VEHICLES = {
-            // Options suitable for food delivery
             'Foods': [
                 { value: 'Car', text: 'Standard Car' },
                 { value: 'Motorcycle', text: 'Motorcycle / Scooter' },
                 { value: 'Bike', text: 'Bike (Bicycle)' },
                 { value: 'Walk', text: 'Walking / Foot Power' }
             ],
-            // Unique options for Nell Rides from your images
             'Rides': [
-                { value: 'Car', text: 'Standard Car' }, // Standard car is available for rides
+                { value: 'Car', text: 'Standard Car' },
                 { value: 'Exotic Sportscar', text: 'Exotic Sportscar' },
                 { value: 'Golf Cart', text: 'Golf Cart' },
                 { value: 'Fire Truck', text: 'Fire Truck' },
@@ -278,7 +321,6 @@
             const softwareFields = document.getElementById('softwareFields');
             const consentDriver = document.getElementById('consentDriver');
 
-            // Find all potential required fields
             const driverInputs = driverFields.querySelectorAll('input, select');
             const softwareInputs = softwareFields.querySelectorAll('input, select, textarea');
             
@@ -345,6 +387,50 @@
                     vehicleSelect.appendChild(newOption);
                 });
             }
+        }
+
+        // --- SUBMISSION HANDLER ---
+        function handleSubmission(event) {
+            // Prevent the default form submission (page reload)
+            event.preventDefault(); 
+
+            // Get the selected role
+            const selectedRole = document.querySelector('input[name="applicationRole"]:checked');
+            const resultDiv = document.getElementById('submissionResult');
+            
+            if (!selectedRole) {
+                alert("Please select a role (Driver/Delivery Partner or Software Engineer) to proceed.");
+                return;
+            }
+
+            // Simple logic for demonstration: 
+            // - Drivers have a 70% chance of being "Accepted" for initial review.
+            // - Engineers have a 30% chance of being "Accepted" for initial review.
+            const isDriver = selectedRole.value === 'DriverDelivery';
+            const acceptThreshold = isDriver ? 0.7 : 0.3; // 70% vs 30%
+
+            // Use a random number to simulate the acceptance decision
+            const isAccepted = Math.random() < acceptThreshold;
+
+            // Display the result
+            if (isAccepted) {
+                resultDiv.className = 'accepted';
+                resultDiv.innerHTML = `✅ **APPLICATION ACCEPTED!**<br>Your information is being reviewed. Check your email for next steps!`;
+            } else {
+                resultDiv.className = 'denied';
+                // Provide different denial messages for context
+                const denialMessage = isDriver 
+                    ? `❌ **APPLICATION DENIED.**<br>Your preliminary qualifications did not meet the criteria. Thank you for your interest.`
+                    : `❌ **APPLICATION DENIED.**<br>The current role has been filled or your resume did not meet the minimum requirements.`;
+                resultDiv.innerHTML = denialMessage;
+            }
+
+            // Show the result and scroll to it
+            resultDiv.style.display = 'block';
+            resultDiv.scrollIntoView({ behavior: 'smooth' });
+            
+            // Optionally, disable the submit button after submission
+            document.querySelector('.btn-submit').disabled = true;
         }
     </script>
 
