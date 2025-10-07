@@ -133,7 +133,7 @@ ul {
     margin-top: 1rem; 
 }
 
-/* .cta-primary (Orange/Yellow - Solid Button) - Used for Foods (Service Block) and Primary CTA (Hero) */
+/* .cta-primary (Orange/Yellow - Solid Button) */
 .cta-primary {
     background: var(--secondary-color); 
     color: var(--white);
@@ -145,9 +145,9 @@ ul {
     border-color: #e68a00;
 }
 
-/* .cta-secondary-filled (Solid Blue button) - Used for Rides (Service Block) */
+/* .cta-secondary-filled (Solid Blue button) - Used for Rides Service Block */
 .cta-secondary-filled {
-    background: var(--primary-color); /* Solid Blue */
+    background: var(--primary-color); 
     color: var(--white); 
     border: 2px solid var(--primary-color);
 }
@@ -157,7 +157,7 @@ ul {
     border-color: #0056b3;
 }
 
-/* .cta-secondary (Outlined Blue button on white/light background) - Default outlined color */
+/* .cta-secondary (Outlined Blue button on white/light background) */
 .cta-secondary {
     background: var(--white); 
     color: var(--primary-color); 
@@ -169,45 +169,54 @@ ul {
 }
 
 
-/* --- Hero Section (Index.html) --- */
+/* ------------------------------------------------------------------------- */
+/* --- 2. INDEX.HTML STYLES (Hero and Content) --- */
+/* ------------------------------------------------------------------------- */
+
+/* Hero Section */
 .hero-section {
     background: var(--primary-color);
     color: var(--white);
     padding: 4rem 1.5rem;
     text-align: center;
 }
-
-.hero-section h1 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
+/* Ensure contrast on blue hero */
+.hero-section .cta-secondary {
+    background: var(--white); 
+    color: var(--primary-color); 
+    border: 2px solid var(--white); 
 }
-
 .cta-buttons {
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    /* Ensure buttons align to the center on mobile */
     align-items: center; 
 }
 
-/* --- INDEX.HTML HERO BUTTON OVERRIDES (Based on image) --- */
 
-/* The 'Order Nell - Foods' button uses .cta-primary (Solid Orange) */
-
-/* The 'Book a Ride' button uses .cta-secondary (White/Blue Outline, high contrast on blue hero) */
-.hero-section .cta-secondary {
-    background: var(--white); 
-    color: var(--primary-color); 
-    border: 2px solid var(--white); /* High contrast border for blue background */
+/* Index.html Content Wrapper */
+.index-content-wrapper {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem; 
 }
-.hero-section .cta-secondary:hover {
-    background: #eee;
+.index-content-block {
+    background: var(--white);
+    padding: 2rem 1.5rem;
+    margin-bottom: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); 
+    transition: transform 0.3s ease-in-out;
 }
-/* Ensure the .cta-secondary-filled uses the same white button style if it's placed in the hero */
-.hero-section .cta-secondary-filled {
-    background: var(--white); 
-    color: var(--primary-color); 
-    border: 2px solid var(--white);
+.index-content-block:hover {
+    transform: translateY(-5px); 
+}
+.index-content-block h2, .index-content-block h3 {
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+}
+.index-content-block p {
+    margin-bottom: 1rem;
 }
 
 /* --- Footer --- */
@@ -219,25 +228,22 @@ footer {
     font-size: 0.9rem;
 }
 
-/* --- Page Hero Styles (for secondary pages) --- */
+/* --- Page Hero Styles (for secondary pages) */
 .page-hero {
     color: var(--white);
     padding: 3rem 1.5rem;
     text-align: center;
 }
-.page-hero h1 {
-    font-size: 2rem;
-    margin-bottom: 0.5rem;
-}
+
 
 /* ------------------------------------------------------------------------- */
-/* --- 2. SERVICES.HTML DESIGN FIXES --- */
+/* --- 3. SERVICES.HTML STYLES (Used for visual consistency across service blocks) --- */
 /* ------------------------------------------------------------------------- */
 
 .service-detail-section {
     padding: 2rem 1.5rem;
     display: flex;
-    flex-direction: column; /* Stacked on Mobile */
+    flex-direction: column; 
     gap: 2.5rem;
     max-width: 1000px;
     margin: 0 auto;
@@ -247,77 +253,80 @@ footer {
     background: var(--white);
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
 }
 .service-block h2 {
     color: var(--primary-color);
     margin-bottom: 0.5rem;
 }
-.service-block img {
-    max-width: 100px; /* Reduced image size for better flow */
-    height: auto;
-    margin-bottom: 1rem;
-    display: block;
-    float: left; /* Image float on mobile */
-    margin-right: 1rem;
-}
-.service-block ul {
-    margin-top: 1rem;
-    padding-left: 1.5rem;
-    list-style: disc;
-    clear: both; /* Clear float after image */
-}
-.service-block ul li {
-    padding: 0.2rem 0;
-    background: none;
-    box-shadow: none;
-}
-/* Accent for the Rides block (Primary/Blue) */
+/* Visual Accent with border for modern look */
 .service-block.ride-block {
+    border: 1px solid var(--primary-color); 
     border-left: 5px solid var(--primary-color); 
 }
-/* Accent for the Foods block (Secondary/Orange) */
 .service-block.foods-block {
+    border: 1px solid var(--secondary-color); 
     border-left: 5px solid var(--secondary-color);
 }
-/* Ensure buttons within service blocks look like CTAs */
-.service-block .cta-primary,
-.service-block .cta-secondary,
-.service-block .cta-secondary-filled {
-    display: inline-block; 
-    margin-top: 1rem;
-    font-size: 1rem;
+.service-block ul {
+    margin-bottom: auto; 
 }
 
 
 /* ------------------------------------------------------------------------- */
-/* --- 3. CAREERS.HTML DESIGN FIXES --- */
+/* --- 4. CITY.HTML STYLES (Modernizing the city list) --- */
 /* ------------------------------------------------------------------------- */
-
-.career-process {
-    padding: 2rem 1.5rem;
-    text-align: center;
+.city-list-section {
+    padding: 2rem 1.5rem; 
+    max-width: 800px;
+    margin: 0 auto;
 }
-.steps-container {
-    display: flex;
-    flex-direction: column; /* Stacked on Mobile */
-    gap: 1.5rem;
+.city-list-section h2 {
+    color: var(--text-color);
     margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
+    border-bottom: 2px solid var(--light-bg-secondary); 
+    padding-bottom: 5px;
+}
+.city-list-section input[type="search"] {
+    width: 100%;
+    padding: 0.75rem; 
+    margin-bottom: 1.5rem;
+    border: 1px solid #ccc;
+    border-radius: 25px; 
+    max-width: 350px;
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+.city-list-section a {
+    display: block;
+    padding: 0.5rem 0; 
+    transition: background-color 0.2s;
+    border-bottom: 1px solid #eee;
+}
+.city-list-section a:hover {
+    background-color: var(--light-bg-primary); 
+    padding-left: 0.5rem;
+}
+
+/* ------------------------------------------------------------------------- */
+/* --- 5. SUPPORT, CAREERS, ABOUT US Generic Layouts --- */
+/* ------------------------------------------------------------------------- */
+
+.steps-container, .values-grid, .faq-sections {
+    display: flex;
+    flex-direction: column; 
+    gap: 1.5rem;
     max-width: 1000px;
     margin: 1.5rem auto 0;
+    padding: 0 1.5rem;
 }
-.step {
+.step, .value-card, .faq-card {
     padding: 1.5rem;
-    background: var(--light-bg-primary);
+    background: var(--white);
     border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
-.step-number {
-    display: block;
-    font-size: 2rem;
-    font-weight: bold;
-    color: var(--primary-color);
-    margin-bottom: 0.5rem;
-}
-
 .job-listings {
     padding: 2rem 1.5rem;
     max-width: 1000px;
@@ -332,139 +341,68 @@ footer {
     display: flex;
     flex-direction: column;
 }
-.listing h3 {
-    color: var(--primary-color);
-    margin-bottom: 0.25rem;
-}
-
-/* ------------------------------------------------------------------------- */
-/* --- 4. ABOUTUS.HTML DESIGN FIXES --- */
-/* ------------------------------------------------------------------------- */
-.mission-statement {
-    padding: 2rem 1.5rem;
-    max-width: 800px;
-    margin: 0 auto;
-}
-.mission-statement h2 {
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-}
-
-.values-grid {
-    padding: 0 1.5rem 3rem;
-    display: flex;
-    flex-direction: column; /* Stacked on Mobile */
-    gap: 1.5rem;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-.value-card {
-    padding: 1.5rem;
-    background: var(--white);
-    border-left: 4px solid var(--primary-color);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-.value-card h3 {
-    color: var(--text-color);
-    margin-bottom: 0.5rem;
-}
-
-
-/* ------------------------------------------------------------------------- */
-/* --- 5. SUPPORT.HTML DESIGN FIXES --- */
-/* ------------------------------------------------------------------------- */
-
-.faq-sections {
-    padding: 2rem 1.5rem;
-    display: flex;
-    flex-direction: column; /* Stacked on Mobile */
-    gap: 1.5rem;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-.faq-card {
-    padding: 1.5rem;
-    background: var(--white);
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-.faq-card h3 {
-    color: var(--primary-color);
-    margin-bottom: 0.5rem;
-}
-.contact-cta {
-    padding: 3rem 1.5rem;
-    text-align: center;
-    background: var(--light-bg-secondary);
-}
 
 /* ------------------------------------------------------------------------- */
 /* --- 6. DESKTOP/TABLET OPTIMIZATION (Media Query) --- */
 /* ------------------------------------------------------------------------- */
 @media (min-width: 768px) {
     
-    /* === GENERAL DESKTOP RESET & NAV === */
+    /* === NAV & HERO === */
     body { padding-top: 0; }
     .main-header { position: static; height: auto; padding: 1.5rem 3rem; justify-content: flex-start; }
     .mobile-menu-icon, .mobile-nav { display: none; }
     .desktop-nav { display: block; margin-left: auto; }
     .desktop-nav ul { display: flex; gap: 1.5rem; }
-    .desktop-nav li a { color: var(--text-color); font-weight: 500; }
-    .page-hero { padding: 5rem 3rem; }
     
-    /* --- GENERAL LAYOUT FIXES (Flex Containers for 2 or 3 Columns) --- */
+    .hero-section {
+        padding: 5rem 3rem;
+    }
+    
+    /* FIX: Index Hero buttons stack horizontally */
+    .cta-buttons {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    /* --- General Layout and Content Sections (Larger desktop padding) --- */
+    .index-content-wrapper, 
+    .city-list-section,
     .service-detail-section,
     .values-grid,
     .steps-container,
-    .faq-sections {
-        flex-direction: row; /* Horizontal layout on desktop */
-        align-items: stretch; /* Ensures columns are same height */
-        gap: 2rem;
-        padding: 2rem 3rem;
+    .faq-sections,
+    .job-listings {
+        padding: 3rem 3rem;
     }
-    
-    /* SERVICES.HTML: Adjust to a two-column layout */
-    /* This section (and city.html) should likely be two columns if it's services/products */
+
+    /* SERVICES.HTML / CITY.HTML Layout (2 Columns) */
     .service-detail-section {
+        flex-direction: row; 
         flex-wrap: wrap; 
     }
     .service-block {
-        flex: 1 1 45%; /* Two columns */
+        flex: 1 1 45%; 
         max-width: 48%; 
-        display: flex;
-        flex-direction: column;
-    }
-    .service-block img {
-        float: none;
-        align-self: flex-start;
-        margin-right: 0;
-    }
-    .service-block ul {
-        margin-top: auto; /* Push list/button to the bottom */
-        clear: none;
-    }
-    .service-block p, .service-block ul {
-        margin-top: 1rem;
     }
     
-    /* CAREERS, ABOUT US, SUPPORT: Maintain 3-column layout */
-    /* If city.html had a 3-column feature grid, it would use these settings */
-    .values-grid,
+    /* CAREERS, ABOUT US, SUPPORT Layout (3 Columns) */
     .steps-container,
+    .values-grid,
     .faq-sections {
+        flex-direction: row;
+        align-items: stretch;
         flex-wrap: nowrap;
     }
-    .value-card, .step, .faq-card {
-        flex: 1 1 30%; /* Three columns */
+    .step, .value-card, .faq-card {
+        flex: 1 1 30%; 
         max-width: 32%;
     }
 
-    /* CAREERS.HTML: Job listings alignment */
+    /* CAREERS.HTML: Job listings alignment FIX (Title on left, Button on right) */
     .listing {
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        padding: 1.5rem;
     }
     .listing h3 {
         margin-bottom: 0;
