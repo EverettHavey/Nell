@@ -25,8 +25,8 @@ body {
     line-height: 1.6;
     color: var(--text-color);
     background: var(--bg-color);
-    /* FIX: Add top padding equal to the header height to prevent content from hiding under the fixed header */
-    padding-top: calc(var(--header-height) + 4px); /* A small buffer for padding */
+    /* FIX: Keep this padding for mobile to clear the fixed header */
+    padding-top: var(--header-height); 
 }
 
 a {
@@ -47,7 +47,7 @@ ul {
     background-color: var(--secondary-color);
 }
 
-/* --- Header & Navigation (Mobile) - FIXED --- */
+/* --- Header & Navigation (Mobile) - FINAL FIXES --- */
 .main-header {
     background: var(--white);
     padding: 1rem 1.5rem;
@@ -55,13 +55,13 @@ ul {
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    /* FIX 1: Make header fixed and full width */
+    /* Set header fixed for mobile */
     position: fixed; 
     top: 0;
     left: 0;
     width: 100%;
-    height: var(--header-height); /* Set a fixed height */
-    z-index: 20; /* Ensure header is above everything */
+    height: var(--header-height); 
+    z-index: 20; 
 }
 
 .logo {
@@ -79,15 +79,16 @@ ul {
     font-size: 2rem;
     cursor: pointer;
     color: var(--text-color);
+    /* Ensure icon is visible and above the mobile nav panel */
+    z-index: 30; 
 }
 
 .mobile-nav {
-    /* FIX 2: Change to fixed position and use calc() for height */
+    /* Set nav fixed for mobile */
     position: fixed; 
-    top: var(--header-height); /* Starts right below the header */
+    top: var(--header-height); 
     left: 0;
     width: 100%;
-    /* FIX 3: Fills the entire remaining viewport height */
     height: calc(100vh - var(--header-height)); 
     background: var(--white);
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
@@ -95,7 +96,6 @@ ul {
     transition: transform 0.3s ease-in-out;
     /* Hide above the screen using 100vh */
     transform: translateY(-100vh); 
-    /* FIX 4: Allows scrolling if links exceed screen height */
     overflow-y: auto; 
 }
 
@@ -232,7 +232,7 @@ footer {
     
     /* 1. HEADER & NAV FIXES */
     
-    /* Reset body padding for desktop as fixed header is changed */
+    /* Reset body padding for desktop */
     body {
         padding-top: 0; 
     }
@@ -249,12 +249,14 @@ footer {
 
     .mobile-nav {
         /* Ensure mobile nav is always hidden on desktop */
-        display: none !important;
+        display: none;
+        /* Removed !important from here */
     }
 
     .desktop-nav {
         /* FIX: Ensure the desktop nav is displayed on ALL pages above 768px */
-        display: block !important; 
+        /* Removed !important to prevent mobile conflict */
+        display: block; 
     }
 
     .desktop-nav ul {
