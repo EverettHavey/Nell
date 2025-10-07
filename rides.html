@@ -108,7 +108,7 @@
             background-color: #e6f0ff; 
         }
 
-        /* PAYMENT CARDS, ETC. */
+        /* Payment/Vehicle Card Styles (Retained) */
         .vehicle-options {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -165,6 +165,25 @@
             object-fit: cover;
             border: 2px solid var(--primary-blue);
         }
+        
+        /* ==================== BUTTON STYLES (FIXED/ADDED) ==================== */
+        .book-button, #confirm-payment-btn {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            width: 100%;
+            margin-top: 15px;
+            font-weight: 600;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .book-button:disabled {
+            background-color: #b0c4de;
+            cursor: not-allowed;
+        }
         #cancel-ride-btn {
             background-color: var(--cancel-red);
             color: white;
@@ -177,8 +196,39 @@
             cursor: pointer;
         }
 
+        /* INLINE PAYMENT FORM INPUT STYLES */
+        #payment-details-form input {
+            width: 100%;
+            padding: 10px 14px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
 
-        /* ==================== CUSTOM MODAL STYLES ==================== */
+        /* ==================== NOTIFICATION BANNER STYLES (Retained) ==================== */
+        #notification-banner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--success-green);
+            color: white;
+            text-align: center;
+            padding: 15px 0;
+            font-weight: bold;
+            z-index: 1000;
+            transform: translateY(-100%); /* Start off-screen */
+            transition: transform 0.4s ease-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: none; /* Ensure hidden initially */
+        }
+        #notification-banner.show {
+            transform: translateY(0); /* Slide into view */
+        }
+        
+        /* ==================== CUSTOM MODAL STYLES (Retained) ==================== */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -244,7 +294,10 @@
             from { opacity: 0; transform: scale(0.9); }
             to { opacity: 1; transform: scale(1); }
         }
-
+        /* Remove stray close icon from inline form if present */
+        #payment-details-form .close-icon {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -290,11 +343,11 @@
         
         <div class="input-group">
             <span class="icon">📍</span>
-            <input type="text" id="pickup-input" placeholder="Enter Pickup Location" oninput="checkLocationInput()">
+            <input type="text" id="pickup-input" placeholder="Enter Pickup Location" onblur="checkLocationInput()">
         </div>
         <div class="input-group">
             <span class="icon">🏁</span>
-            <input type="text" id="dropoff-input" placeholder="Enter Destination" oninput="checkLocationInput()">
+            <input type="text" id="dropoff-input" placeholder="Enter Destination" onblur="checkLocationInput()">
         </div>
         
         <div id="dynamic-booking-content" class="selection-section active">
@@ -319,7 +372,7 @@
             <div id="payment-options-container" class="payment-options" role="radiogroup">
                 </div>
 
-            <div id="payment-details-form" style="display: none;">
+            <div id="payment-details-form" style="display: none; padding-top: 5px;">
                 <h3 id="payment-form-title">Confirm Payment</h3>
                 <div id="payment-form-inputs">
                     </div>
@@ -363,7 +416,7 @@
     </div>
 </div>
 
-<script src="scripts/ridescript.js"></script>
+<script src="scripts/script.js"></script>
 
 </body>
 </html>
