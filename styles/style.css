@@ -7,6 +7,10 @@
     --bg-color: #f4f4f9;
     --white: #ffffff;
     --font-stack: 'Arial', sans-serif;
+    /* Added variables for consistent light backgrounds */
+    --light-bg-primary: #e6f0ff; /* Light blue (used in About Us) */
+    --light-bg-secondary: #e9e9f1; /* Light grey/blue (used in City Feature) */
+    --light-bg-tertiary: #f1f1f9; /* Even lighter (used in Support CTA) */
 }
 
 * {
@@ -31,6 +35,15 @@ ul {
     list-style: none;
 }
 
+/* --- Utility Classes (for page-specific background colors) --- */
+.bg-primary {
+    background-color: var(--primary-color);
+}
+
+.bg-secondary {
+    background-color: var(--secondary-color);
+}
+
 /* --- Header & Navigation (Mobile) --- */
 .main-header {
     background: var(--white);
@@ -49,7 +62,7 @@ ul {
 
 .desktop-nav {
     /* Hide desktop nav on mobile */
-    display: none; 
+    display: none;
 }
 
 .mobile-menu-icon {
@@ -60,7 +73,12 @@ ul {
 
 .mobile-nav {
     position: absolute;
-    top: 60px; /* Adjust based on header height */
+    /* * NOTE: Using a fixed value like 60px is brittle. 
+     * It's often better to ensure the header has a fixed height, 
+     * or use JS to calculate this value, or use a fixed header.
+     * I'll stick with your original value for simplicity of the fix.
+     */
+    top: 60px; 
     left: 0;
     width: 100%;
     background: var(--white);
@@ -83,6 +101,22 @@ ul {
     padding: 0.75rem 1.5rem;
     color: var(--text-color);
     border-bottom: 1px solid #eee;
+}
+
+/* --- Shared Button Styles --- */
+.btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    margin-top: 1rem;
+    background: var(--primary-color);
+    color: var(--white);
+    border-radius: 5px;
+    font-size: 0.9rem;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background: #0056b3;
 }
 
 /* --- Hero Section --- */
@@ -136,7 +170,7 @@ ul {
     background: #eee;
 }
 
-/* --- Service Cards --- */
+/* --- Service Cards (Homepage) --- */
 .service-cards {
     padding: 2rem 1.5rem;
     display: flex;
@@ -156,26 +190,11 @@ ul {
     margin-bottom: 0.5rem;
 }
 
-.btn {
-    display: inline-block;
-    padding: 0.5rem 1rem;
-    margin-top: 1rem;
-    background: var(--primary-color);
-    color: var(--white);
-    border-radius: 5px;
-    font-size: 0.9rem;
-    transition: background-color 0.3s;
-}
-
-.btn:hover {
-    background: #0056b3;
-}
-
-/* --- City Feature --- */
+/* --- City Feature (Homepage) --- */
 .city-feature {
     padding: 2rem 1.5rem;
     text-align: center;
-    background: #e9e9f1;
+    background: var(--light-bg-secondary); /* Used new variable */
 }
 
 .btn-link {
@@ -254,16 +273,17 @@ footer {
     }
 }
 
-/* Unique Styles for Services Page */
+
+/* ------------------------------------------------------------------------- */
+/* --- 3. UNIQUE PAGE STYLES (Services, Careers, About Us, City, Support) --- */
+/* ------------------------------------------------------------------------- */
+
+/* --- Services Page Styles --- */
 
 .page-hero {
     padding: 3rem 1.5rem;
     text-align: center;
     color: var(--white);
-}
-
-.bg-primary {
-    background-color: var(--primary-color);
 }
 
 .service-detail-section {
@@ -301,7 +321,7 @@ footer {
     padding: 0.2rem 0;
 }
 
-/* Desktop optimization for Services */
+/* Services Desktop optimization */
 @media (min-width: 768px) {
     .service-detail-section {
         flex-direction: row;
@@ -315,16 +335,13 @@ footer {
     }
 
     .service-block img {
-        float: left;
+        /* Better to use flex or grid for layout, but keeping your float fix */
+        float: left; 
         margin-right: 1rem;
     }
 }
 
-/* Unique Styles for Careers Page */
-
-.bg-secondary {
-    background-color: var(--secondary-color);
-}
+/* --- Careers Page Styles --- */
 
 .career-process {
     padding: 2rem 1.5rem;
@@ -381,7 +398,7 @@ footer {
     color: var(--text-color);
 }
 
-/* Desktop optimization for Careers */
+/* Careers Desktop optimization */
 @media (min-width: 768px) {
     .steps-container {
         flex-direction: row;
@@ -393,80 +410,7 @@ footer {
     }
 }
 
-/* Unique Styles for Careers Page */
-
-.bg-secondary {
-    background-color: var(--secondary-color);
-}
-
-.career-process {
-    padding: 2rem 1.5rem;
-    text-align: center;
-}
-
-.career-process h2 {
-    margin-bottom: 2rem;
-    color: var(--primary-color);
-}
-
-.steps-container {
-    display: flex;
-    flex-direction: column;
-    gap: 2rem;
-}
-
-.step {
-    padding: 1.5rem;
-    background: var(--white);
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-}
-
-.step-number {
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    line-height: 30px;
-    background: var(--primary-color);
-    color: var(--white);
-    border-radius: 50%;
-    margin-bottom: 1rem;
-    font-weight: bold;
-}
-
-.job-listings {
-    padding: 2rem 1.5rem;
-}
-
-.listing {
-    background: var(--white);
-    padding: 1.5rem;
-    border-left: 5px solid var(--secondary-color);
-    margin-bottom: 1.5rem;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-.listing h3 {
-    margin-bottom: 0.5rem;
-    color: var(--text-color);
-}
-
-/* Desktop optimization for Careers */
-@media (min-width: 768px) {
-    .steps-container {
-        flex-direction: row;
-        max-width: 1100px;
-        margin: 0 auto;
-    }
-    .step {
-        flex: 1;
-    }
-}
-
-/* Unique Styles for About Us Page */
+/* --- About Us Page Styles --- */
 
 .mission-statement {
     padding: 2rem 1.5rem;
@@ -487,7 +431,7 @@ footer {
 
 .value-card {
     padding: 1.5rem;
-    background: #e6f0ff; /* Light blue background */
+    background: var(--light-bg-primary); /* Used new variable */
     border-radius: 8px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.03);
     text-align: center;
@@ -498,7 +442,7 @@ footer {
     margin-bottom: 0.5rem;
 }
 
-/* Desktop optimization for About Us */
+/* About Us Desktop optimization */
 @media (min-width: 768px) {
     .values-grid {
         flex-direction: row;
@@ -510,12 +454,12 @@ footer {
     }
 }
 
-/* Unique Styles for City Page */
+/* --- City Page Styles --- */
 
 .city-search {
     padding: 1.5rem;
     text-align: center;
-    background: #ddd;
+    background: #ddd; /* Keeping fixed grey, as it's a unique search bar background */
 }
 
 #citySearchInput {
@@ -558,7 +502,7 @@ footer {
     list-style: circle;
 }
 
-/* Unique Styles for Support Page */
+/* --- Support Page Styles --- */
 
 .faq-sections {
     padding: 2rem 1.5rem;
@@ -583,15 +527,21 @@ footer {
 .contact-cta {
     padding: 3rem 1.5rem;
     text-align: center;
-    background: #f1f1f9;
+    background: var(--light-bg-tertiary); /* Used new variable */
 }
 
 .contact-cta .cta-primary {
+    /* Using the existing .cta-primary style for the button */
     margin-top: 1rem;
-    background: var(--primary-color);
+    /* NOTE: The original had 'background: var(--primary-color);' here, 
+     * which overrides the existing .cta-primary (secondary color). 
+     * I've kept your intent to make it blue on this specific CTA, but
+     * consider if this should be a new class for consistency.
+     */
+    background: var(--primary-color); 
 }
 
-/* Desktop optimization for Support */
+/* Support Desktop optimization */
 @media (min-width: 768px) {
     .faq-sections {
         flex-direction: row;
