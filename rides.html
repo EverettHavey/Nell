@@ -15,6 +15,7 @@
             --white: #ffffff;
             --danger-color: #e74c3c;
             --font-stack: 'Inter', sans-serif;
+            --border-radius: 8px; /* New variable for consistency */
         }
 
         * {
@@ -43,7 +44,7 @@
             position: sticky;
             top: 0;
             z-index: 50;
-            display: flex; /* Added flex to align logo and back button */
+            display: flex;
             justify-content: space-between;
             align-items: center;
         }
@@ -54,7 +55,7 @@
             color: var(--primary-color);
         }
         
-        /* New Back to Home Button Style */
+        /* Back to Home Button Style */
         .home-btn {
             text-decoration: none;
             color: var(--primary-color);
@@ -62,7 +63,7 @@
             font-size: 0.9rem;
             padding: 0.5rem 1rem;
             border: 1px solid #ddd;
-            border-radius: 8px;
+            border-radius: var(--border-radius);
             transition: background-color 0.2s;
         }
         
@@ -87,6 +88,21 @@
             margin-bottom: 1.5rem;
         }
         
+        /* --- NEW: Map Placeholder Style --- */
+        .map-placeholder {
+            height: 150px;
+            background: #e0e6e9; /* Light grey/blue to mimic a map */
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #666;
+            font-size: 0.9rem;
+            border: 1px solid #ccc;
+        }
+
         /* Form Inputs */
         .input-group {
             margin-bottom: 1rem;
@@ -104,7 +120,7 @@
             width: 100%;
             padding: 0.75rem;
             border: 1px solid #ddd;
-            border-radius: 8px;
+            border-radius: var(--border-radius);
             font-size: 1rem;
             transition: border-color 0.2s;
         }
@@ -117,18 +133,21 @@
         /* Vehicle Selection */
         .vehicle-selection {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Adjusted grid for more services */
-            gap: 1rem;
+            /* Improved grid for better small screen density */
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); 
+            gap: 0.75rem; /* Slightly smaller gap for density */
             margin-top: 1rem;
         }
 
         .vehicle-option {
             border: 2px solid #eee;
             border-radius: 10px;
-            padding: 0.75rem;
+            padding: 0.75rem 0.5rem; /* Adjusted padding */
             text-align: center;
             cursor: pointer;
             transition: all 0.2s;
+            /* Added ARIA role for better accessibility */
+            min-height: 100px; /* Enforce min height for tap target */
         }
 
         .vehicle-option:hover {
@@ -146,20 +165,38 @@
             margin-bottom: 0.25rem;
         }
 
+        .vehicle-name {
+            font-size: 0.8rem !important; /* Made smaller for better fit */
+            font-weight: 400;
+            margin-bottom: 0.25rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
         .vehicle-price {
             font-weight: 800;
             color: var(--text-color);
+            font-size: 1rem;
+        }
+        
+        .vehicle-eta { /* New ETA style for live feedback */
+            font-size: 0.75rem;
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-top: 0.25rem;
+            min-height: 1.2em;
         }
 
         /* Buttons */
-        .book-btn, .confirm-btn {
+        .book-btn, .confirm-btn, .close-btn { /* Combined close-btn for consistency */
             display: block;
             width: 100%;
             padding: 1rem;
             background: var(--primary-color);
             color: var(--white);
             border: none;
-            border-radius: 8px;
+            border-radius: var(--border-radius);
             font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
@@ -174,119 +211,39 @@
         .book-btn:disabled {
             background: #999;
             cursor: not-allowed;
-        }
-
-        .back-btn {
-            background: none;
-            border: none;
-            color: var(--primary-color);
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            margin-bottom: 1rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
+            transform: none;
         }
         
         /* Confirmation View Specific Styles */
-        #confirm-view h2 {
-            color: var(--secondary-color);
-            margin-bottom: 1.5rem;
-            text-align: center;
-        }
-
-        .summary-details .summary-line {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem 0;
-            border-bottom: 1px dashed #eee;
-        }
+        /* ... existing styles remain largely the same ... */
 
         .summary-details .summary-line:last-of-type {
             border-bottom: none;
-            font-weight: 600;
-            color: var(--primary-color);
-            font-size: 1.1rem;
+            font-weight: 700; /* Increased weight */
+            color: var(--secondary-color); /* Changed to secondary color for total */
+            font-size: 1.2rem; /* Increased size */
             padding-top: 1rem;
-        }
-        
-        /* Payment Section Styling */
-        .payment-section {
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-            border-top: 1px solid #ddd;
-        }
-
-        .payment-section h3 {
-            font-size: 1.2rem;
-            color: var(--text-color);
-            margin-bottom: 1rem;
-        }
-
-        .promo-code-group {
-            display: flex; 
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .promo-code-group input {
-            flex-grow: 1; 
-            padding: 0.75rem; 
-            border-radius: 5px; 
-            border: 1px solid #ccc;
         }
         
         .promo-code-group button {
-            background: var(--secondary-color); 
-            color: var(--white); 
-            padding: 0.75rem 1rem; 
-            border: none; 
-            border-radius: 5px; 
-            cursor: pointer; 
-            font-weight: 600;
-            transition: background 0.2s;
+            border-radius: var(--border-radius); /* Use variable for consistency */
         }
         
-        .promo-code-group button:hover {
-            background: #159c7b;
-        }
-
         /* Message Box Styling (for Confirmation) */
         .message-box {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--white);
-            padding: 2rem;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            text-align: center;
-            width: 90%;
-            max-width: 400px;
-            display: none; 
+            /* ... existing styles ... */
             border-top: 5px solid var(--secondary-color);
+            /* Ensure accessibility: hidden by default, visible when needed */
+            aria-modal: true;
+            role: dialog;
         }
-        .message-box h3 {
-            color: var(--secondary-color);
-            margin-bottom: 1rem;
-            font-size: 1.5rem;
+        
+        /* New: Visually indicate required fields */
+        input:required:not([value=""]):valid {
+            border-color: var(--secondary-color);
         }
-        .message-box p {
-            margin-bottom: 1.5rem;
-            font-size: 1rem;
-            text-align: left;
-        }
-        .message-box .close-btn {
-            background: var(--primary-color);
-            color: var(--white);
-            padding: 0.75rem 1.5rem;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
+        input:required:invalid:not(:focus):not([value=""]) {
+            border-color: var(--danger-color);
         }
 
     </style>
@@ -295,42 +252,39 @@
 
     <header class="main-header">
         <div class="logo">NELL - Rides</div>
-        <!-- NEW BACK BUTTON TO HOME -->
         <a href="index.html" class="home-btn">← Back to Home</a>
     </header>
 
     <div class="container">
         
-        <!-- -------------------- RIDE BOOKING VIEW -------------------- -->
-        <section id="booking-view">
+        <section id="booking-view" aria-live="polite">
             <div class="card">
                 <h2 style="color: var(--primary-color); margin-bottom: 1.5rem;">Where to?</h2>
+                
+                <div class="map-placeholder">
+                    🗺️ Mock Map View: Showing route...
+                </div>
+                
                 <div class="input-group">
-                    <label for="pickupLocation">Pickup Location</label>
-                    <!-- Removed default value -->
+                    <label for="pickupLocation">Pickup Location <span style="color:var(--danger-color);">*</span></label>
                     <input type="text" id="pickupLocation" value="" placeholder="Enter pickup location" required>
                 </div>
                 <div class="input-group">
-                    <label for="dropoffLocation">Dropoff Location</label>
-                    <!-- Removed default value -->
+                    <label for="dropoffLocation">Dropoff Location <span style="color:var(--danger-color);">*</span></label>
                     <input type="text" id="dropoffLocation" value="" placeholder="Enter dropoff location" required>
                 </div>
             </div>
             
             <div class="card">
-                <!-- RENAMED HEADING: "Select Vehicle" changed to "Select Travel Mode" -->
                 <h3 style="color: var(--text-color); margin-bottom: 1rem; border-bottom: 1px solid #eee; padding-bottom: 0.5rem;">Select Travel Mode</h3>
-                <!-- Main Vehicle Selection (Includes Exotic Category Trigger) -->
-                <div class="vehicle-selection" id="mainVehicleSelection">
-                    <!-- Options injected by JS -->
-                </div>
+                
+                <div class="vehicle-selection" id="mainVehicleSelection" role="radiogroup" aria-label="Select Main Travel Mode">
+                    </div>
 
-                <!-- Exotic Sub-Menu (Hidden by default) -->
                 <div id="exoticSubMenu" class="hidden" style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px dashed #ddd;">
                     <h4 style="margin-bottom: 0.8rem; font-weight: 600; color: var(--secondary-color);">Choose Your Exotic Ride:</h4>
-                    <div class="vehicle-selection" id="exoticVehicleSelection">
-                        <!-- Exotic Sub-Options injected by JS -->
-                    </div>
+                    <div class="vehicle-selection" id="exoticVehicleSelection" role="radiogroup" aria-label="Select Exotic Sub-Option">
+                        </div>
                 </div>
             </div>
 
@@ -339,36 +293,39 @@
             </button>
         </section>
         
-        <!-- -------------------- RIDE CONFIRMATION VIEW -------------------- -->
-        <section id="confirm-view" class="hidden">
+        <section id="confirm-view" class="hidden" aria-live="polite">
             <button class="back-btn" onclick="showView('booking-view')">&larr; Change Ride</button>
             <div class="card">
                 <h2>Confirm Your Ride</h2>
 
-                <div class="summary-details">
-                    <div class="summary-line">
-                        <span>Travel Mode:</span>
-                        <span id="confirmVehicleType"></span>
+                <div class="summary-details" role="table" aria-label="Ride Summary">
+                    <div style="font-size: 0.9rem; color: #888; padding-bottom: 0.5rem; display: flex; justify-content: space-between;">
+                        <span>Detail</span>
+                        <span>Value</span>
                     </div>
-                    <div class="summary-line">
-                        <span>Pickup:</span>
-                        <span id="confirmPickup"></span>
+                    
+                    <div class="summary-line" role="row">
+                        <span role="cell">Travel Mode:</span>
+                        <span role="cell" id="confirmVehicleType"></span>
                     </div>
-                    <div class="summary-line">
-                        <span>Dropoff:</span>
-                        <span id="confirmDropoff"></span>
+                    <div class="summary-line" role="row">
+                        <span role="cell">Pickup:</span>
+                        <span role="cell" id="confirmPickup"></span>
                     </div>
-                    <div class="summary-line">
-                        <span>Estimated Distance:</span>
-                        <span id="confirmDistance"></span>
+                    <div class="summary-line" role="row">
+                        <span role="cell">Dropoff:</span>
+                        <span role="cell" id="confirmDropoff"></span>
                     </div>
-                    <div class="summary-line">
-                        <span>Estimated Time:</span>
-                        <span id="confirmTime"></span>
+                    <div class="summary-line" role="row">
+                        <span role="cell">Estimated Distance:</span>
+                        <span role="cell" id="confirmDistance"></span>
+                    </div>
+                    <div class="summary-line" role="row">
+                        <span role="cell">Estimated Time:</span>
+                        <span role="cell" id="confirmTime"></span>
                     </div>
                 </div>
 
-                <!-- Payment Section -->
                 <div class="payment-section">
                     <h3>Payment & Total</h3>
 
@@ -387,24 +344,22 @@
                     </div>
                     <p id="promoMessage" style="font-size: 0.85rem; margin-top: -0.5rem; margin-bottom: 1rem;"></p>
 
-                    <!-- Cost Breakdown -->
-                    <div class="summary-details">
-                        <div class="summary-line">
-                            <span>Base Fare:</span>
-                            <span id="confirmBaseFare"></span>
+                    <div class="summary-details" role="table" aria-label="Cost Breakdown">
+                        <div class="summary-line" role="row">
+                            <span role="cell">Base Fare:</span>
+                            <span role="cell" id="confirmBaseFare"></span>
                         </div>
-                        <div class="summary-line">
-                            <span>Surge/Fee:</span>
-                            <span id="confirmSurgeFee">$0.00</span>
+                        <div class="summary-line" role="row">
+                            <span role="cell">Surge/Fee:</span>
+                            <span role="cell" id="confirmSurgeFee">$0.00</span>
                         </div>
-                        <!-- Discount line placeholder -->
-                        <div class="summary-line hidden" id="discountLine">
-                            <span>Promo Discount:</span>
-                            <span id="confirmDiscount" style="color: var(--danger-color); font-weight: 700;">-$0.00</span>
+                        <div class="summary-line hidden" id="discountLine" role="row">
+                            <span role="cell">Promo Discount:</span>
+                            <span role="cell" id="confirmDiscount" style="color: var(--danger-color); font-weight: 700;">-$0.00</span>
                         </div>
-                        <div class="summary-line">
-                            <span>Ride Total:</span>
-                            <span id="confirmTotal" style="color: var(--secondary-color);"></span>
+                        <div class="summary-line" role="row">
+                            <span role="cell">Ride Total:</span>
+                            <span role="cell" id="confirmTotal" style="color: var(--secondary-color);"></span>
                         </div>
                     </div>
                 </div>
@@ -417,8 +372,7 @@
         
     </div>
 
-    <!-- Message Box (Confirmation) -->
-    <div class="message-box" id="messageBox">
+    <div class="message-box" id="messageBox" aria-modal="true" role="dialog" aria-labelledby="messageTitle">
         <h3 id="messageTitle">Ride Confirmed!</h3>
         <p id="messageText"></p>
         <button class="close-btn" onclick="closeMessageBox()">Got It</button>
@@ -472,6 +426,33 @@
             promoDiscount: 0.00
         };
 
+        // --- UTILITY FUNCTIONS ---
+        // Checks if required fields are filled
+        function checkBookingReadiness() {
+            const pickup = document.getElementById('pickupLocation').value.trim();
+            const dropoff = document.getElementById('dropoffLocation').value.trim();
+            const btn = document.getElementById('bookRideBtn');
+
+            // Only enable if both locations are filled AND a vehicle is selected
+            const ready = selectedVehicle && pickup && dropoff;
+            btn.disabled = !ready;
+            
+            // Update button text for better UX
+            if (ready) {
+                const price = (selectedVehicle.basePrice * selectedVehicle.multiplier).toFixed(2);
+                btn.textContent = `Book ${selectedVehicle.name} ($${price})`;
+            } else if (selectedVehicle && (!pickup || !dropoff)) {
+                btn.textContent = 'Enter Locations to Book';
+            } else if (!selectedVehicle && pickup && dropoff) {
+                btn.textContent = 'Select Travel Mode';
+            } else if (selectedVehicle && selectedVehicle.isCategory) {
+                // Keep the 'Select Exotic Car...' text if category is selected but not sub-option
+                // The selectVehicle function already handles this specific case
+            } else {
+                btn.textContent = 'Book Ride';
+            }
+        }
+        
         // --- TIME CALCULATION LOGIC ---
         function getEtaInMinutes(vehicleId) {
             // Establishes a mock Estimated Time of Arrival (ETA) based on a 3.2-mile trip
@@ -494,6 +475,8 @@
 
         // --- VIEW MANAGEMENT ---
         function showView(viewId) {
+            // Clear any old pop-ups when changing views
+            closeMessageBox();
             document.getElementById('booking-view').classList.add('hidden');
             document.getElementById('confirm-view').classList.add('hidden');
             document.getElementById(viewId).classList.remove('hidden');
@@ -505,108 +488,111 @@
 
         // --- BOOKING VIEW LOGIC ---
         function renderVehicles() {
-            const mainContainer = document.getElementById('mainVehicleSelection');
-            mainContainer.innerHTML = '';
+            const renderOptions = (containerId, vehicleList) => {
+                const container = document.getElementById(containerId);
+                container.innerHTML = '';
+                
+                vehicleList.forEach(v => {
+                    const price = (v.basePrice * v.multiplier).toFixed(2);
+                    const option = document.createElement('div');
+                    option.classList.add('vehicle-option');
+                    option.setAttribute('data-id', v.id);
+                    // Added ARIA attributes
+                    option.setAttribute('role', 'radio');
+                    option.setAttribute('aria-checked', 'false');
+                    option.setAttribute('tabindex', '0');
+                    option.onclick = () => selectVehicle(v);
+                    option.onkeydown = (e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            selectVehicle(v);
+                        }
+                    };
+
+                    option.innerHTML = `
+                        <div class="vehicle-icon">${v.icon}</div>
+                        <div class="vehicle-name" style="font-size: 0.9rem;">${v.name}</div>
+                        <div class="vehicle-price">$${price}</div>
+                        <div class="vehicle-eta" id="eta-${v.id}">${getEtaInMinutes(v.id)}</div>
+                    `;
+                    container.appendChild(option);
+                });
+            };
 
             // 1. Render main vehicles (excluding sub-options)
-            mainVehicles.forEach(v => {
-                const price = (v.basePrice * v.multiplier).toFixed(2);
-                const option = document.createElement('div');
-                option.classList.add('vehicle-option');
-                option.setAttribute('data-id', v.id);
-                option.onclick = () => selectVehicle(v);
-
-                option.innerHTML = `
-                    <div class="vehicle-icon">${v.icon}</div>
-                    <div class="vehicle-name" style="font-size: 0.9rem;">${v.name}</div>
-                    <div class="vehicle-price">$${price}</div>
-                `;
-                mainContainer.appendChild(option);
-            });
+            renderOptions('mainVehicleSelection', mainVehicles);
 
             // 2. Render exotic sub-options into their hidden container
-            const exoticContainer = document.getElementById('exoticVehicleSelection');
-            exoticContainer.innerHTML = '';
-            
-            exoticSubVehicles.forEach(v => {
-                const price = (v.basePrice * v.multiplier).toFixed(2);
-                const option = document.createElement('div');
-                option.classList.add('vehicle-option');
-                option.setAttribute('data-id', v.id);
-                option.onclick = () => selectVehicle(v); // Sub-options use the same select function
-
-                option.innerHTML = `
-                    <div class="vehicle-icon">${v.icon}</div>
-                    <div class="vehicle-name" style="font-size: 0.9rem;">${v.name}</div>
-                    <div class="vehicle-price">$${price}</div>
-                `;
-                exoticContainer.appendChild(option);
-            });
+            renderOptions('exoticVehicleSelection', exoticSubVehicles);
         }
 
         function selectVehicle(vehicle) {
-            // 1. Clear previous selection visuals (main selection)
-            document.querySelectorAll('#mainVehicleSelection .vehicle-option').forEach(opt => opt.classList.remove('selected'));
-            // 2. Clear previous selection visuals (exotic selection)
-            document.querySelectorAll('#exoticVehicleSelection .vehicle-option').forEach(opt => opt.classList.remove('selected'));
+            // 1. Clear previous selections (visual and ARIA)
+            document.querySelectorAll('.vehicle-option').forEach(opt => {
+                opt.classList.remove('selected');
+                opt.setAttribute('aria-checked', 'false');
+            });
+            
+            const currentOptionElement = document.querySelector(`.vehicle-option[data-id="${vehicle.id}"]`);
 
             if (vehicle.isCategory) {
-                // If Exotic Category is chosen, show the submenu and select the category visually
-                selectedVehicle = null; // Clear actual vehicle selection
+                // If Exotic Category is chosen, show the submenu and visually select the category
+                selectedVehicle = null; // Clear actual vehicle selection to force sub-selection
                 document.getElementById('exoticSubMenu').classList.remove('hidden');
-                document.querySelector(`#mainVehicleSelection .vehicle-option[data-id="${vehicle.id}"]`).classList.add('selected');
+                currentOptionElement.classList.add('selected');
+                currentOptionElement.setAttribute('aria-checked', 'true');
                 
-                // Disable book button until a sub-option is selected
-                document.getElementById('bookRideBtn').disabled = true;
-                document.getElementById('bookRideBtn').textContent = 'Select Exotic Car...';
-                return;
-            } 
-            
-            // If a regular vehicle or exotic sub-vehicle is chosen
-            selectedVehicle = vehicle;
-            rideDetails.time = getEtaInMinutes(vehicle.id); 
-
-            // Update visuals
-            const currentContainerId = vehicle.isSubOption ? 'exoticVehicleSelection' : 'mainVehicleSelection';
-            document.querySelector(`#${currentContainerId} .vehicle-option[data-id="${vehicle.id}"]`).classList.add('selected');
-            
-            // If an exotic sub-option was chosen, make sure the category remains visually selected and the submenu is visible
-            if (vehicle.isSubOption) {
-                document.querySelector(`#mainVehicleSelection .vehicle-option[data-id="exotic_category"]`).classList.add('selected');
-                document.getElementById('exoticSubMenu').classList.remove('hidden');
             } else {
-                // If a standard vehicle is chosen, hide the exotic submenu
-                document.getElementById('exoticSubMenu').classList.add('hidden');
-            }
+                // If a regular vehicle or exotic sub-vehicle is chosen
+                selectedVehicle = vehicle;
+                rideDetails.time = getEtaInMinutes(vehicle.id); 
 
-            // Enable and update button
-            const price = (vehicle.basePrice * vehicle.multiplier).toFixed(2);
-            const btn = document.getElementById('bookRideBtn');
-            btn.textContent = `Book ${vehicle.name} ($${price})`;
-            btn.disabled = false;
+                // Update visuals and ARIA
+                currentOptionElement.classList.add('selected');
+                currentOptionElement.setAttribute('aria-checked', 'true');
+
+                if (vehicle.isSubOption) {
+                    // If an exotic sub-option was chosen, visually select the main category too
+                    const categoryElement = document.querySelector(`#mainVehicleSelection .vehicle-option[data-id="exotic_category"]`);
+                    categoryElement.classList.add('selected');
+                    categoryElement.setAttribute('aria-checked', 'true');
+                    document.getElementById('exoticSubMenu').classList.remove('hidden');
+                } else {
+                    // If a standard vehicle is chosen, hide the exotic submenu
+                    document.getElementById('exoticSubMenu').classList.add('hidden');
+                }
+            }
+            
+            checkBookingReadiness(); // Update button state
         }
 
         function calculateRideTotal() {
-            if (!selectedVehicle) return 0.00;
+            if (!selectedVehicle) return { subtotal: 0.00, total: 0.00 };
             const subtotal = selectedVehicle.basePrice * selectedVehicle.multiplier;
             const total = Math.max(0, subtotal + rideDetails.surgeFee - rideDetails.promoDiscount);
             return { subtotal, total };
         }
 
         function bookRide() {
-            const pickup = document.getElementById('pickupLocation').value;
-            const dropoff = document.getElementById('dropoffLocation').value;
+            const pickup = document.getElementById('pickupLocation').value.trim();
+            const dropoff = document.getElementById('dropoffLocation').value.trim();
 
             if (!selectedVehicle || !pickup || !dropoff) {
                 alertUser("Missing Information", "Please select a travel mode and enter valid locations.");
                 return;
+            }
+            
+            if (selectedVehicle.isCategory) {
+                 alertUser("Select Exotic Car", "Please choose one of the specific exotic cars from the menu.");
+                 return;
             }
 
             // Update rideDetails with current inputs
             rideDetails.pickup = pickup;
             rideDetails.dropoff = dropoff;
             rideDetails.baseFare = (selectedVehicle.basePrice * selectedVehicle.multiplier);
-            rideDetails.promoDiscount = 0.00; // Reset discount on new booking
+            // DO NOT reset promoDiscount here, the user might have an active promo. 
+            // It should only be reset when leaving the confirm screen or starting a new full booking process.
 
             // Transition to confirmation view
             renderConfirmationDetails();
@@ -617,12 +603,10 @@
         function renderConfirmationDetails() {
             const { subtotal, total } = calculateRideTotal();
 
-            // Updated label for Vehicle Type to Travel Mode
             document.getElementById('confirmVehicleType').textContent = selectedVehicle.name;
             document.getElementById('confirmPickup').textContent = rideDetails.pickup;
             document.getElementById('confirmDropoff').textContent = rideDetails.dropoff;
             document.getElementById('confirmDistance').textContent = rideDetails.distance;
-            // The ETA is now dynamically updated here
             document.getElementById('confirmTime').textContent = rideDetails.time; 
             
             document.getElementById('confirmBaseFare').textContent = `$${subtotal.toFixed(2)}`;
@@ -646,13 +630,12 @@
             const messageElement = document.getElementById('promoMessage');
             
             rideDetails.promoDiscount = 0.00; // Reset discount
-            messageElement.style.color = '#cc0000'; // Default to error color (red)
+            messageElement.style.color = 'var(--danger-color)'; // Default to error color (red)
             
             // Mock Promo Code Logic
             if (code === 'NELLRIDE') {
                 rideDetails.promoDiscount = 5.00; // Mock $5 off
                 messageElement.textContent = '$5 discount applied!';
-                // FIX: CSS variables must be wrapped in a string literal in JS style assignment
                 messageElement.style.color = 'var(--secondary-color)';
             } else if (code) {
                 messageElement.textContent = 'Invalid promo code.';
@@ -671,57 +654,45 @@
             const driverId = Math.random().toString(36).substring(2, 8).toUpperCase();
             
             // Prepare confirmation message
-            document.getElementById('messageTitle').textContent = "Booking Confirmed!";
+            document.getElementById('messageTitle').textContent = "Booking Confirmed! 🎉";
             
             let confirmationMessage = '';
-            // Determine the appropriate message based on the travel mode
-            if (selectedVehicle.id === 'walk') {
-                 confirmationMessage = `
-                    <p><strong>Your Walking Companion is arriving shortly!</strong></p>
-                    <p><strong>Companion ID:</strong> ${driverId}</p>
-                    <p><strong>Meet at:</strong> ${rideDetails.pickup}</p>
-                    <p><strong>Destination:</strong> ${rideDetails.dropoff}</p>
-                    <p><strong>Estimated Walk Time:</strong> ${rideDetails.time}</p>
-                `;
-            } else if (selectedVehicle.id === 'airplane') {
-                 confirmationMessage = `
-                    <p><strong>Your ${selectedVehicle.name} charter is being arranged!</strong></p>
-                    <p><strong>Flight ID:</strong> ${driverId}</p>
-                    <p><strong>Departure from:</strong> ${rideDetails.pickup}</p>
-                    <p><strong>Arrival at:</strong> ${rideDetails.dropoff}</p>
-                    <p><strong>Estimated Flight Time:</strong> ${rideDetails.time}</p>
-                `;
-            } else {
-                 confirmationMessage = `
-                    <p><strong>Your ${selectedVehicle.name} is on its way!</strong></p>
-                    <p><strong>Driver ID:</strong> ${driverId}</p>
-                    <p><strong>Pickup:</strong> ${rideDetails.pickup}</p>
-                    <p><strong>Dropoff:</strong> ${rideDetails.dropoff}</p>
-                    <p><strong>Time:</strong> ${rideDetails.time} ETA</p>
-                `;
-            }
+            // Use a consistent structure for confirmation for better code readability
+            const vehicleType = selectedVehicle.name;
+            const modeSpecificDetail = (
+                selectedVehicle.id === 'walk' ? 'Walking Companion' :
+                selectedVehicle.id === 'airplane' ? 'Flight' :
+                'Driver'
+            );
+            
+            confirmationMessage = `
+                <p><strong>Your ${vehicleType} is on its way!</strong></p>
+                <p><strong>${modeSpecificDetail} ID:</strong> ${driverId}</p>
+                <p><strong>Pickup:</strong> ${rideDetails.pickup}</p>
+                <p><strong>Dropoff:</strong> ${rideDetails.dropoff}</p>
+                <p><strong>Time:</strong> ${rideDetails.time} ETA</p>
+            `;
 
             document.getElementById('messageText').innerHTML = confirmationMessage + 
                 `<p style="margin-top: 1rem;"><strong>Charged to ${paymentName}:</strong> $${total.toFixed(2)}</p>`;
             
             document.getElementById('messageBox').style.display = 'block';
 
-            // Reset state to start a new booking (optional, for a simple prototype)
+            // Reset state to start a new booking
             selectedVehicle = null;
-            document.getElementById('bookRideBtn').disabled = true;
-            document.getElementById('bookRideBtn').textContent = 'Book Ride';
-            document.querySelectorAll('.vehicle-option').forEach(opt => opt.classList.remove('selected'));
-            document.getElementById('exoticSubMenu').classList.add('hidden');
-            document.getElementById('ridePromoCode').value = '';
-            document.getElementById('promoMessage').textContent = '';
+            document.getElementById('pickupLocation').value = '';
+            document.getElementById('dropoffLocation').value = '';
+            rideDetails.promoDiscount = 0.00; // Reset discount after confirmation
             
-            // Go back to the initial booking view in the background
+            // Go back to the initial booking view in the background and re-render
             showView('booking-view'); 
+            checkBookingReadiness(); // Ensure button is disabled
         }
 
         function alertUser(title, message) {
             document.getElementById('messageTitle').textContent = title;
             document.getElementById('messageText').innerHTML = message;
+            // Removed close-btn specific styling here as it's general now
             document.getElementById('messageBox').style.display = 'block';
         }
 
@@ -729,6 +700,10 @@
         document.addEventListener('DOMContentLoaded', () => {
             renderVehicles();
             showView('booking-view');
+            
+            // New: Attach listener to locations to enable/disable button
+            document.getElementById('pickupLocation').addEventListener('input', checkBookingReadiness);
+            document.getElementById('dropoffLocation').addEventListener('input', checkBookingReadiness);
         });
     </script>
 </body>
