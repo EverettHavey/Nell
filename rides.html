@@ -578,7 +578,6 @@
             document.getElementById('driver-name').textContent = driverInfo.name;
             document.getElementById('vehicle-details').textContent = `${selectedVehicle.name} • ${driverInfo.plate}`; 
             document.getElementById('payment-summary').textContent = `${paymentMethod.icon} ${paymentMethod.confirmedName}`; 
-            // Setting the temporary driver image source.
             document.getElementById('driver-img').src = 'Images/Image.webp'; 
 
             simulateRide();
@@ -595,8 +594,8 @@
         }, 3500);
     }
 
+    // NOTE: This simulation function is currently commented out to allow for testing the cancel button.
     function simulateRide() {
-        // ... (Simulation logic remains the same for the purpose of this request) ...
         const statusElement = document.getElementById('ride-status-message');
         const mapMessageElement = document.getElementById('live-map-message');
         
@@ -617,7 +616,6 @@
                 mapMessageElement.innerHTML = `🗺️ **Live Ride Map**<br>${stage.mapText}`;
 
                 currentStage++;
-                // Note: Clearing any existing timeout is needed for a proper cancelation, but for this simulation, we'll keep the simple structure.
                 setTimeout(nextStage, stage.delay);
             } else {
                 // Trip completed - initiate reset
@@ -627,8 +625,7 @@
                 }, 5000);
             }
         }
-        // Start the simulation after the initial 500ms timeout in bookRide finishes
-        // nextStage(); // Commented out to prevent the ride from auto-completing while demonstrating the cancel button
+        // nextStage(); 
     }
 
     // --- RESET FUNCTION (Centralized logic for cancellation and completion) ---
@@ -654,9 +651,10 @@
     }
 
     function cancelRide() {
-        if(confirm('Are you sure you want to cancel your ride? The confirmation number ' + currentConfirmationNumber + ' will be invalidated.')) {
-            // In a real application, you'd stop the simulation here (e.g., using clearTimeout)
-            alert('Your ride (Confirmation: ' + currentConfirmationNumber + ') has been cancelled. You have been returned to the booking screen.');
+        const professionalPrompt = "Are you sure you wish to cancel this ride? If you proceed, your ride with confirmation number **" + currentConfirmationNumber + "** will be immediately released, and you will be returned to the booking screen.";
+
+        if(confirm(professionalPrompt)) {
+            alert('Your ride (Confirmation: ' + currentConfirmationNumber + ') has been successfully cancelled.');
             resetBookingState();
         }
     }
