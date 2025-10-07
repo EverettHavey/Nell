@@ -143,7 +143,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            margin-bottom: 10px; /* Reduced margin to bring details closer */
+            margin-bottom: 10px; 
         }
         .payment-card {
             display: flex;
@@ -319,7 +319,8 @@
     ];
 
     const paymentMethods = [
-        { id: 'visa', name: 'Visa **** 1234', icon: '💳', confirmed: false, confirmedName: 'Visa (default)' },
+        // Changed name from 'Visa **** 1234' to 'Visa (Primary)'
+        { id: 'visa', name: 'Visa (Primary)', icon: '💳', confirmed: false, confirmedName: 'Visa (default)' }, 
         { id: 'paypal', name: 'PayPal (Primary)', icon: '💰', confirmed: false, confirmedName: 'PayPal Linked' },
         { id: 'cash', name: 'Cash', icon: '💵', confirmed: true, confirmedName: 'Cash (Pay Driver)' } 
     ];
@@ -328,7 +329,7 @@
     let selectedVehicleId = null; 
     let selectedPaymentId = null; 
 
-    // --- DRIVER DETAILS LOGIC (REMAINING SAME) ---
+    // --- DRIVER DETAILS LOGIC ---
     function getDriverDetails(vehicleId) {
         switch (vehicleId) {
             case 'standard': return { name: 'Sarah J.', rating: '4.9', plate: 'T-800' };
@@ -337,7 +338,7 @@
         }
     }
     
-    // --- VEHICLE SELECTION LOGIC (REMAINING SAME) ---
+    // --- VEHICLE SELECTION LOGIC ---
     function checkLocationInput() {
         checkBookingReadiness();
     }
@@ -366,7 +367,7 @@
     function selectVehicle(id) {
         selectedVehicleId = id;
         renderVehicles();
-        showInlinePaymentForm(selectedPaymentId); // Update the form price if a payment is already selected
+        showInlinePaymentForm(selectedPaymentId);
         checkBookingReadiness();
     }
 
@@ -381,7 +382,17 @@
             card.className = `payment-card ${isSelected ? 'selected' : ''}`; 
             card.onclick = () => selectPaymentMethod(method.id);
 
-            const statusText = method.confirmed ? `✓ ${method.confirmedName}` : 'Click to Add/Confirm';
+            // Logic to remove the checkmark for cash
+            let statusText = 'Click to Add/Confirm';
+            if (method.confirmed) {
+                // If confirmed but NOT cash, show the checkmark
+                if (method.id !== 'cash') {
+                    statusText = `✓ ${method.confirmedName}`;
+                } else {
+                    // For Cash, only show the text without the checkmark
+                    statusText = method.confirmedName;
+                }
+            }
 
             card.innerHTML = `
                 <div class="payment-info">
@@ -412,15 +423,15 @@
         renderPaymentMethods();
     }
 
-    // --- INLINE PAYMENT FORM LOGIC (NEW) ---
+    // --- INLINE PAYMENT FORM LOGIC ---
     function getPaymentFormHTML(type) {
         if (type === 'visa') {
             return `
                 <input type="number" id="card-number" placeholder="Card Number (XXXX XXXX XXXX 1234)" required>
                 <input type="text" id="card-holder" placeholder="Card Holder Name" required>
                 <div style="display: flex; gap: 10px;">
-                    <input type="text" id="card-expiry" placeholder="MM/YY" style="width: 50%;" required>
-                    <input type="number" id="card-cvv" placeholder="CVV" style="width: 50%;" required>
+                    <input type="text" id="card-expiry" placeholder="MM/YY" required>
+                    <input type="number" id="card-cvv" placeholder="CVV" required>
                 </div>
             `;
         } else if (type === 'paypal') {
@@ -445,7 +456,7 @@
 
         const selectedMethod = paymentMethods.find(p => p.id === id);
 
-        // 1. Hide the form if 'cash' is selected or no vehicle is selected
+        // 1. Hide the form if 'cash' is selected, no vehicle is selected, or the payment is already confirmed
         if (!selectedVehicleId || id === 'cash' || !selectedMethod || selectedMethod.confirmed) {
             formDiv.style.display = 'none';
             return;
@@ -462,7 +473,7 @@
     function confirmInlinePayment() {
         if (!selectedPaymentId) return;
 
-        // Basic validation check (replace with real validation)
+        // Simple validation check (should be enhanced in a real app)
         const formInputs = document.getElementById('payment-form-inputs').querySelectorAll('input');
         let isValid = true;
         formInputs.forEach(input => {
@@ -514,7 +525,7 @@
         return isReady;
     }
 
-    // --- SIMULATION LOGIC (REMAINING SAME) ---
+    // --- SIMULATION LOGIC ---
     function bookRide() {
         if (!checkBookingReadiness()) return;
 
@@ -574,7 +585,6 @@
                 setTimeout(nextStage, stage.delay);
             } else {
                 setTimeout(() => {
-                    // Reset to initial state
                     const visaIndex = paymentMethods.findIndex(p => p.id === 'visa');
                     if(visaIndex !== -1) paymentMethods[visaIndex].confirmed = false;
                     const paypalIndex = paymentMethods.findIndex(p => p.id === 'paypal');
