@@ -230,13 +230,15 @@ footer {
 /* ------------------------------------------------------------------------- */
 @media (min-width: 768px) {
     
-    /* Reset body padding for desktop if header is no longer fixed (optional, but clean) */
+    /* 1. HEADER & NAV FIXES */
+    
+    /* Reset body padding for desktop as fixed header is changed */
     body {
         padding-top: 0; 
     }
 
     .main-header {
-        position: static; /* Make header static on desktop for standard flow */
+        position: static; /* Set header back to normal flow on desktop */
         height: auto;
     }
     
@@ -247,12 +249,12 @@ footer {
 
     .mobile-nav {
         /* Ensure mobile nav is always hidden on desktop */
-        display: none !important; /* Use !important to override fixed/visible state */
+        display: none !important;
     }
 
     .desktop-nav {
-        /* Show desktop nav */
-        display: block;
+        /* FIX: Ensure the desktop nav is displayed on ALL pages above 768px */
+        display: block !important; 
     }
 
     .desktop-nav ul {
@@ -265,6 +267,8 @@ footer {
         font-weight: 500;
     }
 
+    /* 2. LAYOUT OPTIMIZATION (Original Rules) */
+    
     /* Adjust Hero for wider screens */
     .hero-section {
         padding: 6rem 3rem;
@@ -282,7 +286,7 @@ footer {
         flex-direction: row; /* Buttons side-by-side on desktop */
         justify-content: center;
     }
-
+    
     /* Cards side-by-side on desktop */
     .service-cards {
         flex-direction: row;
@@ -294,6 +298,53 @@ footer {
     .card {
         flex: 1;
         max-width: 45%;
+    }
+
+    /* Services Desktop optimization */
+    .service-detail-section {
+        flex-direction: row;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+
+    .service-block {
+        flex: 1;
+        text-align: left;
+    }
+
+    .service-block img {
+        float: left; 
+        margin-right: 1rem;
+    }
+
+    /* Careers Desktop optimization */
+    .steps-container {
+        flex-direction: row;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    .step {
+        flex: 1;
+    }
+
+    /* About Us Desktop optimization */
+    .values-grid {
+        flex-direction: row;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    .value-card {
+        flex: 1;
+    }
+
+    /* Support Desktop optimization */
+    .faq-sections {
+        flex-direction: row;
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    .faq-card {
+        flex: 1;
     }
 }
 
@@ -343,25 +394,6 @@ footer {
 
 .service-block ul li {
     padding: 0.2rem 0;
-}
-
-/* Services Desktop optimization */
-@media (min-width: 768px) {
-    .service-detail-section {
-        flex-direction: row;
-        max-width: 1100px;
-        margin: 0 auto;
-    }
-
-    .service-block {
-        flex: 1;
-        text-align: left;
-    }
-
-    .service-block img {
-        float: left; 
-        margin-right: 1rem;
-    }
 }
 
 /* --- Careers Page Styles --- */
@@ -421,18 +453,6 @@ footer {
     color: var(--text-color);
 }
 
-/* Careers Desktop optimization */
-@media (min-width: 768px) {
-    .steps-container {
-        flex-direction: row;
-        max-width: 1100px;
-        margin: 0 auto;
-    }
-    .step {
-        flex: 1;
-    }
-}
-
 /* --- About Us Page Styles --- */
 
 .mission-statement {
@@ -463,18 +483,6 @@ footer {
 .value-card h3 {
     color: var(--primary-color);
     margin-bottom: 0.5rem;
-}
-
-/* About Us Desktop optimization */
-@media (min-width: 768px) {
-    .values-grid {
-        flex-direction: row;
-        max-width: 1100px;
-        margin: 0 auto;
-    }
-    .value-card {
-        flex: 1;
-    }
 }
 
 /* --- City Page Styles --- */
@@ -556,16 +564,4 @@ footer {
 .contact-cta .cta-primary {
     margin-top: 1rem;
     background: var(--primary-color);
-}
-
-/* Support Desktop optimization */
-@media (min-width: 768px) {
-    .faq-sections {
-        flex-direction: row;
-        max-width: 1100px;
-        margin: 0 auto;
-    }
-    .faq-card {
-        flex: 1;
-    }
 }
