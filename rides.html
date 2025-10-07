@@ -87,28 +87,34 @@
             overflow: hidden;
             position: relative; 
         }
+        .map-placeholder img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
         
-        /* TIME SELECTION STYLES */
-        .time-options {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+        /* NOTIFICATION BANNER */
+        #notification-banner {
+            position: absolute;
+            top: -50px; 
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--success-green);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            z-index: 1000;
+            transition: top 0.5s ease-out;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            font-weight: 600;
+            display: none; 
         }
-        .time-card {
-            flex-grow: 1;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            cursor: pointer;
-            text-align: center;
-            font-weight: 500;
+        #notification-banner.show {
+            top: 20px; 
+            display: block;
         }
-        .time-card.selected {
-            border-color: var(--primary-blue);
-            background-color: #e6f0ff; 
-        }
-
-        /* PAYMENT CARDS, ETC. (CSS from previous steps retained) */
+        
+        /* VEHICLE GRID LAYOUT */
         .vehicle-options {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -133,6 +139,8 @@
             border-color: var(--primary-blue);
             background-color: #e6f0ff; 
         }
+
+        /* PAYMENT CARDS */
         .payment-options {
             display: flex;
             flex-direction: column;
@@ -153,17 +161,56 @@
             border-color: var(--primary-blue);
             background-color: #e6f0ff; 
         }
-        .driver-line {
-            display: flex;
-            align-items: center;
-            gap: 10px;
+
+        /* INLINE PAYMENT DETAILS FORM */
+        #payment-details-form {
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #eee;
         }
-        .driver-image {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--primary-blue);
+        #payment-details-form input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        #confirm-payment-btn {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        /* BUTTONS */
+        .book-button {
+            background-color: var(--primary-blue);
+            width: 100%;
+            padding: 16px;
+            color: white;
+            border-radius: 10px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .book-button:disabled { background-color: #99c2ff; cursor: not-allowed; opacity: 0.8; }
+
+        /* IN-RIDE SPECIFIC STYLES */
+        .ride-status-card {
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            background-color: #fff;
+        }
+        .driver-info p {
+            margin: 5px 0;
         }
         #cancel-ride-btn {
             background-color: var(--cancel-red);
@@ -176,98 +223,31 @@
             font-weight: bold;
             cursor: pointer;
         }
-
-
-        /* ==================== CUSTOM MODAL STYLES ==================== */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
+        .driver-line {
             display: flex;
-            justify-content: center;
             align-items: center;
-            z-index: 2000;
+            gap: 10px;
         }
-
-        .modal-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 15px;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            text-align: center;
-            animation: fadeIn 0.3s ease-out;
+        .driver-image {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-blue);
         }
-        
-        .modal-content h3 {
-            font-size: 1.5em;
-            font-weight: 700;
-            color: var(--cancel-red);
-            margin-bottom: 15px;
-        }
-
-        .modal-content p {
-            font-size: 1em;
-            color: #444;
-            margin-bottom: 25px;
-            line-height: 1.5;
-        }
-
-        .modal-buttons button {
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background-color 0.2s;
-            width: 100%;
-        }
-
-        #modal-confirm-btn {
-            background-color: var(--cancel-red);
-            color: white;
-            border: none;
-            margin-bottom: 10px;
-        }
-
-        #modal-cancel-btn {
-            background-color: #f0f0f0;
-            color: #333;
-            border: 1px solid #ccc;
-        }
-        
-        /* Fade in animation for modal */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
     </style>
 </head>
 <body>
 
-<div id="custom-modal" class="modal-overlay" style="display: none;">
-    <div class="modal-content">
-        <h3>Confirm Ride Cancellation</h3>
-        <p id="modal-message">
-            Are you sure you wish to cancel this ride? If you proceed, your ride with confirmation number **<span id="modal-confirmation-number"></span>** will be immediately released, and you will be returned to the booking screen.
-        </p>
-        <div class="modal-buttons">
-            <button id="modal-confirm-btn">Confirm Cancellation</button>
-            <button id="modal-cancel-btn">Do Not Cancel</button>
-        </div>
-    </div>
-</div>
 <div class="container">
     
     <header class="mb-6 flex flex-col md:flex-row md:justify-between md:items-center space-y-3 md:space-y-0">
+        
         <div onclick="window.location.reload()" class="cursor-pointer flex-shrink-0">
             <h1 class="text-3xl font-extrabold text-red-600">Nell Rides 🚕</h1> 
             <p class="text-gray-500">Book your next trip instantly.</p> 
         </div>
+
         <nav class="desktop-nav mt-3 md:mt-0">
             <ul class="flex space-x-4 overflow-x-auto pb-1 justify-end md:justify-start">
                 <li><a href="services.html" target="_blank" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">Services</a></li>
@@ -277,6 +257,7 @@
                 <li><a href="support.html" target="_blank" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">Support</a></li>
             </ul>
         </nav>
+
     </header>
     <div id="notification-banner">
         🎉 Ride Accepted! Driver is confirmed and arriving soon.
@@ -298,19 +279,6 @@
         </div>
         
         <div id="dynamic-booking-content" class="selection-section active">
-            
-            <h2>Preferred Time of Departure</h2>
-            <div id="time-options-container" class="time-options">
-                <div id="time-now" class="time-card selected" onclick="selectTime('now')">
-                    Come Now
-                    <p style="font-size: 0.8em; color: #666; margin: 0;">(ASAP: Est. Arrival 5-10 min)</p>
-                </div>
-                <div id="time-later" class="time-card" onclick="selectTime('later')">
-                    Reserve for Later
-                    <p style="font-size: 0.8em; color: #666; margin: 0;">(Book a Specific Time/Date)</p>
-                </div>
-            </div>
-
             <h2>Choose Your Ride</h2>
             <div id="vehicle-options-container" class="vehicle-options" role="radiogroup">
                 </div>
@@ -351,12 +319,11 @@
                 <hr style="margin: 10px 0; border-color: #eee;">
                 
                 <div class="driver-line">
-                    <img id="driver-img" src="" alt="Driver Profile" class="driver-image">
+                    <img id="driver-img" src="Images/Image.webp" alt="Driver Profile" class="driver-image">
                     <p style="margin: 0;"><strong>Driver:</strong> <span id="driver-name"></span></p>
                 </div>
                 <p><strong>Vehicle:</strong> <span id="vehicle-details"></span></p>
                 <p><strong>Payment:</strong> <span id="payment-summary"></span></p>
-                <p><strong>Time Preference:</strong> <span id="time-preference-summary"></span></p>
             </div>
             <button id="cancel-ride-btn" onclick="cancelRide()">Cancel Ride</button>
         </div>
@@ -371,7 +338,16 @@
         { id: 'premium', name: 'Premium', icon: '💎', price: 70.00, eta: '10 min' },
         { id: 'luxury', name: 'Luxury', icon: '✨', price: 125.00, eta: '10 min' },
         { id: 'heli_ride', name: 'Heli-Ride', icon: '🚁', price: 450.00, eta: '5 min' },
-        // ... (other vehicles)
+        
+        { id: 'airplane', name: 'Airplane', icon: '✈️', price: 2500.00, eta: '1 hour' },
+        { id: 'ice_cream', name: 'Ice Cream', icon: '🍦', price: 36.00, eta: '35 min (slow stops!)' },
+        { id: 'garbage_truck', name: 'Garbage Truck', icon: '🚚', price: 49.50, eta: '45 min (many stops!)' },
+        { id: 'fire_truck', name: 'Fire Truck', icon: '🚒', price: 150.00, eta: '15 min (with sirens)' },
+        { id: 'exotic', name: 'Exotic Sportscar', icon: '🏎️', price: 187.50, eta: '8 min (if traffic allows)' },
+        
+        { id: 'golf_cart', name: 'Golf Cart', icon: '⛳', price: 8.00, eta: '15 min' },
+        { id: 'walk', name: 'Walk', icon: '🚶', price: 2.50, eta: '40 min' },
+        { id: 'bike', name: 'Bike', icon: '🚲', price: 5.60, eta: '20 min' }
     ];
 
     const paymentMethods = [
@@ -379,22 +355,10 @@
         { id: 'paypal', name: 'PayPal (Primary)', icon: '💰', confirmed: false, confirmedName: 'PayPal Linked' },
         { id: 'cash', name: 'Cash', icon: '💵', confirmed: true, confirmedName: 'Cash (Pay Driver)' } 
     ];
-    
-    // DRIVER DATA with Image URLs
-    const driverData = {
-        'standard': { name: 'Sarah J.', rating: '4.9', plate: 'T-800', image: 'Images/Image.webp' },
-        'xl': { name: 'Mike D.', rating: '4.7', plate: 'XL-200', image: 'Images/Image.webp' }, 
-        'premium': { name: 'Elias K.', rating: '5.0', plate: 'PR-100', image: 'Images/Image.webp' }, 
-        'luxury': { name: 'Victoria M.', rating: '4.9', plate: 'LX-007', image: 'Images/Image.webp' },
-        'heli_ride': { name: 'Captain Viper', rating: '4.8', plate: 'H-911', image: 'Images/Image.webp' },
-        // Fallback for other mock vehicles
-        'default': { name: 'Driver D.', rating: '4.8', plate: 'X-777', image: 'Images/Image.webp' } 
-    };
     // ----------------------------------------
     
     let selectedVehicleId = null; 
     let selectedPaymentId = null; 
-    let selectedTimePreference = 'now'; // Default to "Come Now"
     let currentConfirmationNumber = null; 
 
     // --- UTILITY FUNCTIONS ---
@@ -408,31 +372,20 @@
     }
 
     function getDriverDetails(vehicleId) {
-        return driverData[vehicleId] || driverData['default'];
+        switch (vehicleId) {
+            case 'standard': return { name: 'Sarah J.', rating: '4.9', plate: 'T-800' };
+            case 'heli_ride': return { name: 'Captain Viper', rating: '4.8', plate: 'H-911' };
+            default: return { name: 'Driver D.', rating: '4.8', plate: 'X-777' };
+        }
     }
     
     function checkLocationInput() {
         checkBookingReadiness();
     }
 
-    // --- TIME SELECTION LOGIC ---
-    function selectTime(preference) {
-        selectedTimePreference = preference;
-        document.getElementById('time-now').classList.remove('selected');
-        document.getElementById('time-later').classList.remove('selected');
-        document.getElementById(`time-${preference}`).classList.add('selected');
-        
-        // In a real app, 'Reserve for Later' would trigger a date/time picker here.
-        if (preference === 'later') {
-            alert('A time-selection widget would pop up here for scheduling your ride.');
-        }
+    // --- UI RENDERING & SELECTION ---
 
-        checkBookingReadiness();
-    }
-
-    // --- UI RENDERING & SELECTION (Retained from previous steps) ---
     function renderVehicles() {
-        // ... (Renders vehicle cards) ...
         const container = document.getElementById('vehicle-options-container');
         container.innerHTML = ''; 
 
@@ -461,7 +414,6 @@
     }
 
     function renderPaymentMethods() {
-        // ... (Renders payment cards) ...
         const container = document.getElementById('payment-options-container');
         container.innerHTML = ''; 
 
@@ -508,8 +460,52 @@
         renderPaymentMethods();
     }
 
+    // --- INLINE PAYMENT FORM LOGIC ---
+    function getPaymentFormHTML(type) {
+        if (type === 'visa') {
+            return `
+                <input type="number" id="card-number" placeholder="Card Number (XXXX XXXX XXXX 1234)" required>
+                <input type="text" id="card-holder" placeholder="Card Holder Name" required>
+                <div style="display: flex; gap: 10px;">
+                    <input type="text" id="card-expiry" placeholder="MM/YY" required>
+                    <input type="number" id="card-cvv" placeholder="CVV" required>
+                </div>
+            `;
+        } else if (type === 'paypal') {
+            return `
+                <p style="text-align: center; color: var(--primary-blue); font-weight: bold; margin-top: 0;">Log in to confirm payment</p>
+                <input type="email" id="paypal-email" placeholder="Email or Phone Number" required>
+                <input type="password" id="paypal-password" placeholder="Password" required>
+            `;
+        }
+        return '';
+    }
+
+    function showInlinePaymentForm(id) {
+        const formDiv = document.getElementById('payment-details-form');
+        const formInputsDiv = document.getElementById('payment-form-inputs');
+        const priceDisplay = document.getElementById('payment-price-display');
+        const formTitle = document.getElementById('payment-form-title');
+
+        const selectedVehicle = vehicles.find(v => v.id === selectedVehicleId);
+        const price = selectedVehicle ? selectedVehicle.price.toFixed(2) : '0.00';
+        priceDisplay.innerHTML = `$${price} (Estimated Ride Cost)`;
+
+        const selectedMethod = paymentMethods.find(p => p.id === id);
+
+        if (!selectedVehicleId || id === 'cash' || !selectedMethod || selectedMethod.confirmed) {
+            formDiv.style.display = 'none';
+            return;
+        }
+
+        formTitle.textContent = id === 'visa' ? 'Enter Card Details' : 'Log in to PayPal';
+        formInputsDiv.innerHTML = getPaymentFormHTML(id);
+        formDiv.style.display = 'block';
+
+        checkBookingReadiness();
+    }
+
     function confirmInlinePayment() {
-        // ... (Payment confirmation logic) ...
         if (!selectedPaymentId) return;
 
         const formInputs = document.getElementById('payment-form-inputs').querySelectorAll('input');
@@ -582,15 +578,9 @@
             document.getElementById('driver-name').textContent = driverInfo.name;
             document.getElementById('vehicle-details').textContent = `${selectedVehicle.name} • ${driverInfo.plate}`; 
             document.getElementById('payment-summary').textContent = `${paymentMethod.icon} ${paymentMethod.confirmedName}`; 
-            
-            // Time Preference Summary
-            const timeSummary = selectedTimePreference === 'now' ? 'ASAP (Driver En Route)' : 'Reserved for Later';
-            document.getElementById('time-preference-summary').textContent = timeSummary;
+            document.getElementById('driver-img').src = 'Images/Image.webp'; 
 
-            // Set dynamic driver image
-            document.getElementById('driver-img').src = driverInfo.image; 
-
-            // simulateRide(); // Kept commented out for testing cancel button
+            simulateRide();
         }, 500); 
     }
     
@@ -604,6 +594,40 @@
         }, 3500);
     }
 
+    // NOTE: This simulation function is currently commented out to allow for testing the cancel button.
+    function simulateRide() {
+        const statusElement = document.getElementById('ride-status-message');
+        const mapMessageElement = document.getElementById('live-map-message');
+        
+        const stages = [
+            { message: 'Driver is arriving in 5 min.', mapText: 'Driver is approaching. Estimated time: 3 minutes', delay: 5000, color: '#ff9800' },
+            { message: 'Driver has arrived at pickup! You have 3 minutes to board.', mapText: 'Driver is at your location! Please head to the curb.', delay: 180000, color: '#2196f3' }, 
+            { message: 'You are on the way to your destination.', mapText: 'On the road. Route progress: 60%', delay: 15000, color: '#0076ff' },
+            { message: 'You have arrived! Trip is complete.', mapText: 'Trip Complete. Thank you for riding!', delay: 5000, color: '#388e3c' }
+        ];
+
+        let currentStage = 0;
+
+        function nextStage() {
+            if (currentStage < stages.length) {
+                const stage = stages[currentStage];
+                statusElement.textContent = stage.message;
+                statusElement.style.color = stage.color;
+                mapMessageElement.innerHTML = `🗺️ **Live Ride Map**<br>${stage.mapText}`;
+
+                currentStage++;
+                setTimeout(nextStage, stage.delay);
+            } else {
+                // Trip completed - initiate reset
+                setTimeout(() => {
+                    alert('Your ride is complete! We hope you enjoyed it.');
+                    resetBookingState();
+                }, 5000);
+            }
+        }
+        // nextStage(); 
+    }
+
     // --- RESET FUNCTION (Centralized logic for cancellation and completion) ---
     function resetBookingState() {
         currentConfirmationNumber = null;
@@ -615,7 +639,6 @@
 
         selectedVehicleId = null;
         selectedPaymentId = null;
-        selectedTimePreference = 'now'; // Reset time to default
 
         document.getElementById('pickup-input').value = '';
         document.getElementById('dropoff-input').value = '';
@@ -625,50 +648,21 @@
         
         renderVehicles();
         renderPaymentMethods();
-        selectTime('now'); // Visually reset time selector
     }
 
-    // --- CUSTOM MODAL/CANCELLATION LOGIC ---
     function cancelRide() {
-        const modal = document.getElementById('custom-modal');
-        const confirmBtn = document.getElementById('modal-confirm-btn');
-        const cancelBtn = document.getElementById('modal-cancel-btn');
-        const confNumSpan = document.getElementById('modal-confirmation-number');
+        const professionalPrompt = "Are you sure you wish to cancel this ride? If you proceed, your ride with confirmation number **" + currentConfirmationNumber + "** will be immediately released, and you will be returned to the booking screen.";
 
-        // Set the confirmation number in the modal message
-        confNumSpan.textContent = currentConfirmationNumber;
-        modal.style.display = 'flex';
-
-        // Use a promise to handle the modal choice asynchronously
-        return new Promise(resolve => {
-            
-            // Function to close modal and clean up listeners
-            const closeModal = (confirmed) => {
-                confirmBtn.removeEventListener('click', onConfirm);
-                cancelBtn.removeEventListener('click', onCancel);
-                modal.style.display = 'none';
-                resolve(confirmed);
-            };
-
-            const onConfirm = () => closeModal(true);
-            const onCancel = () => closeModal(false);
-
-            confirmBtn.addEventListener('click', onConfirm);
-            cancelBtn.addEventListener('click', onCancel);
-
-        }).then(confirmed => {
-            if (confirmed) {
-                alert('Your ride (Confirmation: ' + currentConfirmationNumber + ') has been successfully cancelled.');
-                resetBookingState();
-            }
-        });
+        if(confirm(professionalPrompt)) {
+            alert('Your ride (Confirmation: ' + currentConfirmationNumber + ') has been successfully cancelled.');
+            resetBookingState();
+        }
     }
 
 
     window.onload = () => {
         renderVehicles();
         renderPaymentMethods();
-        selectTime('now');
     };
 </script>
 
