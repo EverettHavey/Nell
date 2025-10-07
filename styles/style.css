@@ -1,8 +1,8 @@
 /* --- 1. BASE STYLES & MOBILE-FIRST LAYOUT (Default: Mobile) --- */
 
 :root {
-    --primary-color: #007bff;
-    --secondary-color: #ff9900; /* Used for secondary CTAs/headers */
+    --primary-color: #007bff; /* Blue */
+    --secondary-color: #ff9900; /* Orange/Yellow */
     --text-color: #333;
     --bg-color: #f4f4f9;
     --white: #ffffff;
@@ -69,12 +69,12 @@ ul {
     color: var(--primary-color);
 }
 
-/* 1. HIDE DESKTOP NAV ON MOBILE */
+/* HIDE DESKTOP NAV ON MOBILE */
 .desktop-nav {
     display: none;
 }
 
-/* 2. SHOW MOBILE ICON ON MOBILE */
+/* SHOW MOBILE ICON ON MOBILE */
 .mobile-menu-icon {
     font-size: 2rem;
     cursor: pointer;
@@ -82,7 +82,7 @@ ul {
     z-index: 30; 
 }
 
-/* 3. MOBILE NAV MENU (INITIAL HIDDEN STATE) */
+/* MOBILE NAV MENU (INITIAL HIDDEN STATE) */
 .mobile-nav {
     position: fixed; 
     top: var(--header-height); 
@@ -101,7 +101,7 @@ ul {
     overflow-y: auto; 
 }
 
-/* 4. MOBILE NAV MENU (VISIBLE STATE - Toggled by JavaScript) */
+/* MOBILE NAV MENU (VISIBLE STATE - Toggled by JavaScript) */
 .mobile-nav.visible {
     display: block;
     transform: translateY(0); 
@@ -134,7 +134,10 @@ ul {
     background: #0056b3;
 }
 
-/* --- Hero Section (Homepage) --- */
+/* * --- HERO SECTION STYLES --- 
+ * NOTE: .hero-section uses --primary-color (Blue) background.
+ * The cta-primary and cta-secondary classes are styled to contrast this blue.
+*/
 .hero-section {
     background: var(--primary-color);
     color: var(--white);
@@ -164,15 +167,25 @@ ul {
     border-radius: 8px;
     font-weight: bold;
     transition: background-color 0.3s;
+    margin-top: 0; 
+}
+
+/* .cta-primary (Used for 'Order Nell - Foods' in the current HTML) */
+.cta-primary {
+    background: var(--secondary-color); /* Orange/Yellow background */
+    color: var(--white);
+    border: 2px solid var(--secondary-color);
 }
 
 .cta-primary:hover {
-    background: #e68a00;
+    background: #e68a00; /* Darker yellow/orange hover */
+    border-color: #e68a00;
 }
 
+/* .cta-secondary (Used for 'Book a Ride' in the current HTML) */
 .cta-secondary {
-    background: var(--white);
-    color: var(--primary-color);
+    background: var(--white); /* White background stands out against blue hero */
+    color: var(--primary-color); /* Blue text on white background */
     border: 2px solid var(--white);
 }
 
@@ -372,6 +385,10 @@ footer {
     }
     
     /* Secondary Pages Layout */
+    .page-hero {
+        padding: 5rem 3rem;
+    }
+
     .service-detail-section,
     .values-grid,
     .steps-container,
