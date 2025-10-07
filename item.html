@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NELL - Select Items</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <script src="scripts/script.js" defer></script> 
+    
+    <style>
+        /* Base styles from food.css theme */
+        :root {
+            --color-food-accent: #f5c531; 
+            --color-starbucks-green: #00704A;
+        }
+
+        .item-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: var(--spacing-lg) var(--spacing-md);
+        }
+
+        /* Hero Banner for Restaurant */
+        .restaurant-hero {
+            background-color: var(--color-light);
+            background-image: url('https://placehold.co/1200x300/f0f0f0/333333?text=Restaurant+Banner');
+            background-size: cover;
+            background-position: center;
+            height: 300px;
+            display: flex;
+            align-items: flex-end;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            margin-bottom: var(--spacing-lg);
+            position: relative;
+        }
+        
+        .restaurant-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.1));
+            border-radius: var(--border-radius-md);
+        }
+
+        .restaurant-info {
+            z-index: 10;
+            color: white;
+        }
+
+        .restaurant-info h1 {
+            margin-bottom: var(--spacing-xs);
+            font-size: 2.5rem;
+        }
+
+        /* Item Grid */
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr; /* Menu on left, Cart on right */
+            gap: var(--spacing-lg);
+        }
+        
+        .item-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .menu-item {
+            background-color: white;
+            border: 1px solid #eee;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .menu-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .item-image-container {
+            height: 150px;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .item-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .item-details {
+            padding: var(--spacing-md);
+        }
+
+        .item-details h4 {
+            font-size: 1.1rem;
+            margin-top: 0;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .item-details p {
+            font-size: 0.85rem;
+            color: #777;
+            margin-bottom: var(--spacing-sm);
+        }
+        
+        .add-to-cart {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .item-price {
+            font-weight: bold;
+            color: var(--color-dark);
+            font-size: 1.1rem;
+        }
+        
+        .add-btn {
+            background-color: var(--color-food-accent);
+            color: var(--color-dark);
+            border: none;
+            padding: 8px 12px;
+            border-radius: var(--border-radius-sm);
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .add-btn:hover {
+            background-color: #e5b42d;
+        }
+
+        /* Cart Sidebar */
+        .cart-sidebar {
+            background-color: var(--color-light);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-md);
+            height: fit-content;
+            position: sticky;
+            top: 100px; /* Offset from fixed header */
+        }
+        
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-sm) 0;
+            border-bottom: 1px dashed #ccc;
+        }
+        
+        .cart-item-info {
+            flex-grow: 1;
+        }
+
+        .cart-item-info span {
+            font-size: 0.9rem;
+            color: #555;
+            display: block;
+        }
+        
+        .cart-total {
+            margin-top: var(--spacing-md);
+            font-size: 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            padding-top: var(--spacing-sm);
+            border-top: 2px solid #ccc;
+        }
+        
+        /* Responsive Cart Layout */
+        @media (max-width: 900px) {
+            .menu-grid {
+                grid-template-columns: 1fr;
+            }
+            .cart-sidebar {
+                position: relative;
+                top: auto;
+                margin-top: var(--spacing-lg);
+            }
+        }
+    </style>
+    
+    <script>
+        // Data model for dynamic menu items
+        const RESTAURANT_MENUS = {
+            'Starbucks': [
+                { name: 'Iced Caramel Macchiato', description: 'Espresso, vanilla syrup, milk, and caramel drizzle.', price: 5.45, imageText: 'Starbucks Latte' },
+                { name: 'Matcha Tea Latte', description: 'Smooth matcha combined with milk over ice.', price: 4.80, imageText: 'Matcha Drink' },
+                { name: 'Bacon, Gouda & Egg Sandwich', description: 'Artisan roll with bacon, aged Gouda, and a fried egg.', price: 4.75, imageText: 'Breakfast Sandwich' },
+                { name: 'Double-Smoked Bacon Cheddar & Egg Sandwich', description: 'Hearty sandwich with double-smoked bacon and melted cheddar.', price: 5.25, imageText: 'Breakfast Sandwich' }
+            ],
+            'McDonalds': [
+                { name: 'Big Mac', description: 'Two 100% beef patties, special sauce, lettuce, cheese, pickles, onions on a sesame seed bun.', price: 5.99, imageText: 'Big Mac' },
+                { name: 'Quarter Pounder with Cheese', description: 'One quarter pound of 100% fresh beef and two slices of cheese.', price: 6.29, imageText: 'Quarter Pounder' },
+                { name: 'Medium Fries', description: 'World famous fries, hot and crispy.', price: 3.49, imageText: 'Fries' },
+                { name: 'McNuggets (10 piece)', description: 'Tender, juicy, all-white meat chicken.', price: 6.59, imageText: 'McNuggets' }
+            ],
+            'The Grill Hub': [
+                { name: 'Hub Classic Burger', description: 'Single patty, signature sauce, American cheese, LTO.', price: 11.50, imageText: 'Classic Burger' },
+                { name: 'Sweet Potato Fries', description: 'Crispy sweet potato fries with honey mustard dip.', price: 5.50, imageText: 'Sweet Potato Fries' },
+                { name: 'Hub Milkshake (Vanilla)', description: 'Thick and creamy vanilla milkshake.', price: 7.00, imageText: 'Milkshake' },
+                { name: 'The Veggie Stack', description: 'Grilled portobello mushroom, feta, arugula, and balsamic glaze.', price: 10.99, imageText: 'Veggie Sandwich' }
+            ],
+            'Fresh Fries': [
+                { name: 'Signature Curly Fries', description: 'Freshly cut potatoes seasoned and curled.', price: 4.99, imageText: 'Curly Fries' },
+                { name: 'Truffle Aioli Fries', description: 'Hand-cut fries tossed with truffle oil and served with aioli.', price: 7.50, imageText: 'Truffle Fries' },
+                { name: 'Chili Cheese Fries', description: 'Classic fries smothered in beef chili and melted cheddar.', price: 8.99, imageText: 'Chili Fries' },
+                { name: 'Cajun Spiced Fries', description: 'Fries tossed in a spicy, smoky Cajun blend.', price: 4.50, imageText: 'Cajun Fries' }
+            ],
+            // --- NEW RESTAURANT MENUS ADDED BELOW ---
+            'Nell Grocers': [
+                { name: 'Organic Gala Apples (1 lb)', description: 'Crisp, sweet, and locally sourced organic apples.', price: 3.99, imageText: 'Apples' },
+                { name: 'Whole Milk (1 Gallon)', description: 'Farm-fresh 100% whole vitamin D milk.', price: 4.50, imageText: 'Milk' },
+                { name: 'Artisan Sourdough Loaf', description: 'Hand-crafted sourdough, slow-fermented for perfect tang.', price: 6.75, imageText: 'Bread' },
+                { name: 'Fresh Salmon Fillet (1 lb)', description: 'Sustainably sourced Atlantic salmon, perfect for grilling.', price: 18.99, imageText: 'Salmon' }
+            ],
+            'Wok Around The Clock': [
+                { name: 'Spicy Kung Pao Chicken', description: 'Diced chicken, peanuts, vegetables, and chili peppers.', price: 14.50, imageText: 'Kung Pao' },
+                { name: 'Vegetable Lo Mein Noodles', description: 'Stir-fried soft noodles with a mix of fresh seasonal vegetables.', price: 12.00, imageText: 'Lo Mein' },
+                { name: 'Shrimp Fried Rice', description: 'Classic fried rice with large succulent shrimp and egg.', price: 15.25, imageText: 'Fried Rice' },
+                { name: 'Pork Egg Rolls (3 pcs)', description: 'Crispy rolls filled with seasoned pork and cabbage.', price: 5.99, imageText: 'Egg Rolls' }
+            ],
+            'Artisan Pizza Co.': [
+                { name: 'Margherita Pizza', description: 'Tomato, fresh mozzarella, basil, and olive oil.', price: 17.00, imageText: 'Margherita Pizza' },
+                { name: 'Pepperoni Diavolo', description: 'Spicy pepperoni, chili flakes, and hot honey drizzle.', price: 19.50, imageText: 'Pepperoni' },
+                { name: 'Garlic Knots (6 pcs)', description: 'Served with a side of house-made marinara sauce.', price: 7.00, imageText: 'Garlic Knots' },
+                { name: 'House Garden Salad', description: 'Mixed greens, cucumber, tomatoes, and balsamic dressing.', price: 8.50, imageText: 'Salad' }
+            ],
+            'Taqueria del Sol': [
+                { name: 'Carne Asada Tacos (2)', description: 'Grilled marinated steak, onions, cilantro, and salsa verde.', price: 9.50, imageText: 'Carne Asada Tacos' },
+                { name: 'Chicken Burrito Bowl', description: 'Rice, black beans, grilled chicken, pico de gallo, and sour cream.', price: 12.99, imageText: 'Burrito Bowl' },
+                { name: 'Chips & Guacamole', description: 'Freshly fried tortilla chips served with chunky guacamole.', price: 7.99, imageText: 'Guacamole' },
+                { name: 'Horchata (Large)', description: 'Traditional creamy rice milk beverage with cinnamon.', price: 4.00, imageText: 'Horchata' }
+            ],
+            // Fallback menu for any future or unlisted restaurants
+            'default': [
+                { name: 'Chef\'s Special Dish', description: 'A delightful dish unique to this local establishment.', price: 15.00, imageText: 'Special Dish' },
+                { name: 'House Drink', description: 'Refreshing house-made lemonade.', price: 4.00, imageText: 'Drink' },
+                { name: 'Side Salad', description: 'Fresh seasonal greens with vinaigrette.', price: 6.00, imageText: 'Salad' },
+                { name: 'Molten Lava Cake', description: 'Warm chocolate cake with a gooey center.', price: 6.50, imageText: 'Dessert' }
+            ]
+        };
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const params = new URLSearchParams(window.location.search);
+            // Decode the URL parameter to get the correct restaurant name
+            const encodedRestaurantName = params.get('restaurant') || 'Unknown Restaurant';
+            const restaurantName = decodeURIComponent(encodedRestaurantName.replace(/\+/g, ' '));
+            
+            // Set the dynamic content
+            const titleElement = document.getElementById('restaurantTitle');
+            if (titleElement) {
+                titleElement.textContent = restaurantName;
+            }
+            
+            // --- Menu Rendering Logic ---
+            const menuListContainer = document.getElementById('itemList');
+            // Select the specific menu, or fall back to 'default' if not found
+            const menuToRender = RESTAURANT_MENUS[restaurantName] || RESTAURANT_MENUS['default'];
+            
+            // Clear existing mock items
+            menuListContainer.innerHTML = ''; 
+
+            menuToRender.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'menu-item';
+                itemElement.innerHTML = `
+                    <div class="item-image-container">
+                        <img src="https://placehold.co/300x150/6E3845/ffffff?text=${item.imageText}" alt="${item.name}">
+                    </div>
+                    <div class="item-details">
+                        <h4>${item.name}</h4>
+                        <p>${item.description}</p>
+                        <div class="add-to-cart">
+                            <span class="item-price">$${item.price.toFixed(2)}</span>
+                            <button class="add-btn">Add</button>
+                        </div>
+                    </div>
+                `;
+                menuListContainer.appendChild(itemElement);
+            });
+            // -----------------------------
+            
+            // Generate mock banner image based on restaurant name (simple mock logic)
+            const hero = document.getElementById('restaurantHero');
+            if (hero) {
+                let color = 'f0f0f0';
+                if (restaurantName.includes('Starbucks')) color = '00704A';
+                if (restaurantName.includes('McDonald')) color = 'FFC72C';
+                if (restaurantName.includes('Grill Hub')) color = '333333';
+                if (restaurantName.includes('Fresh Fries')) color = '8B4513';
+                if (restaurantName.includes('Grocers')) color = '4CAF50';
+                if (restaurantName.includes('Wok')) color = 'A0522D';
+                if (restaurantName.includes('Pizza')) color = 'ff5a5f';
+                if (restaurantName.includes('Taqueria')) color = '007bff';
+                
+                hero.style.backgroundImage = `url('https://placehold.co/1200x300/${color}/333333?text=${restaurantName.toUpperCase()}')`;
+            }
+            
+            // Mock cart functionality
+            let cartItems = [];
+            const cartList = document.getElementById('cartList');
+            const cartTotal = document.getElementById('cartTotal');
+            const checkoutBtn = document.getElementById('checkoutBtn');
+
+            const updateCart = () => {
+                let total = 0;
+                cartList.innerHTML = '';
+                
+                if (cartItems.length === 0) {
+                    cartList.innerHTML = '<p class="text-center" style="font-style:italic;">Your cart is empty.</p>';
+                    checkoutBtn.disabled = true;
+                    checkoutBtn.textContent = 'Add items to checkout';
+                    checkoutBtn.classList.remove('cta-primary');
+                    checkoutBtn.classList.add('cta-secondary');
+                } else {
+                    cartItems.forEach(item => {
+                        const price = parseFloat(item.price.replace('$', ''));
+                        total += price * item.quantity;
+                        
+                        const itemElement = document.createElement('div');
+                        itemElement.className = 'cart-item';
+                        itemElement.innerHTML = `
+                            <div class="cart-item-info">
+                                <strong>${item.name}</strong>
+                                <span>$${price.toFixed(2)} x ${item.quantity}</span>
+                            </div>
+                            <strong>$${(price * item.quantity).toFixed(2)}</strong>
+                        `;
+                        cartList.appendChild(itemElement);
+                    });
+                    checkoutBtn.disabled = false;
+                    checkoutBtn.textContent = `Checkout ($${total.toFixed(2)})`;
+                    checkoutBtn.classList.add('cta-primary');
+                    checkoutBtn.classList.remove('cta-secondary');
+                }
+                
+                cartTotal.textContent = `$${total.toFixed(2)}`;
+            };
+
+            const addItemToCart = (name, priceText) => {
+                const price = parseFloat(priceText.replace('$', ''));
+                const existingItem = cartItems.find(item => item.name === name);
+                
+                if (existingItem) {
+                    existingItem.quantity += 1;
+                } else {
+                    cartItems.push({ name, price: priceText, quantity: 1 });
+                }
+                
+                updateCart();
+                console.log('Cart updated:', cartItems);
+            };
+
+            // Attach event listeners to all dynamically created 'Add' buttons
+            menuListContainer.addEventListener('click', (e) => {
+                if (e.target.classList.contains('add-btn')) {
+                    e.preventDefault(); 
+                    const itemElement = e.target.closest('.menu-item');
+                    const itemName = itemElement.querySelector('h4').textContent;
+                    const itemPrice = itemElement.querySelector('.item-price').textContent;
+                    
+                    addItemToCart(itemName, itemPrice);
+                }
+            });
+
+            // Initial cart load
+            updateCart();
+        });
+    </script>
+</head>
+<body>
+    <header class="main-header">
+        <a href="index.html" class="logo">NELL</a>
+        <!-- Navigation remains the same -->
+        <nav class="desktop-nav">
+            <ul>
+                <li><a href="index.html">Home</a></li> 
+                <li><a href="services.html">Services</a></li>
+                <li><a href="city.html">Cities</a></li>
+                <li><a href="career.html">Careers</a></li>
+                <li><a href="aboutus.html">About Us</a></li>
+                <li><a href="support.html">Support</a></li>
+            </ul>
+        </nav>
+        <div class="mobile-menu-icon">&#9776;</div>
+    </header>
+    
+    <nav class="mobile-nav">
+        <ul>
+            <li><a href="index.html">Home</a></li> 
+            <li><a href="services.html">Services</a></li>
+            <li><a href="city.html">Cities</a></li>
+            <li><a href="career.html">Careers</a></li>
+            <li><a href="aboutus.html">About Us</a></li>
+            <li><a href="support.html">Support</li>
+            </ul>
+        </nav>
+
+        <main class="page-content">
+            <section class="item-container">
+                <!-- Restaurant Hero Section -->
+                <div id="restaurantHero" class="restaurant-hero">
+                    <div class="restaurant-info">
+                        <h1 id="restaurantTitle">Loading...</h1>
+                        <p style="font-size: 1.1rem;">Freshly prepared favorites, delivered quickly.</p>
+                    </div>
+                </div>
+                
+                <div class="menu-grid">
+                    
+                    <!-- Menu Items Section -->
+                    <div class="menu-section">
+                        <h2 style="margin-bottom: var(--spacing-md);">Menu & Specials</h2>
+                        
+                        <!-- Item List Container - Content is now dynamically generated by the script -->
+                        <div id="itemList" class="item-list">
+                            <!-- Dynamic menu items will be inserted here -->
+                            <p>Loading menu...</p>
+                        </div>
+                    </div>
+                    
+                    <!-- Cart Sidebar -->
+                    <div class="cart-sidebar">
+                        <h3 style="margin-top: 0; border-bottom: 2px solid var(--color-food-accent); padding-bottom: 10px;">Your Order</h3>
+                        
+                        <div id="cartList" style="min-height: 100px;">
+                            <!-- Cart items will be injected here -->
+                        </div>
+                        
+                        <div class="cart-total">
+                            <span>Subtotal</span>
+                            <span id="cartTotal">$0.00</span>
+                        </div>
+                        
+                        <button id="checkoutBtn" class="btn cta-secondary" style="width: 100%; margin-top: var(--spacing-md);" disabled>Add items to checkout</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2025 NELL, Inc. | All Rights Reserved.</p>
+        </footer>
+    </body>
+    </html>

@@ -4,9 +4,24 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    const categoryChips = document.querySelectorAll('.category-chip');
+    // Initial DOM selection
     const restaurantCards = document.querySelectorAll('.restaurant-card');
     const foodSearchInput = document.getElementById('foodSearch');
+    const categoryChipsContainer = document.querySelector('.category-chips');
+
+    // Initialize: Add an 'all' category to the chips array for 'Show All' functionality
+    const allChip = document.createElement('div');
+    allChip.className = 'category-chip';
+    allChip.textContent = 'All';
+    allChip.dataset.category = 'all';
+    
+    // Add the 'All' chip to the beginning of the container
+    if (categoryChipsContainer) {
+        categoryChipsContainer.prepend(allChip);
+    }
+    
+    // Select ALL category chips *after* the 'All' chip has been added to the DOM
+    const categoryChips = document.querySelectorAll('.category-chip');
 
     /**
      * Toggles the active state of category chips and filters restaurants.
@@ -36,6 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     /**
      * Handles clicking on category chips.
+     * Listener is attached to ALL chips, including the new 'All' chip.
      */
     categoryChips.forEach(chip => {
         chip.addEventListener('click', () => {
@@ -50,31 +66,13 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     foodSearchInput.addEventListener('input', (e) => {
         const searchTerm = e.target.value.toLowerCase().trim();
-        // In a real application, you would filter the list here based on the search term
         // For now, this just logs the activity.
         console.log('Searching for:', searchTerm);
         // Optional: Reset category filter when searching to show all.
         filterRestaurants('all'); 
     });
     
-    // Initialize: Add an 'all' category to the chips array for 'Show All' functionality
-    const allChip = document.createElement('div');
-    allChip.className = 'category-chip';
-    allChip.textContent = 'All';
-    allChip.dataset.category = 'all';
-    
-    const categoryChipsContainer = document.querySelector('.category-chips');
-    if (categoryChipsContainer) {
-        categoryChipsContainer.prepend(allChip);
-        
-        // Rerun event listener assignment to include the new 'All' chip
-        allChip.addEventListener('click', () => {
-            filterRestaurants('all');
-        });
-    }
-
     // Default filter to 'all' on load, or the current active chip's category
     const initialCategory = document.querySelector('.category-chip.active')?.dataset.category || 'all';
     filterRestaurants(initialCategory);
-
 });

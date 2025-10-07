@@ -1,6 +1,9 @@
 /* Variables specific to the Food page visual design */
 :root {
     --color-food-accent: #f5c531; /* Golden yellow for food highlights */
+    --color-starbucks-green: #00704A;
+    --color-starbucks-light: #F2F0EB;
+    --color-grocery-green: #4CAF50; /* Fresh green for groceries */
 }
 
 /* * ----------------------------- 
@@ -183,9 +186,54 @@
     margin: var(--spacing-lg) 0;
 }
 
+/* * ----------------------------- 
+ * 4. Custom Themes 
+ * ----------------------------- 
+ */
+
+/* STARBUCKS THEME */
+.restaurant-card.starbucks-theme {
+    /* Subtle border to frame the brand */
+    border: 2px solid var(--color-starbucks-green); 
+    /* Soft shadow to highlight */
+    box-shadow: 0 4px 15px rgba(0, 112, 74, 0.2);
+}
+
+.restaurant-card.starbucks-theme h3 {
+    /* Brand-specific title color */
+    color: var(--color-starbucks-green);
+}
+
+.restaurant-card.starbucks-theme .rating {
+    /* Use brand color for rating stars */
+    color: var(--color-starbucks-green);
+}
+
+.restaurant-card.starbucks-theme:hover {
+    /* Lift and give a green glow on hover */
+    box-shadow: 0 10px 20px rgba(0, 112, 74, 0.25);
+}
+
+/* GROCERY THEME */
+.restaurant-card.grocery-theme {
+    border: 2px solid var(--color-grocery-green); 
+}
+
+.restaurant-card.grocery-theme h3 {
+    color: var(--color-grocery-green);
+}
+
+.restaurant-card.grocery-theme .rating {
+    color: var(--color-grocery-green);
+}
+
+.restaurant-card.grocery-theme:hover {
+    box-shadow: 0 10px 20px rgba(76, 175, 80, 0.25);
+}
+
 
 /* * ----------------------------- 
- * 4. Responsive Design 
+ * 5. Responsive Design 
  * ----------------------------- 
  */
 

@@ -48,21 +48,22 @@
         <!-- Search and Filters Section -->
         <section class="food-container food-search-section">
             <div class="food-search-bar">
-                <input type="search" id="foodSearch" placeholder="Search Nell - Foods, restaurants, or dishes...">
-                <!-- The margin-top:0 has been removed, relying on the flex container -->
+                <input type="search" id="foodSearch" placeholder="Search Nell - Foods, restaurants, groceries, or dishes...">
                 <a href="#" class="btn cta-secondary">Filters & Sort</a> 
             </div>
             
             <h2 style="margin-bottom: var(--spacing-md);">Popular Categories</h2>
             <div class="category-chips">
-                <!-- Data attribute added for script targeting -->
-                <div class="category-chip active" data-category="pizza">Pizza</div>
+                <!-- NOTE: The 'All' chip is added dynamically by foodscript.js -->
+                <!-- Removed 'active' class from all chips so 'All' becomes the default -->
+                <div class="category-chip" data-category="groceries">Groceries</div>
+                <div class="category-chip" data-category="pizza">Pizza</div>
                 <div class="category-chip" data-category="burgers">Burgers</div>
+                <div class="category-chip" data-category="coffee">Coffee & Tea</div>
                 <div class="category-chip" data-category="asian">Asian</div>
                 <div class="category-chip" data-category="mexican">Mexican</div>
                 <div class="category-chip" data-category="healthy">Healthy</div>
                 <div class="category-chip" data-category="desserts">Desserts</div>
-                <div class="category-chip" data-category="coffee">Coffee & Tea</div>
                 <div class="category-chip" data-category="alcohol">Alcohol</div>
             </div>
         </section>
@@ -73,8 +74,76 @@
             
             <div class="restaurant-list">
                 
-                <!-- Restaurant Card 1 -->
-                <a href="#" class="restaurant-card" data-category="burgers">
+                <!-- NEW: Groceries Card (Fictional Store) -->
+                <a href="items.html?restaurant=Nell+Grocers" class="restaurant-card grocery-theme" data-category="groceries">
+                    <div class="restaurant-image-container">
+                        <img src="https://placehold.co/800x450/4CAF50/ffffff?text=Groceries" 
+                             class="restaurant-image" 
+                             alt="Nell Grocers logo and fresh produce">
+                    </div>
+                    <div class="details">
+                        <h3>Nell Grocers</h3>
+                        <p class="restaurant-metadata">Produce, Pantry Staples, Home Goods • $</p>
+                        <div class="info-bar">
+                            <span class="rating">★ <span>4.9 (5k+)</span></span>
+                            <span>30-45 min</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- NEW: Fictional Asian Card -->
+                <a href="items.html?restaurant=Wok+Around+The+Clock" class="restaurant-card" data-category="asian">
+                    <div class="restaurant-image-container">
+                        <img src="https://placehold.co/800x450/C0C0C0/333333?text=Wok+Shop" 
+                             class="restaurant-image" 
+                             alt="Wok Around The Clock Chinese food">
+                    </div>
+                    <div class="details">
+                        <h3>Wok Around The Clock</h3>
+                        <p class="restaurant-metadata">Chinese, Noodles, Rice • $$</p>
+                        <div class="info-bar">
+                            <span class="rating">★ <span>4.4 (800+)</span></span>
+                            <span>40-50 min</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- Starbucks Card (Coffee Category) -->
+                <a href="items.html?restaurant=Starbucks" class="restaurant-card starbucks-theme" data-category="coffee">
+                    <div class="restaurant-image-container">
+                        <img src="https://placehold.co/800x450/00704A/F2F0EB?text=Starbucks" 
+                             class="restaurant-image" 
+                             alt="Starbucks logo and drinks">
+                    </div>
+                    <div class="details">
+                        <h3>Starbucks</h3>
+                        <p class="restaurant-metadata">Coffee, Pastries, Drinks • $$$</p>
+                        <div class="info-bar">
+                            <span class="rating">★ <span>4.8 (10k+)</span></span>
+                            <span>15-20 min</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- McDonalds Card (Burgers Category) -->
+                <a href="items.html?restaurant=McDonalds" class="restaurant-card" data-category="burgers">
+                    <div class="restaurant-image-container">
+                        <img src="https://placehold.co/800x450/FFC72C/DA291C?text=McDonalds" 
+                             class="restaurant-image" 
+                             alt="McDonalds Big Mac and Fries">
+                    </div>
+                    <div class="details">
+                        <h3>McDonald's</h3>
+                        <p class="restaurant-metadata">Fast Food, Burgers, Breakfast • $</p>
+                        <div class="info-bar">
+                            <span class="rating">★ <span>4.2 (20k+)</span></span>
+                            <span>20-30 min</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- The Grill Hub (Burgers Category) -->
+                <a href="items.html?restaurant=The+Grill+Hub" class="restaurant-card" data-category="burgers">
                     <div class="restaurant-image-container">
                         <img src="https://placehold.co/800x450/333333/ffffff?text=Burger+Place" 
                              class="restaurant-image" 
@@ -90,8 +159,25 @@
                     </div>
                 </a>
 
-                <!-- Restaurant Card 2 -->
-                <a href="#" class="restaurant-card" data-category="pizza">
+                <!-- Fresh Fries Card (Burgers Category) -->
+                <a href="items.html?restaurant=Fresh+Fries" class="restaurant-card" data-category="burgers">
+                    <div class="restaurant-image-container">
+                         <img src="https://placehold.co/800x450/8B4513/ffffff?text=Fresh+Fries" 
+                             class="restaurant-image" 
+                             alt="Basket of fresh cut fries">
+                    </div>
+                    <div class="details">
+                        <h3>Fresh Fries</h3>
+                        <p class="restaurant-metadata">Fries, Comfort Food, Snacks • $</p>
+                        <div class="info-bar">
+                            <span class="rating">★ <span>4.6 (1.2k+)</span></span>
+                            <span>15-25 min</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- Artisan Pizza Co. (Pizza Category) -->
+                <a href="items.html?restaurant=Artisan+Pizza+Co." class="restaurant-card" data-category="pizza">
                     <div class="restaurant-image-container">
                          <img src="https://placehold.co/800x450/ff5a5f/ffffff?text=Pizza+Place" 
                              class="restaurant-image" 
@@ -107,8 +193,8 @@
                     </div>
                 </a>
                 
-                <!-- Restaurant Card 3 -->
-                <a href="#" class="restaurant-card" data-category="mexican">
+                <!-- Taqueria del Sol (Mexican Category) -->
+                <a href="items.html?restaurant=Taqueria+del+Sol" class="restaurant-card" data-category="mexican">
                     <div class="restaurant-image-container">
                          <img src="https://placehold.co/800x450/007bff/ffffff?text=Taco+Place" 
                              class="restaurant-image" 
@@ -120,57 +206,6 @@
                         <div class="info-bar">
                             <span class="rating">★ <span>4.5 (800+)</span></span>
                             <span>15-20 min</span>
-                        </div>
-                    </div>
-                </a>
-                
-                <!-- Restaurant Card 4 -->
-                <a href="#" class="restaurant-card" data-category="asian">
-                    <div class="restaurant-image-container">
-                         <img src="https://placehold.co/800x450/f8f9fa/333333?text=Sushi+Place" 
-                             class="restaurant-image" 
-                             alt="Restaurant image">
-                    </div>
-                    <div class="details">
-                        <h3>Zen Sushi Bar</h3>
-                        <p class="restaurant-metadata">Japanese, Seafood • $$$$</p>
-                        <div class="info-bar">
-                            <span class="rating">★ <span>4.8 (350+)</span></span>
-                            <span>40-50 min</span>
-                        </div>
-                    </div>
-                </a>
-                 
-                 <!-- Restaurant Card 5 -->
-                <a href="#" class="restaurant-card" data-category="healthy">
-                    <div class="restaurant-image-container">
-                         <img src="https://placehold.co/800x450/333333/ffffff?text=Smoothies" 
-                             class="restaurant-image" 
-                             alt="Restaurant image">
-                    </div>
-                    <div class="details">
-                        <h3>The Green Bowl</h3>
-                        <p class="restaurant-metadata">Healthy, Smoothies • $$</p>
-                        <div class="info-bar">
-                            <span class="rating">★ <span>4.6 (200+)</span></span>
-                            <span>20-30 min</span>
-                        </div>
-                    </div>
-                </a>
-                
-                <!-- Restaurant Card 6 -->
-                <a href="#" class="restaurant-card" data-category="breakfast">
-                    <div class="restaurant-image-container">
-                         <img src="https://placehold.co/800x450/ff5a5f/ffffff?text=Breakfast" 
-                             class="restaurant-image" 
-                             alt="Restaurant image">
-                    </div>
-                    <div class="details">
-                        <h3>Sunny Side Diner</h3>
-                        <p class="restaurant-metadata">Breakfast, Comfort Food • $$</p>
-                        <div class="info-bar">
-                            <span class="rating">★ <span>4.4 (1.5k+)</span></span>
-                            <span>35-45 min</span>
                         </div>
                     </div>
                 </a>
