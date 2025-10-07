@@ -237,7 +237,7 @@ footer {
 
 
 /* ------------------------------------------------------------------------- */
-/* --- 3. SERVICES.HTML STYLES (Used for visual consistency across service blocks) --- */
+/* --- 3. SERVICES.HTML STYLES (Fixed Card Layout and Size) --- */
 /* ------------------------------------------------------------------------- */
 
 .service-detail-section {
@@ -253,13 +253,41 @@ footer {
     background: var(--white);
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    /* Set up primary card flex for content alignment */
     display: flex;
     flex-direction: column;
 }
+
 .service-block h2 {
     color: var(--primary-color);
     margin-bottom: 0.5rem;
 }
+
+/* FIX: Ensure content inside the block is a flexible column for better spacing */
+.service-content {
+    display: flex;
+    flex-direction: column;
+    /* Optional: If you have an image, style it here for consistent size */
+}
+
+.service-block img {
+    max-width: 80px; /* Reduced image size for a cleaner card look */
+    height: auto;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.service-block p {
+    margin-bottom: 1rem;
+}
+
+.service-block ul {
+    margin-top: 0.5rem;
+    padding-left: 1.5rem;
+    list-style: disc;
+    margin-bottom: auto; /* Pushes the button to the bottom */
+}
+
 /* Visual Accent with border for modern look */
 .service-block.ride-block {
     border: 1px solid var(--primary-color); 
@@ -269,8 +297,28 @@ footer {
     border: 1px solid var(--secondary-color); 
     border-left: 5px solid var(--secondary-color);
 }
-.service-block ul {
-    margin-bottom: auto; 
+
+
+/* ------------------------------------------------------------------------- */
+/* --- 6. DESKTOP/TABLET OPTIMIZATION (Media Query) --- */
+/* (Only the relevant services section is shown here) */
+/* ------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+    /* ... (Other existing desktop styles) ... */
+    
+    /* FIX: SERVICES.HTML / CITY.HTML Layout (2 Columns, prevents stretching) */
+    .service-detail-section {
+        flex-direction: row; 
+        flex-wrap: wrap; 
+    }
+    .service-block {
+        /* Distributes space evenly, but uses max-width to control size */
+        flex: 1 1 45%; 
+        max-width: calc(50% - 1.5rem); /* Calc ensures two columns with gap */
+        box-sizing: border-box; /* Important for preventing overflow */
+    }
+    
+    /* ... (Rest of the media query remains the same) ... */
 }
 
 
