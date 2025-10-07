@@ -114,7 +114,7 @@
             opacity: 0.7;
         }
 
-        /* --- NEW STYLES FOR IN-RIDE VIEW --- */
+        /* --- STYLES FOR IN-RIDE VIEW --- */
         #in-ride-view {
             text-align: center;
         }
@@ -230,20 +230,31 @@
 </div>
 
 <script>
-    // Mock Data for Vehicles
+    // --- UPDATED MOCK DATA FOR VEHICLES, MATCHING THE IMAGE ---
     const vehicles = [
-        { id: 'standard_sedan', name: 'Standard Sedan', price: 15.50, category: 'Standard', eta: 3 },
-        { id: 'comfort_suv', name: 'Comfort SUV', price: 25.00, category: 'Comfort', eta: 5 },
-        { id: 'electric_eco', name: 'Electric Eco', price: 18.00, category: 'Electric', eta: 4 },
-        { id: 'lux_bugatti', name: 'Bugatti Veyron', price: 150.00, category: 'Exotic Sportscar', eta: 7 },
-        { id: 'lux_lamborghini', name: 'Lamborghini Huracán', price: 120.00, category: 'Exotic Sportscar', eta: 8 }
+        { id: 'standard', name: 'Standard 🚗', price: 15.00, category: 'Standard', eta: '10 min' },
+        { id: 'xl', name: 'XL 🚌', price: 37.50, category: 'XL', eta: '10 min' },
+        { id: 'premium', name: 'Premium 💎', price: 70.00, category: 'Premium', eta: '10 min' },
+        { id: 'luxury', name: 'Luxury ✨', price: 125.00, category: 'Luxury', eta: '10 min' },
+        { id: 'heli_ride', name: 'Heli-Ride 🚁', price: 450.00, category: 'Unique', eta: '5 min' },
+        
+        { id: 'airplane', name: 'Airplane ✈️', price: 2500.00, category: 'Unique', eta: '1 hour' },
+        { id: 'ice_cream', name: 'Ice Cream 🍦', price: 36.00, category: 'Fun', eta: '35 min (slow stops!)' },
+        { id: 'garbage_truck', name: 'Garbage Truck 🚚', price: 49.50, category: 'Fun', eta: '45 min (many stops!)' },
+        { id: 'fire_truck', name: 'Fire Truck 🚒', price: 150.00, category: 'Fun', eta: '15 min (with sirens)' },
+        { id: 'exotic', name: 'Exotic Sportscar 🏎️', price: 187.50, category: 'Luxury', eta: '8 min (if traffic allows)' },
+        
+        { id: 'golf_cart', name: 'Golf Cart ⛳', price: 8.00, category: 'Budget', eta: '15 min' },
+        { id: 'walk', name: 'Walk 🚶', price: 2.50, category: 'Budget', eta: '40 min' },
+        { id: 'bike', name: 'Bike 🚲', price: 5.60, category: 'Budget', eta: '20 min' }
     ];
+    // ----------------------------------------
 
     let selectedVehicleId = null;
 
     /**
      * Renders the vehicle options dynamically.
-     * This function is also used to reset the selection state.
+     * Note: The vehicle name now includes the emoji for a better look.
      */
     function renderVehicles() {
         const container = document.getElementById('vehicle-options-container');
@@ -261,7 +272,7 @@
             card.innerHTML = `
                 <div class="vehicle-info">
                     <div class="vehicle-name">${vehicle.name}</div>
-                    <div class="vehicle-eta">ETA: ${vehicle.eta} min</div>
+                    <div class="vehicle-eta">${vehicle.eta}</div>
                 </div>
                 <div class="vehicle-price">$${vehicle.price.toFixed(2)}</div>
             `;
@@ -292,7 +303,9 @@
 
         if (isReady) {
             const selectedVehicle = vehicles.find(v => v.id === selectedVehicleId);
-            button.textContent = `Book ${selectedVehicle.name} for $${selectedVehicle.price.toFixed(2)}`;
+            // We use a simplified name for the button text (removing emojis/extra text)
+            const buttonName = selectedVehicle.name.split(' ')[0]; 
+            button.textContent = `Book ${buttonName} for $${selectedVehicle.price.toFixed(2)}`;
         } else {
             button.textContent = 'Please enter locations and select a vehicle';
         }
@@ -300,7 +313,7 @@
 
     /**
      * Handles the ride booking process.
-     * NEW: Transitions to the In-Ride View on success.
+     * Transitions to the In-Ride View on success.
      */
     function bookRide() {
         const pickup = document.getElementById('pickup-input');
@@ -320,7 +333,8 @@
             
             // --- 3. Populate In-Ride View Details ---
             document.getElementById('driver-name').textContent = 'Sarah J.'; // Mock data
-            document.getElementById('vehicle-details').textContent = `${selectedVehicle.name} • ABC-123`; // Mock data
+            // Use the full name including emoji and a mock license plate
+            document.getElementById('vehicle-details').textContent = `${selectedVehicle.name} • ABC-123`; 
             document.getElementById('summary-pickup').textContent = pickup.value;
             document.getElementById('summary-dropoff').textContent = dropoff.value;
 
@@ -333,7 +347,7 @@
     }
 
     /**
-     * NEW FUNCTION: Simulates the ride progression and updates the status message.
+     * Simulates the ride progression and updates the status message.
      */
     function simulateRide() {
         const statusElement = document.getElementById('ride-status-message');
