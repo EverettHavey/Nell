@@ -306,7 +306,7 @@ section {
     color: white;
     text-align: center;
     /* Increase top/bottom padding for more vertical space */
-    padding: 6rem var(--spacing-md); 
+    padding: 8rem var(--spacing-md); 
 }
 
 .page-hero h1 {
