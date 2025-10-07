@@ -108,17 +108,8 @@ let promoDiscount = 0.00;
 let lastOrder = null; // Holds the confirmed order details for tracking
 const DELIVERY_FEE = 4.00;
 
-// Exporting to window so functions can be called directly from onclick in HTML
-window.currentRestaurant = currentRestaurant;
-window.DELIVERY_FEE = DELIVERY_FEE;
-window.cart = cart;
-window.promoDiscount = promoDiscount;
-window.lastOrder = lastOrder;
-window.restaurants = restaurants;
-
-
 // --- UTILITY: Notification Toast ---
-export function showNotification(message) {
+function showNotification(message) {
     const toast = document.getElementById('notification-toast');
     document.getElementById('notification-text').textContent = message;
     
@@ -132,13 +123,13 @@ export function showNotification(message) {
 }
 
 // --- UTILITY: Custom Modal ---
-export function alertUser(title, message) {
+function alertUser(title, message) {
     document.getElementById('messageBox').querySelector('h3').textContent = title;
     document.getElementById('messageText').innerHTML = message;
     document.getElementById('messageBox').style.display = 'flex'; // Use flex for centering
 }
 
-export function closeMessageBox() {
+function closeMessageBox() {
     document.getElementById('messageBox').style.display = 'none';
 }
 
@@ -153,12 +144,12 @@ function showView(viewId) {
     window.scrollTo(0, 0); 
 }
 
-export function showListView() {
+function showListView() {
     showView('list-view');
 }
 
-// NEW: Function to render the tracking view
-export function showTrackingView() {
+// Function to render the tracking view
+function showTrackingView() {
     if (!lastOrder) {
         alertUser("Error", "No recent order found to track.");
         showListView();
@@ -191,7 +182,7 @@ export function showTrackingView() {
     showView('tracking-view');
 }
 
-export function showMenu(restaurantName) {
+function showMenu(restaurantName) {
     currentRestaurant = restaurants.find(r => r.name === restaurantName);
     window.currentRestaurant = currentRestaurant; // Update exported state
 
@@ -215,7 +206,7 @@ export function showMenu(restaurantName) {
             const itemDiv = document.createElement('div');
             itemDiv.classList.add('menu-item');
             
-            // Note: The onclick uses window.addItemToCart because it is exported globally
+            // The onclick relies on window.addItemToCart being globally available
             itemDiv.innerHTML = `
                 <div class="item-info">
                     <h4 class="font-semibold">${item.name}</h4>
@@ -231,7 +222,7 @@ export function showMenu(restaurantName) {
     showView('menu-view');
 }
 
-export function showCart() {
+function showCart() {
     renderCart();
     showView('cart-view');
 }
@@ -262,7 +253,7 @@ function renderRestaurants(filter = 'all', searchTerm = '') {
         const card = document.createElement('div');
         card.classList.add('restaurant-card', 'bg-white', 'rounded-xl', 'shadow-md', 'overflow-hidden');
         card.setAttribute('data-cuisine', restaurant.cuisine);
-        // Note: The onclick uses window.showMenu because it is exported globally
+        // Note: The onclick uses window.showMenu because it is attached globally
         card.onclick = () => showMenu(restaurant.name); 
         
         let categoryDisplay = restaurant.cuisine.charAt(0).toUpperCase() + restaurant.cuisine.slice(1);
@@ -312,7 +303,7 @@ function handleCategoryClick(event) {
 }
 
 // --- CART AND PROMO LOGIC ---
-export function addItemToCart(itemId, name, price) {
+function addItemToCart(itemId, name, price) {
     const existingItem = cart.find(item => item.id === itemId);
     
     if (existingItem) {
@@ -326,23 +317,20 @@ export function addItemToCart(itemId, name, price) {
     showNotification(`${name} added!`); 
 }
 
-export function applyPromo() {
+function applyPromo() {
     const code = document.getElementById('promoCode').value.toUpperCase().trim();
     const messageElement = document.getElementById('promoMessage');
     
     promoDiscount = 0.00; // Reset discount
-    window.promoDiscount = promoDiscount; // Update exported state
     messageElement.style.color = '#cc0000';
     
     // Mock Promo Code Logic
     if (code === 'NELL20') {
         promoDiscount = 20.00; // Mock $20 off
-        window.promoDiscount = promoDiscount;
         messageElement.textContent = '$20 discount applied!';
         messageElement.style.color = '#10b981'; // Green
     } else if (code === 'FREEDELIVERY') {
         promoDiscount = DELIVERY_FEE; // Mock delivery fee discount
-        window.promoDiscount = promoDiscount;
         messageElement.textContent = `Free Delivery applied! ($${DELIVERY_FEE.toFixed(2)} discount)`;
         messageElement.style.color = '#10b981'; // Green
     } else if (code) {
@@ -429,7 +417,7 @@ function updateCartButtonVisibility() {
     }
 }
 
-export function checkout() {
+function checkout() {
     if (cart.length === 0) {
         alertUser("Cart Empty", "Please add items to your cart before checking out.");
         return;
@@ -462,20 +450,33 @@ export function checkout() {
         paymentMethod: paymentName
     };
 
-    window.lastOrder = orderDetails; // Store the order state globally
+    lastOrder = orderDetails; // Store the order state globally
 
     // Clear state after saving
     cart.length = 0;
     currentRestaurant = null;
-    window.currentRestaurant = null;
     promoDiscount = 0.00;
-    window.promoDiscount = promoDiscount;
     document.getElementById('promoCode').value = '';
     document.getElementById('promoMessage').textContent = '';
     
     // Transition to the new tracking view
     showTrackingView(); 
 }
+
+// --- GLOBAL EXPOSURE (THE FIX) ---
+// Since we are using an ES Module (type="module" in HTML), these functions must be 
+// explicitly attached to the global 'window' object to be accessible from inline 'onclick' attributes.
+window.showListView = showListView;
+window.showTrackingView = showTrackingView;
+window.showMenu = showMenu;
+window.showCart = showCart;
+window.addItemToCart = addItemToCart;
+window.applyPromo = applyPromo;
+window.checkout = checkout;
+window.closeMessageBox = closeMessageBox;
+
+// Also expose state variables needed for inline onclick checks in HTML
+window.currentRestaurant = currentRestaurant;
 
 // --- INITIALIZATION ---
 document.addEventListener('DOMContentLoaded', () => {
