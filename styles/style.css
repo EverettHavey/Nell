@@ -79,7 +79,6 @@ ul {
     font-size: 2rem;
     cursor: pointer;
     color: var(--text-color);
-    /* Ensure icon is visible and above the mobile nav panel */
     z-index: 30; 
 }
 
@@ -94,8 +93,10 @@ ul {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 10;
     transition: transform 0.3s ease-in-out;
-    /* Hide above the screen using 100vh */
+    
+    /* CRITICAL FIX: Hide above the screen by default */
     transform: translateY(-100vh); 
+    
     overflow-y: auto; 
 }
 
@@ -250,12 +251,10 @@ footer {
     .mobile-nav {
         /* Ensure mobile nav is always hidden on desktop */
         display: none;
-        /* Removed !important from here */
     }
 
     .desktop-nav {
-        /* FIX: Ensure the desktop nav is displayed on ALL pages above 768px */
-        /* Removed !important to prevent mobile conflict */
+        /* Ensure the desktop nav is displayed on ALL pages above 768px */
         display: block; 
     }
 
