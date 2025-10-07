@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NELL - Order Food</title>
+    <!-- Global Styles -->
+    <link rel="stylesheet" href="styles/style.css">
+    <!-- Food Page Specific Styles -->
+    <link rel="stylesheet" href="styles/food.css">
+    
+    <!-- Scripts for mobile menu (existing) -->
+    <script src="scripts/script.js" defer></script> 
+    <!-- Scripts for food page interactivity -->
+    <script src="scripts/foodscript.js" defer></script> 
+</head>
+<body>
+    <header class="main-header">
+        <a href="index.html" class="logo">NELL</a>
+        
+        <nav class="desktop-nav">
+            <ul>
+                <li><a href="index.html">Home</a></li> 
+                <li><a href="services.html">Services</a></li>
+                <li><a href="city.html">Cities</a></li>
+                <li><a href="career.html">Careers</a></li>
+                <li><a href="aboutus.html">About Us</a></li>
+                <li><a href="support.html">Support</a></li>
+            </ul>
+        </nav>
+        
+        <div class="mobile-menu-icon">&#9776;</div>
+    </header>
+    
+    <nav class="mobile-nav">
+        <ul>
+            <li><a href="index.html">Home</a></li> 
+            <li><a href="services.html">Services</a></li>
+            <li><a href="city.html">Cities</a></li>
+            <li><a href="career.html">Careers</a></li>
+            <li><a href="aboutus.html">About Us</a></li>
+            <li><a href="support.html">Support</a></li>
+        </ul>
+    </nav>
+
+    <main class="page-content">
+        
+        <!-- Search and Filters Section -->
+        <section class="food-container food-search-section">
+            <div class="food-search-bar">
+                <input type="search" id="foodSearch" placeholder="Search Nell - Foods, restaurants, or dishes...">
+                <!-- The margin-top:0 has been removed, relying on the flex container -->
+                <a href="#" class="btn cta-secondary">Filters & Sort</a> 
+            </div>
+            
+            <h2 style="margin-bottom: var(--spacing-md);">Popular Categories</h2>
+            <div class="category-chips">
+                <!-- Data attribute added for script targeting -->
+                <div class="category-chip active" data-category="pizza">Pizza</div>
+                <div class="category-chip" data-category="burgers">Burgers</div>
+                <div class="category-chip" data-category="asian">Asian</div>
+                <div class="category-chip" data-category="mexican">Mexican</div>
+                <div class="category-chip" data-category="healthy">Healthy</div>
+                <div class="category-chip" data-category="desserts">Desserts</div>
+                <div class="category-chip" data-category="coffee">Coffee & Tea</div>
+                <div class="category-chip" data-category="alcohol">Alcohol</div>
+            </div>
+        </section>
+
+        <!-- Restaurant Listings -->
+        <section class="food-container food-list-section">
+            <h2 class="section-title">Restaurants Near You</h2>
+            
+            <div class="restaurant-list">
+                
+                <!-- Restaurant Card 1 -->
+                <a href="#" class="restaurant-card" data-category="burgers">
+                    <div class="restaurant-image-container">
+                        <img src="https://placehold.co/800x450/333333/ffffff?text=Burger+Place" 
+                             class="restaurant-image" 
+                             alt="Restaurant image">
+                    </div>
+                    <div class="details">
+                        <h3>The Grill Hub</h3>
+                        <p class="restaurant-metadata">Burgers, American • $$</p>
+                        <div class="info-bar">
+                            <span class="rating">★ <span>4.7 (500+)</span></span>
+                            <span>25-35 min</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Restaurant Card 2 -->
+                <a href="#" class="restaurant-card" data-category="pizza">
+                    <div class="restaurant-image-container">
+                         <img src="https://placehold.co/800x450/ff5a5f/ffffff?text=Pizza+Place" 
+                             class="restaurant-image" 
+                             alt="Restaurant image">
+                    </div>
+                    <div class="details">
+                        <h3>Artisan Pizza Co.</h3>
+                        <p class="restaurant-metadata">Pizza, Italian • $$$</p>
+                        <div class="info-bar">
+                            <span class="rating">★ <span>4.9 (1k+)</span></span>
+                            <span>30-40 min</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- Restaurant Card 3 -->
+                <a href="#" class="restaurant-card" data-category="mexican">
+                    <div class="restaurant-image-container">
+                         <img src="https://placehold.co/800x450/007bff/ffffff?text=Taco+Place" 
+                             class="restaurant-image" 
+                             alt="Restaurant image">
+                    </div>
+                    <div class="details">
+                        <h3>Taqueria del Sol</h3>
+                        <p class="restaurant-metadata">Mexican, Tacos • $</p>
+                        <div class="info-bar">
+                            <span class="rating">★ <span>4.5 (800+)</span></span>
+                            <span>15-20 min</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- Restaurant Card 4 -->
+                <a href="#" class="restaurant-card" data-category="asian">
+                    <div class="restaurant-image-container">
+                         <img src="https://placehold.co/800x450/f8f9fa/333333?text=Sushi+Place" 
+                             class="restaurant-image" 
+                             alt="Restaurant image">
+                    </div>
+                    <div class="details">
+                        <h3>Zen Sushi Bar</h3>
+                        <p class="restaurant-metadata">Japanese, Seafood • $$$$</p>
+                        <div class="info-bar">
+                            <span class="rating">★ <span>4.8 (350+)</span></span>
+                            <span>40-50 min</span>
+                        </div>
+                    </div>
+                </a>
+                 
+                 <!-- Restaurant Card 5 -->
+                <a href="#" class="restaurant-card" data-category="healthy">
+                    <div class="restaurant-image-container">
+                         <img src="https://placehold.co/800x450/333333/ffffff?text=Smoothies" 
+                             class="restaurant-image" 
+                             alt="Restaurant image">
+                    </div>
+                    <div class="details">
+                        <h3>The Green Bowl</h3>
+                        <p class="restaurant-metadata">Healthy, Smoothies • $$</p>
+                        <div class="info-bar">
+                            <span class="rating">★ <span>4.6 (200+)</span></span>
+                            <span>20-30 min</span>
+                        </div>
+                    </div>
+                </a>
+                
+                <!-- Restaurant Card 6 -->
+                <a href="#" class="restaurant-card" data-category="breakfast">
+                    <div class="restaurant-image-container">
+                         <img src="https://placehold.co/800x450/ff5a5f/ffffff?text=Breakfast" 
+                             class="restaurant-image" 
+                             alt="Restaurant image">
+                    </div>
+                    <div class="details">
+                        <h3>Sunny Side Diner</h3>
+                        <p class="restaurant-metadata">Breakfast, Comfort Food • $$</p>
+                        <div class="info-bar">
+                            <span class="rating">★ <span>4.4 (1.5k+)</span></span>
+                            <span>35-45 min</span>
+                        </div>
+                    </div>
+                </a>
+                
+            </div>
+            
+            <div class="load-more-container">
+                <button class="btn cta-primary">Load More Restaurants</button>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2025 NELL, Inc. | All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
