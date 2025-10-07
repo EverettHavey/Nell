@@ -3,18 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ride Booking App</title>
+    <title>Nell Rides - Book a Trip</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* BASE STYLES */
+        /* BASE STYLES - Set theme to a clean, modern blue/white */
+        :root {
+            --primary-blue: #0076ff; /* Nell Rides Primary Blue */
+            --primary-dark: #1f1f1f;
+            --success-green: #388e3c;
+        }
+
         body {
             font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #f0f2f5; 
-            color: #1a1a1a;
+            background-color: #f7f7f7; 
+            color: var(--primary-dark);
         }
         .container {
-            max-width: 480px; 
+            max-width: 700px; /* Increased width to better fit the grid */
             margin: auto;
             background-color: #ffffff;
             padding: 24px;
@@ -22,19 +29,26 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             position: relative; 
         }
-        h1 {
-            text-align: center;
-            color: #1e88e5;
-            margin-bottom: 24px;
-            font-size: 2em;
-            font-weight: 700;
+        
+        /* HEADER STYLES */
+        .text-3xl {
+            font-size: 2.25rem !important;
+            font-weight: 700 !important;
         }
+        .text-red-600, .hover\:text-red-500:hover { /* Override red to Nell Blue */
+            color: var(--primary-blue) !important; 
+        }
+        .text-gray-500 {
+            color: #6c757d !important;
+            font-size: 0.9em;
+        }
+
         h2 {
             font-size: 1.2em;
             font-weight: 600;
             margin-top: 20px;
             margin-bottom: 12px;
-            color: #333;
+            color: var(--primary-dark);
         }
 
         /* INPUTS */
@@ -52,8 +66,8 @@
             transition: border-color 0.3s, box-shadow 0.3s;
         }
         .input-group input[type="text"]:focus {
-            border-color: #1e88e5;
-            box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.2);
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0, 118, 255, 0.2);
             outline: none;
         }
         .input-group .icon {
@@ -69,8 +83,8 @@
         .map-placeholder {
             width: 100%;
             height: 180px;
-            background-color: #e8f5ee;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23f0f0f0"/><line x1="0" y1="50" x2="100" y2="50" stroke="%23ccc" stroke-width="2"/><line x1="50" y1="0" x2="50" y2="100" stroke="%23ccc" stroke-width="2"/><circle cx="50" cy="50" r="10" fill="%23e53935"/></svg>');
+            background-color: #f0f0f0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23f7f7f7"/><line x1="0" y1="50" x2="100" y2="50" stroke="%23ccc" stroke-width="2"/><line x1="50" y1="0" x2="50" y2="100" stroke="%23ccc" stroke-width="2"/><circle cx="50" cy="50" r="10" fill="%230076ff"/></svg>');
             background-size: 100% 100%;
             display: flex;
             align-items: center;
@@ -80,17 +94,9 @@
             color: #333;
             font-weight: 600;
         }
-        .map-large {
-            height: 300px; 
-            flex-direction: column;
-            justify-content: flex-start;
-            padding-top: 20px;
-        }
-        .map-large p:first-child { margin-bottom: 5px; font-size: 1.1em; }
-        .map-large p:last-child { font-size: 0.9em; color: #555; }
 
-        /* CARDS (VEHICLE/PAYMENT) */
-        .selection-section { /* New class for sections to be hidden */
+        /* DYNAMIC CONTENT VISIBILITY */
+        .selection-section { 
             display: none; 
             opacity: 0;
             transition: opacity 0.5s ease-in-out;
@@ -99,13 +105,71 @@
             display: block;
             opacity: 1;
         }
-        .vehicle-options, .payment-options {
+        
+        /* VEHICLE GRID LAYOUT */
+        .vehicle-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); /* Responsive Grid */
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .vehicle-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 5px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            min-height: 140px; /* Ensure cards are uniform height */
+        }
+        .vehicle-card:hover {
+            border-color: var(--primary-blue);
+            box-shadow: 0 2px 5px rgba(0, 118, 255, 0.1);
+        }
+        .vehicle-card.selected {
+            border-color: var(--primary-blue);
+            background-color: #e6f0ff; 
+            box-shadow: 0 0 0 2px rgba(0, 118, 255, 0.3);
+        }
+        .vehicle-icon {
+            font-size: 40px; 
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+        .vehicle-name {
+            font-weight: bold;
+            font-size: 0.9em;
+            color: #1a1a1a;
+            line-height: 1.2;
+            min-height: 2.4em; /* Reserve space for two lines of text */
+        }
+        .vehicle-price {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: var(--primary-dark); 
+            margin-top: 5px;
+        }
+        .vehicle-eta {
+            font-size: 0.8em;
+            color: #6c757d;
+            margin-top: 2px;
+            line-height: 1.2;
+        }
+        
+        /* PAYMENT CARDS (List layout remains) */
+        .payment-options {
             display: flex;
             flex-direction: column;
             gap: 10px;
             margin-bottom: 20px;
         }
-        .vehicle-card, .payment-card {
+        .payment-card {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -113,195 +177,58 @@
             border: 1px solid #ddd;
             border-radius: 10px;
             cursor: pointer;
-            transition: all 0.2s ease-in-out;
             background-color: #fff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
-        .vehicle-card:hover, .payment-card:hover {
-            border-color: #1e88e5;
-            box-shadow: 0 2px 5px rgba(30, 136, 229, 0.1);
-        }
-        .vehicle-card.selected, .payment-card.selected {
-            border-color: #1e88e5;
-            background-color: #e3f2fd;
-            box-shadow: 0 0 0 2px #90caf9;
-        }
-        .vehicle-info {
-            display: flex;
-            flex-direction: column;
-        }
-        .vehicle-name, .payment-name {
-            font-weight: bold;
-            font-size: 1.1em;
-            color: #1a1a1a;
-        }
-        .vehicle-price {
-            font-size: 1.3em;
-            font-weight: bold;
-            color: #28a745;
-        }
-        .vehicle-eta {
-            font-size: 0.85em;
-            color: #6c757d;
-            margin-top: 4px;
-        }
-        .payment-card .status {
-            font-size: 0.8em;
-            color: #6c757d;
-        }
-        .payment-card .status.confirmed {
-            color: #4caf50;
-            font-weight: 600;
+        .payment-card.selected {
+            border-color: var(--primary-blue);
+            background-color: #e6f0ff; 
         }
 
-        /* BUTTONS */
+        /* BUTTONS, IN-RIDE, MODAL STYLES (Blue theme adjustments) */
         .book-button {
+            background-color: var(--primary-blue);
+            box-shadow: 0 4px 10px rgba(0, 118, 255, 0.3);
             width: 100%;
             padding: 16px;
-            background-color: #1e88e5;
             color: white;
             border: none;
             border-radius: 10px;
             font-size: 1.1em;
             font-weight: bold;
             cursor: pointer;
-            transition: background-color 0.3s, opacity 0.3s;
-            box-shadow: 0 4px 10px rgba(30, 136, 229, 0.3);
         }
-        .book-button:hover:not(:disabled) {
-            background-color: #1565c0;
-        }
-        .book-button:disabled {
-            background-color: #90caf9;
-            cursor: not-allowed;
-            opacity: 0.8;
-            box-shadow: none;
-        }
-        .button-secondary {
-            padding: 10px 20px;
-            background-color: #f44336;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            font-size: 16px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        /* NOTIFICATION */
-        #notification-banner {
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%) translateY(-100%); 
-            width: 90%;
-            padding: 15px 20px;
-            background-color: #4caf50; 
-            color: white;
-            text-align: center;
-            font-weight: bold;
-            border-radius: 0 0 8px 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            z-index: 1000;
-            opacity: 0;
-            transition: transform 0.4s ease-out, opacity 0.4s ease-out;
-        }
-        #notification-banner.show {
-            transform: translateX(-50%) translateY(0); 
-            opacity: 1;
-        }
-
-        /* MODAL STYLES */
-        .modal-overlay {
-            display: none; 
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.6);
-            z-index: 1050;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            width: 80%;
-            max-width: 400px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
-            position: relative;
-        }
-        .modal-close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            position: absolute;
-            top: 10px;
-            right: 20px;
-        }
-        .modal-price-display {
-            font-size: 1.4em;
-            font-weight: bold;
-            color: #28a745;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .modal-price-display span {
-            font-size: 0.8em;
-            font-weight: normal;
-            color: #6c757d;
-            display: block;
-            margin-top: 5px;
-        }
-        .modal-confirm-button {
-            width: 100%;
-            padding: 12px;
-            background-color: #1e88e5;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        /* IN-RIDE VIEW */
-        .ride-status-card {
-            background-color: #f1f8e9; 
-            border: none;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-        }
-        .status-message {
-            font-size: 1.6em;
-            color: #388e3c;
-        }
-        .driver-info {
-            background-color: #fff;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-            margin: 20px 0;
-            border-top: none;
-            border-bottom: none;
-        }
-        .driver-info p {
-            margin: 3px 0;
-        }
-        .driver-info strong {
-            color: #1e88e5;
-            font-weight: 600;
-        }
+        .book-button:hover:not(:disabled) { background-color: #005ac0; }
+        .book-button:disabled { background-color: #99c2ff; cursor: not-allowed; opacity: 0.8; box-shadow: none; }
+        
+        .status-message { color: var(--primary-blue); }
+        .driver-info strong { color: var(--primary-blue); }
+        .modal-confirm-button { background-color: var(--primary-blue); }
+        .modal-content input { padding: 12px; }
 
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1><span style="color: #28a745;">Go</span>Ride 🚀</h1>
     
+    <header class="mb-6 flex flex-col md:flex-row md:justify-between md:items-center space-y-3 md:space-y-0">
+        
+        <div onclick="window.location.reload()" class="cursor-pointer flex-shrink-0">
+            <h1 class="text-3xl font-extrabold text-red-600">Nell Rides 🚕</h1> 
+            <p class="text-gray-500">Book your next trip instantly.</p> 
+        </div>
+
+        <nav class="desktop-nav mt-3 md:mt-0">
+            <ul class="flex space-x-4 overflow-x-auto pb-1 justify-end md:justify-start">
+                <li><a href="#" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">Drive</a></li> 
+                <li><a href="#" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">Business</a></li>
+                <li><a href="#" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">Safety</a></li>
+                <li><a href="#" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">About</a></li>
+                <li><a href="#" class="text-gray-600 hover:text-red-500 font-medium transition whitespace-nowrap">Help</a></li>
+            </ul>
+        </nav>
+
+    </header>
     <div id="notification-banner">
         🎉 Ride Accepted! Driver is confirmed and arriving soon.
     </div>
@@ -317,11 +244,11 @@
         </div>
         <div class="input-group">
             <span class="icon">🏁</span>
-            <input type="text" id="dropoff-input" placeholder="Enter Dropoff Location" oninput="checkLocationInput()">
+            <input type="text" id="dropoff-input" placeholder="Enter Destination" oninput="checkLocationInput()">
         </div>
         
         <div id="dynamic-booking-content" class="selection-section">
-            <h2>Select Your Ride</h2>
+            <h2>Choose Your Ride</h2>
             <div id="vehicle-options-container" class="vehicle-options" role="radiogroup">
                 </div>
 
@@ -333,7 +260,8 @@
                 Please enter locations, select a vehicle, and confirm your payment
             </button>
         </div>
-        </div>
+        
+    </div>
 
     <div id="in-ride-view" style="display: none;">
         <div class="map-placeholder map-large">
@@ -385,7 +313,7 @@
         </div>
 
         <div id="modal-paypal-form" style="display: none;">
-            <p style="text-align: center; color: #0070ba; font-weight: bold;">Log in to confirm payment</p>
+            <p style="text-align: center; color: #0076ff; font-weight: bold;">Log in to confirm payment</p>
             <input type="email" placeholder="Email or Phone Number" required>
             <input type="password" placeholder="Password" required>
         </div>
@@ -394,47 +322,58 @@
     </div>
 </div>
 <script>
-    // --- MOCK DATA ---
+    // --- MOCK DATA - Updated with ALL options from the provided image ---
     const vehicles = [
-        { id: 'standard', name: 'Standard 🚗', price: 15.00, category: 'Standard', eta: '10 min' },
-        { id: 'xl', name: 'XL 🚌', price: 37.50, category: 'XL', eta: '10 min' },
-        { id: 'premium', name: 'Premium 💎', price: 70.00, category: 'Premium', eta: '10 min' },
-        { id: 'luxury', name: 'Luxury ✨', price: 125.00, category: 'Luxury', eta: '10 min' },
+        { id: 'standard', name: 'Standard', icon: '🚗', price: 15.00, eta: '10 min' },
+        { id: 'xl', name: 'XL', icon: '🚌', price: 37.50, eta: '10 min' },
+        { id: 'premium', name: 'Premium', icon: '💎', price: 70.00, eta: '10 min' },
+        { id: 'luxury', name: 'Luxury', icon: '✨', price: 125.00, eta: '10 min' },
+        { id: 'heli_ride', name: 'Heli-Ride', icon: '🚁', price: 450.00, eta: '5 min' },
         
-        // Removed less common options to keep the list concise initially
+        { id: 'airplane', name: 'Airplane', icon: '✈️', price: 2500.00, eta: '1 hour' },
+        { id: 'ice_cream', name: 'Ice Cream', icon: '🍦', price: 36.00, eta: '35 min (slow stops!)' },
+        { id: 'garbage_truck', name: 'Garbage Truck', icon: '🚚', price: 49.50, eta: '45 min (many stops!)' },
+        { id: 'fire_truck', name: 'Fire Truck', icon: '🚒', price: 150.00, eta: '15 min (with sirens)' },
+        { id: 'exotic', name: 'Exotic Sportscar', icon: '🏎️', price: 187.50, eta: '8 min (if traffic allows)' },
+        
+        { id: 'golf_cart', name: 'Golf Cart', icon: '⛳', price: 8.00, eta: '15 min' },
+        { id: 'walk', name: 'Walk', icon: '🚶', price: 2.50, eta: '40 min' },
+        { id: 'bike', name: 'Bike', icon: '🚲', price: 5.60, eta: '20 min' }
     ];
 
     const paymentMethods = [
         { id: 'visa', name: 'Visa **** 1234', icon: '💳', confirmed: false, confirmedName: 'Visa (default)' },
         { id: 'paypal', name: 'PayPal (Primary)', icon: '💰', confirmed: false, confirmedName: 'PayPal Linked' },
-        { id: 'cash', name: 'Cash', icon: '💵', confirmed: true, confirmedName: 'Cash (pay driver)' } 
+        { id: 'cash', name: 'Cash', icon: '💵', confirmed: true, confirmedName: 'Cash (Pay Driver)' } 
     ];
     // ----------------------------------------
     
     let selectedVehicleId = null;
     let selectedPaymentId = null;
 
-    // --- DRIVER DETAILS LOGIC (REMAINS THE SAME) ---
+    // --- DRIVER DETAILS LOGIC ---
     function getDriverDetails(vehicleId) {
+        // Updated driver data to match the unique vehicle types
         switch (vehicleId) {
             case 'standard': return { name: 'Sarah J.', rating: '4.9', plate: 'T-800' };
-            case 'xl': return { name: 'James B.', rating: '5.0', plate: 'L-007' };
-            case 'premium': return { name: 'Alice W.', rating: '4.8', plate: 'P-999' };
-            case 'luxury': return { name: 'Racer Ken', rating: '4.9', plate: 'Z-010' };
+            case 'heli_ride': return { name: 'Captain Viper', rating: '4.8', plate: 'H-911' };
+            case 'ice_cream': return { name: 'Scoops M.', rating: '4.7', plate: 'I-C-3' };
+            case 'fire_truck': return { name: 'Chief Blaze', rating: '4.9', plate: 'F-999' };
             default: return { name: 'Driver D.', rating: '4.8', plate: 'X-777' };
         }
     }
     
-    // --- NEW LOCATION CHECK FUNCTION ---
+    // --- LOCATION CHECK / DYNAMIC CONTENT VISIBILITY ---
     function checkLocationInput() {
         const pickup = document.getElementById('pickup-input').value;
         const dropoff = document.getElementById('dropoff-input').value;
         const dynamicContent = document.getElementById('dynamic-booking-content');
         
-        if (pickup.length > 2 && dropoff.length > 2) {
-            // Simulate route calculation and data loading
+        const isLocationReady = pickup.length > 2 && dropoff.length > 2;
+
+        if (isLocationReady) {
             if (!dynamicContent.classList.contains('active')) {
-                 // Set initial selections if not set (for first time display)
+                 // Set initial selections for a smooth first reveal
                 if (!selectedVehicleId) {
                     selectedVehicleId = vehicles[0].id;
                 }
@@ -442,19 +381,18 @@
                     selectedPaymentId = paymentMethods[2].id; // Default to Cash
                 }
 
-                // Render options and show section
                 renderVehicles();
                 renderPaymentMethods();
                 dynamicContent.classList.add('active');
             }
         } else {
             dynamicContent.classList.remove('active');
-            // Reset selection state when locations are cleared
-            checkBookingReadiness();
+            document.getElementById('book-ride-button').disabled = true;
         }
+        checkBookingReadiness();
     }
 
-    // --- VEHICLE SELECTION LOGIC (REMAINS THE SAME) ---
+    // --- VEHICLE SELECTION LOGIC (UPDATED FOR GRID STYLE) ---
     function renderVehicles() {
         const container = document.getElementById('vehicle-options-container');
         container.innerHTML = ''; 
@@ -469,11 +407,10 @@
             card.onclick = () => selectVehicle(vehicle.id);
 
             card.innerHTML = `
-                <div class="vehicle-info">
-                    <div class="vehicle-name">${vehicle.name}</div>
-                    <div class="vehicle-eta">ETA: ${vehicle.eta}</div>
-                </div>
+                <div class="vehicle-icon">${vehicle.icon}</div>
+                <div class="vehicle-name">${vehicle.name}</div>
                 <div class="vehicle-price">$${vehicle.price.toFixed(2)}</div>
+                <div class="vehicle-eta">${vehicle.eta}</div>
             `;
             container.appendChild(card);
         });
@@ -484,12 +421,14 @@
         selectedVehicleId = id;
         renderVehicles();
         const selectedPayment = paymentMethods.find(p => p.id === selectedPaymentId);
+        // If an unconfirmed card/PayPal is selected, reopen modal to display new price
         if (selectedPayment && !selectedPayment.confirmed && (selectedPayment.id === 'visa' || selectedPayment.id === 'paypal')) {
             openModal(selectedPayment.id);
         }
     }
 
-    // --- PAYMENT SELECTION LOGIC (REMAINS THE SAME) ---
+    // --- PAYMENT SELECTION LOGIC, MODAL LOGIC, BOOKING LOGIC (Remain the same) ---
+    
     function renderPaymentMethods() {
         const container = document.getElementById('payment-options-container');
         container.innerHTML = ''; 
@@ -519,7 +458,6 @@
 
     function selectPaymentMethod(id) {
         selectedPaymentId = id;
-
         const selectedMethod = paymentMethods.find(p => p.id === id);
 
         if (id === 'visa' || id === 'paypal') {
@@ -531,10 +469,9 @@
         renderPaymentMethods();
     }
 
-    // --- MODAL LOGIC (REMAINS THE SAME) ---
     function openModal(type) {
         if (!selectedVehicleId) {
-            alert('Please select a vehicle first to get the estimated price.');
+            alert('Please select a ride option first to view the estimated price.');
             return;
         }
 
@@ -581,26 +518,21 @@
     }
 
     function confirmPayment() {
-        // Mock validation: Check if required inputs are not empty (for UX, not security)
-        // In a real app, this would validate and save the data. 
-        // Here, we just simulate success.
         closeModal(true); 
     }
-
-
-    // --- BOOKING LOGIC (REMAINS THE SAME) ---
 
     function checkBookingReadiness() {
         const pickup = document.getElementById('pickup-input').value;
         const dropoff = document.getElementById('dropoff-input').value;
         const button = document.getElementById('book-ride-button');
 
+        const isLocationReady = pickup.length > 2 && dropoff.length > 2;
         const vehicleSelected = !!selectedVehicleId;
         
         const paymentMethod = paymentMethods.find(p => p.id === selectedPaymentId);
         const paymentConfirmed = paymentMethod ? paymentMethod.confirmed : false;
 
-        const isReady = pickup && dropoff && vehicleSelected && paymentConfirmed;
+        const isReady = isLocationReady && vehicleSelected && paymentConfirmed;
         button.disabled = !isReady;
 
         if (isReady) {
@@ -642,7 +574,7 @@
                 // --- Populate In-Ride View Details ---
                 document.getElementById('driver-name').textContent = driverInfo.name;
                 document.getElementById('driver-rating').textContent = driverInfo.rating;
-                document.getElementById('vehicle-details').textContent = `${selectedVehicle.name.replace(/(\s\w+)$/, '')} • ${driverInfo.plate}`; 
+                document.getElementById('vehicle-details').textContent = `${selectedVehicle.name} • ${driverInfo.plate}`; 
                 document.getElementById('payment-summary').textContent = `${paymentMethod.icon} ${paymentMethod.confirmedName}`; 
                 document.getElementById('summary-pickup').textContent = pickup.value;
                 document.getElementById('summary-dropoff').textContent = dropoff.value;
@@ -665,13 +597,9 @@
         const mapPlaceholder = document.querySelector('#in-ride-view .map-placeholder p');
         
         const stages = [
-            // Driver is confirmed and moving
             { message: 'Driver is arriving in 5 min.', mapText: 'Driver is approaching. Estimated time: 3 minutes', delay: 5000, color: '#ff9800' },
-            // Driver arrives and waits for the user (3 minutes = 180,000ms)
             { message: 'Driver has arrived at pickup! You have 3 minutes to board.', mapText: 'Driver is at your location! Please head to the curb.', delay: 180000, color: '#2196f3' }, 
-            // User boards and the ride starts
-            { message: 'You are on the way to your destination.', mapText: 'On the road. Route progress: 60%', delay: 15000, color: '#1e88e5' },
-            // Final arrival
+            { message: 'You are on the way to your destination.', mapText: 'On the road. Route progress: 60%', delay: 15000, color: '#0076ff' },
             { message: 'You have arrived! Trip is complete.', mapText: 'Trip Complete. Thank you for riding!', delay: 5000, color: '#388e3c' }
         ];
 
@@ -687,28 +615,22 @@
                 currentStage++;
                 setTimeout(nextStage, stage.delay);
             } else {
-                // After the trip is complete, transition back to booking view after a delay
                 setTimeout(() => {
                     alert('Your ride is complete! We hope you enjoyed it.');
-                    // Reset confirmation status for payments
+                    
                     const visaIndex = paymentMethods.findIndex(p => p.id === 'visa');
                     if(visaIndex !== -1) paymentMethods[visaIndex].confirmed = false;
                     const paypalIndex = paymentMethods.findIndex(p => p.id === 'paypal');
                     if(paypalIndex !== -1) paymentMethods[paypalIndex].confirmed = false;
 
-                    // Reset to booking view
                     document.getElementById('in-ride-view').style.display = 'none';
                     document.getElementById('booking-view').style.display = 'block';
                     
-                    // Clear state
                     document.getElementById('pickup-input').value = '';
                     document.getElementById('dropoff-input').value = '';
                     selectedVehicleId = null;
                     selectedPaymentId = null; 
-                    renderVehicles();
-                    renderPaymentMethods();
                     
-                    // Ensure dynamic content is hidden again
                     document.getElementById('dynamic-booking-content').classList.remove('active');
                 }, 5000);
             }
@@ -719,33 +641,25 @@
 
     function cancelRide() {
         if(confirm('Are you sure you want to cancel your ride?')) {
-            // Reset confirmation status for payments
             const visaIndex = paymentMethods.findIndex(p => p.id === 'visa');
             if(visaIndex !== -1) paymentMethods[visaIndex].confirmed = false;
             const paypalIndex = paymentMethods.findIndex(p => p.id === 'paypal');
             if(paypalIndex !== -1) paymentMethods[paypalIndex].confirmed = false;
             
-            // Reset to booking view
             document.getElementById('in-ride-view').style.display = 'none';
             document.getElementById('booking-view').style.display = 'block';
             
-            // Clear state
             document.getElementById('pickup-input').value = '';
             document.getElementById('dropoff-input').value = '';
             selectedVehicleId = null;
             selectedPaymentId = null;
-            renderVehicles();
-            renderPaymentMethods();
-            alert('Your ride has been cancelled.');
-
-            // Ensure dynamic content is hidden again
+            
             document.getElementById('dynamic-booking-content').classList.remove('active');
+            alert('Your ride has been cancelled.');
         }
     }
 
-    // Initialize the app
     window.onload = () => {
-        // Initial setup only, without forcing selections
         renderVehicles();
         renderPaymentMethods();
     };
