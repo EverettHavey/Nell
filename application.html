@@ -183,14 +183,14 @@
                     <label for="city">City of Operation</label>
                     <input type="text" id="city" name="city">
                 </div>
-                <div class="form-group">
-                    <label>Which service(s) will you provide?</label>
+                <div class="form-group radio-group">
+                    <label>Which service will you provide?</label>
                     <div>
-                        <input type="checkbox" id="serviceRides" name="serviceType" value="Rides" onchange="filterVehicleTypes()">
+                        <input type="radio" id="serviceRides" name="serviceSelection" value="Rides" onchange="filterVehicleTypes()">
                         <label for="serviceRides">Nell Rides (Driving passengers)</label>
                     </div>
                     <div>
-                        <input type="checkbox" id="serviceFoods" name="serviceType" value="Foods" onchange="filterVehicleTypes()">
+                        <input type="radio" id="serviceFoods" name="serviceSelection" value="Foods" onchange="filterVehicleTypes()">
                         <label for="serviceFoods">Nell Foods (Delivering food)</label>
                     </div>
                 </div>
@@ -230,11 +230,11 @@
 
             <div class="form-section">
                 <h2>4. Agreement & Submission</h2>
-                <div class="form-group checkbox-group">
+                <div class="form-group radio-group">
                     <input type="checkbox" id="termsAgree" name="termsAgree" required>
                     <label for="termsAgree">I agree to the Nell Partner Terms of Service and Privacy Policy.</label>
                 </div>
-                <div class="form-group checkbox-group hidden" id="consentDriver">
+                <div class="form-group radio-group hidden" id="consentDriver">
                     <input type="checkbox" id="backgroundCheckConsent" name="consent">
                     <label for="backgroundCheckConsent">I consent to a background check and driving record review.</label>
                 </div>
@@ -260,7 +260,7 @@
             ],
             // Unique options for Nell Rides from your images
             'Rides': [
-                { value: 'Car', text: 'Standard Car' }, // Standard car is common to both
+                { value: 'Car', text: 'Standard Car' }, // Standard car is available for rides
                 { value: 'Exotic Sportscar', text: 'Exotic Sportscar' },
                 { value: 'Golf Cart', text: 'Golf Cart' },
                 { value: 'Fire Truck', text: 'Fire Truck' },
@@ -284,15 +284,15 @@
             
             const setRequired = (inputs, isRequired) => {
                 inputs.forEach(input => {
-                    // Skip the checkboxes for service type, as their required status is complex
-                    if (input.id === 'serviceRides' || input.id === 'serviceFoods') return; 
+                    // Skip the service radio buttons when clearing requirements for the whole block
+                    if (input.name === 'serviceSelection') return; 
                     
                     if (isRequired) {
                         input.setAttribute('required', 'required');
                     } else {
                         input.removeAttribute('required');
                         input.value = ''; 
-                        if (input.type === 'checkbox') input.checked = false;
+                        if (input.type === 'radio' || input.type === 'checkbox') input.checked = false;
                     }
                 });
             };
@@ -309,8 +309,8 @@
                 consentDriver.classList.remove('hidden');
                 setRequired(driverInputs, true);
                 
-                // Initialize vehicle types on showing driver fields
-                filterVehicleTypes(); 
+                // Clear and reset vehicle types on showing driver fields
+                document.getElementById('vehicleType').innerHTML = '<option value="">Select Vehicle Type</option>';
 
             } else if (role === 'SoftwareEngineer') {
                 softwareFields.classList.add('active');
@@ -320,30 +320,25 @@
 
         // --- FILTER VEHICLE TYPES (Handles Service type selection) ---
         function filterVehicleTypes() {
-            const ridesChecked = document.getElementById('serviceRides').checked;
-            const foodsChecked = document.getElementById('serviceFoods').checked;
+            const ridesRadio = document.getElementById('serviceRides');
+            const foodsRadio = document.getElementById('serviceFoods');
             const vehicleSelect = document.getElementById('vehicleType');
 
             // Clear current options
             vehicleSelect.innerHTML = '<option value="">Select Vehicle Type</option>';
 
-            let visibleOptions = [];
-
-            if (ridesChecked || foodsChecked) {
-                // Combine and de-duplicate options based on selections
-                if (ridesChecked) {
-                    visibleOptions.push(...ALL_VEHICLES.Rides);
-                }
-                if (foodsChecked) {
-                    visibleOptions.push(...ALL_VEHICLES.Foods);
-                }
-
-                // Remove duplicates by converting to JSON, filtering, and converting back
-                const uniqueOptions = Array.from(new Set(visibleOptions.map(o => JSON.stringify(o))))
-                    .map(s => JSON.parse(s));
-
-                // Add unique options to the dropdown
-                uniqueOptions.forEach(option => {
+            let selectedService = '';
+            if (ridesRadio.checked) {
+                selectedService = 'Rides';
+            } else if (foodsRadio.checked) {
+                selectedService = 'Foods';
+            }
+            
+            if (selectedService) {
+                const options = ALL_VEHICLES[selectedService];
+                
+                // Add options specific to the selected service
+                options.forEach(option => {
                     const newOption = document.createElement('option');
                     newOption.value = option.value;
                     newOption.textContent = option.text;
