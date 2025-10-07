@@ -4,219 +4,396 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NELL - Order Food</title>
-    <!-- Global Styles -->
-    <link rel="stylesheet" href="styles/style.css">
-    <!-- Food Page Specific Styles -->
-    <link rel="stylesheet" href="styles/food.css">
+    <style>
+        /* Shared CSS Variables (Mocking an external style.css) */
+        :root {
+            --color-primary: #1e40af; /* Tailwind blue-700 */
+            --color-secondary: #fcd34d; /* Tailwind amber-300 */
+            --color-dark: #1f2937; /* Tailwind gray-800 */
+            --color-light: #ffffff;
+            --color-food-accent: #f5c531; 
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 32px;
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: var(--color-dark);
+            margin: 0;
+            padding-top: 60px; /* Space for fixed header */
+        }
+        
+        /* Header/Nav Styles */
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: var(--color-dark);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 500;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--color-secondary);
+            text-decoration: none;
+        }
+
+        .desktop-nav ul, .mobile-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        .desktop-nav li a {
+            color: var(--color-light);
+            text-decoration: none;
+            padding: 8px 15px;
+            display: block;
+            border-radius: var(--border-radius-sm);
+            transition: background-color 0.2s;
+        }
+
+        .desktop-nav li a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .mobile-nav, .mobile-menu-icon {
+            display: none;
+        }
+
+        /* Button Styles (CTA) */
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--border-radius-md);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, opacity 0.2s;
+        }
+
+        .cta-primary {
+            background-color: var(--color-primary);
+            color: var(--color-light);
+        }
+        
+        .cta-secondary {
+            background-color: #e5e7eb; /* Tailwind gray-200 */
+            color: var(--color-dark);
+        }
+
+        .cta-primary:hover:not(:disabled) {
+            background-color: #1d4ed8; /* Tailwind blue-800 */
+        }
+        
+        .cta-secondary:hover:not(:disabled) {
+            background-color: #d1d5db; /* Tailwind gray-300 */
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+            background-color: var(--color-dark);
+            color: var(--color-light);
+            font-size: 0.8rem;
+        }
+        
+        /* File Specific Styles */
+        .food-container {
+            max-width: 1200px;
+            margin: var(--spacing-lg) auto;
+            padding: 0 var(--spacing-md);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+            padding: var(--spacing-md);
+            background-color: var(--color-light);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-group button {
+            margin-left: var(--spacing-sm);
+            background-color: var(--color-secondary);
+            color: var(--color-dark);
+            padding: 8px 12px;
+            border-radius: var(--border-radius-sm);
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .filter-group button:hover {
+            background-color: #fbb329;
+        }
+
+        .restaurant-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        .restaurant-card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none; /* important for <a> tag */
+            color: inherit;
+            display: block;
+        }
+
+        .restaurant-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-image {
+            height: 180px;
+            width: 100%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .card-details {
+            padding: var(--spacing-md);
+        }
+
+        .card-details h3 {
+            margin-top: 0;
+            margin-bottom: var(--spacing-sm);
+            font-size: 1.25rem;
+            color: var(--color-dark);
+        }
+
+        .card-details p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        
+        .load-more-container {
+            text-align: center;
+            margin-top: var(--spacing-lg);
+        }
+        
+        /* Responsive controls */
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .filter-group {
+                margin-top: var(--spacing-md);
+                display: flex;
+                justify-content: space-around;
+            }
+            .filter-group button {
+                margin-left: 0;
+            }
+        }
+    </style>
     
-    <!-- Scripts for mobile menu (existing) -->
-    <script src="scripts/script.js" defer></script> 
-    <!-- Scripts for food page interactivity -->
-    <script src="scripts/foodscript.js" defer></script> 
+    <script>
+        const ALL_RESTAURANTS = [
+            { name: 'Starbucks', category: 'Coffee', rating: 4.5, delivery: 15, color: '00704A', text: 'Coffee%20%26%20Pastries' },
+            { name: 'McDonalds', category: 'Fast Food', rating: 3.9, delivery: 25, color: 'FFC72C', text: 'Burgers%20%26%20Fries' },
+            { name: 'The Grill Hub', category: 'Burgers', rating: 4.7, delivery: 35, color: '333333', text: 'Gourmet%20Burgers' },
+            { name: 'Fresh Fries', category: 'Snacks', rating: 4.2, delivery: 10, color: '8B4513', text: 'Specialty%20Fries' },
+            { name: 'Nell Grocers', category: 'Grocery', rating: 4.9, delivery: 60, color: '4CAF50', text: 'Fresh%20Produce' },
+            { name: 'Wok Around The Clock', category: 'Asian', rating: 4.6, delivery: 45, color: 'A0522D', text: 'Chinese%20Takeout' },
+            { name: 'Artisan Pizza Co.', category: 'Pizza', rating: 4.8, delivery: 30, color: 'ff5a5f', text: 'Wood%20Fired%20Pizza' },
+            { name: 'Taqueria del Sol', category: 'Mexican', rating: 4.4, delivery: 20, color: '007bff', text: 'Authentic%20Tacos' },
+            { name: 'Juice Bar Express', category: 'Health', rating: 4.3, delivery: 15, color: '06B6D4', text: 'Smoothies%20%26%20Juice' },
+            { name: 'Italian Trattoria', category: 'Italian', rating: 4.7, delivery: 40, color: 'DC2626', text: 'Pasta%20%26%20Wine' },
+            { name: 'Doughnut Delight', category: 'Dessert', rating: 4.1, delivery: 15, color: 'F9A8D4', text: 'Sweet%20Treats' },
+            { name: 'Sushi Samurai', category: 'Asian', rating: 4.9, delivery: 35, color: '1F2937', text: 'Fresh%20Sushi' }
+        ];
+
+        let currentRestaurants = [...ALL_RESTAURANTS];
+        const pageSize = 6;
+        let visibleCount = pageSize;
+        let activeSort = 'delivery'; 
+        
+        // Declare element variables globally with 'let'
+        let restaurantGrid;
+        let loadMoreBtn;
+        let sortSelect;
+
+        const renderRestaurants = () => {
+            // Check if element has been initialized before accessing it
+            if (!restaurantGrid) return; 
+
+            // Clear existing content
+            restaurantGrid.innerHTML = ''; 
+            
+            // Apply sorting logic
+            currentRestaurants.sort((a, b) => {
+                if (activeSort === 'delivery') return a.delivery - b.delivery;
+                if (activeSort === 'rating') return b.rating - a.rating;
+                return 0;
+            });
+
+            // Render only visible items
+            const toRender = currentRestaurants.slice(0, visibleCount);
+
+            toRender.forEach(r => {
+                const card = document.createElement('a');
+                // IMPORTANT: Link to items.html with the restaurant name
+                card.href = `items.html?restaurant=${encodeURIComponent(r.name)}`;
+                card.className = 'restaurant-card';
+                card.innerHTML = `
+                    <div class="card-image" style="background-image: url('https://placehold.co/400x180/${r.color}/ffffff?text=${r.text}')"></div>
+                    <div class="card-details">
+                        <h3>${r.name}</h3>
+                        <p>Category: ${r.category}</p>
+                        <p>Rating: <strong>${r.rating.toFixed(1)}</strong> &#9733; | Delivery: ${r.delivery} min</p>
+                    </div>
+                `;
+                restaurantGrid.appendChild(card);
+            });
+
+            // Update Load More button visibility
+            if (!loadMoreBtn) return; // Check if element has been initialized
+
+            if (visibleCount >= currentRestaurants.length) {
+                loadMoreBtn.style.display = 'none';
+            } else {
+                loadMoreBtn.style.display = 'inline-block';
+                loadMoreBtn.textContent = `Load More (${currentRestaurants.length - visibleCount} remaining)`;
+            }
+        };
+
+        const applyFilter = (category) => {
+            visibleCount = pageSize; // Reset visible count on filter/sort change
+            if (category === 'All') {
+                currentRestaurants = [...ALL_RESTAURANTS];
+            } else {
+                currentRestaurants = ALL_RESTAURANTS.filter(r => r.category === category);
+            }
+            document.querySelectorAll('.filter-group button').forEach(btn => {
+                // FIX: CSS variables must be wrapped in quotes when assigning via btn.style.
+                btn.style.backgroundColor = btn.textContent === category ? 'var(--color-primary)' : 'var(--color-secondary)';
+                btn.style.color = btn.textContent === category ? 'var(--color-light)' : 'var(--color-dark)';
+            });
+            renderRestaurants();
+        };
+
+        const loadMore = () => {
+            visibleCount += pageSize;
+            renderRestaurants();
+        };
+        
+        // --- Event Listeners ---
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // Initialize elements here when the DOM is guaranteed to be ready
+            restaurantGrid = document.getElementById('restaurantGrid');
+            loadMoreBtn = document.getElementById('loadMoreBtn');
+            sortSelect = document.getElementById('sortSelect');
+
+            // Initial render
+            renderRestaurants(); 
+
+            // Filter Buttons Logic
+            document.getElementById('filterGroup').addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON') {
+                    applyFilter(e.target.textContent);
+                }
+            });
+
+            // Sort Select Logic
+            sortSelect.addEventListener('change', (e) => {
+                activeSort = e.target.value;
+                visibleCount = pageSize; // Reset visible count on sort
+                renderRestaurants();
+            });
+
+            // Load More Button Logic
+            loadMoreBtn.addEventListener('click', loadMore);
+
+            // Initial Filter color setup (Set 'All' to active)
+            document.querySelector('#filterGroup button:first-child').click();
+        });
+    </script>
 </head>
 <body>
     <header class="main-header">
         <a href="index.html" class="logo">NELL</a>
-        
         <nav class="desktop-nav">
             <ul>
                 <li><a href="index.html">Home</a></li> 
                 <li><a href="services.html">Services</a></li>
                 <li><a href="city.html">Cities</a></li>
-                <li><a href="career.html">Careers</a></li>
+                <li><a href="food.html" style="background-color: var(--color-primary);">Order Food</a></li>
                 <li><a href="aboutus.html">About Us</a></li>
                 <li><a href="support.html">Support</a></li>
             </ul>
         </nav>
-        
         <div class="mobile-menu-icon">&#9776;</div>
     </header>
     
     <nav class="mobile-nav">
-        <ul>
-            <li><a href="index.html">Home</a></li> 
-            <li><a href="services.html">Services</a></li>
-            <li><a href="city.html">Cities</a></li>
-            <li><a href="career.html">Careers</a></li>
-            <li><a href="aboutus.html">About Us</a></li>
-            <li><a href="support.html">Support</a></li>
-        </ul>
+        <!-- Mobile nav links... -->
     </nav>
 
     <main class="page-content">
-        
-        <!-- Search and Filters Section -->
-        <section class="food-container food-search-section">
-            <div class="food-search-bar">
-                <input type="search" id="foodSearch" placeholder="Search Nell - Foods, restaurants, groceries, or dishes...">
-                <a href="#" class="btn cta-secondary">Filters & Sort</a> 
-            </div>
-            
-            <h2 style="margin-bottom: var(--spacing-md);">Popular Categories</h2>
-            <div class="category-chips">
-                <!-- NOTE: The 'All' chip is added dynamically by foodscript.js -->
-                <!-- Removed 'active' class from all chips so 'All' becomes the default -->
-                <div class="category-chip" data-category="groceries">Groceries</div>
-                <div class="category-chip" data-category="pizza">Pizza</div>
-                <div class="category-chip" data-category="burgers">Burgers</div>
-                <div class="category-chip" data-category="coffee">Coffee & Tea</div>
-                <div class="category-chip" data-category="asian">Asian</div>
-                <div class="category-chip" data-category="mexican">Mexican</div>
-                <div class="category-chip" data-category="healthy">Healthy</div>
-                <div class="category-chip" data-category="desserts">Desserts</div>
-                <div class="category-chip" data-category="alcohol">Alcohol</div>
-            </div>
-        </section>
+        <section class="food-container">
+            <h1 style="font-size: 2rem; margin-bottom: var(--spacing-md);">Restaurants & Groceries</h1>
 
-        <!-- Restaurant Listings -->
-        <section class="food-container food-list-section">
-            <h2 class="section-title">Restaurants Near You</h2>
-            
-            <div class="restaurant-list">
+            <!-- Filter and Sort Controls (Working!) -->
+            <div class="controls">
+                <div id="filterGroup" class="filter-group">
+                    <button class="btn">All</button>
+                    <button class="btn">Fast Food</button>
+                    <button class="btn">Asian</button>
+                    <button class="btn">Grocery</button>
+                    <button class="btn">Pizza</button>
+                    <button class="btn">Health</button>
+                </div>
                 
-                <!-- NEW: Groceries Card (Fictional Store) -->
-                <a href="items.html?restaurant=Nell+Grocers" class="restaurant-card grocery-theme" data-category="groceries">
-                    <div class="restaurant-image-container">
-                        <img src="https://placehold.co/800x450/4CAF50/ffffff?text=Groceries" 
-                             class="restaurant-image" 
-                             alt="Nell Grocers logo and fresh produce">
-                    </div>
-                    <div class="details">
-                        <h3>Nell Grocers</h3>
-                        <p class="restaurant-metadata">Produce, Pantry Staples, Home Goods • $</p>
-                        <div class="info-bar">
-                            <span class="rating">★ <span>4.9 (5k+)</span></span>
-                            <span>30-45 min</span>
-                        </div>
-                    </div>
-                </a>
-                
-                <!-- NEW: Fictional Asian Card -->
-                <a href="items.html?restaurant=Wok+Around+The+Clock" class="restaurant-card" data-category="asian">
-                    <div class="restaurant-image-container">
-                        <img src="https://placehold.co/800x450/C0C0C0/333333?text=Wok+Shop" 
-                             class="restaurant-image" 
-                             alt="Wok Around The Clock Chinese food">
-                    </div>
-                    <div class="details">
-                        <h3>Wok Around The Clock</h3>
-                        <p class="restaurant-metadata">Chinese, Noodles, Rice • $$</p>
-                        <div class="info-bar">
-                            <span class="rating">★ <span>4.4 (800+)</span></span>
-                            <span>40-50 min</span>
-                        </div>
-                    </div>
-                </a>
-                
-                <!-- Starbucks Card (Coffee Category) -->
-                <a href="items.html?restaurant=Starbucks" class="restaurant-card starbucks-theme" data-category="coffee">
-                    <div class="restaurant-image-container">
-                        <img src="https://placehold.co/800x450/00704A/F2F0EB?text=Starbucks" 
-                             class="restaurant-image" 
-                             alt="Starbucks logo and drinks">
-                    </div>
-                    <div class="details">
-                        <h3>Starbucks</h3>
-                        <p class="restaurant-metadata">Coffee, Pastries, Drinks • $$$</p>
-                        <div class="info-bar">
-                            <span class="rating">★ <span>4.8 (10k+)</span></span>
-                            <span>15-20 min</span>
-                        </div>
-                    </div>
-                </a>
-                
-                <!-- McDonalds Card (Burgers Category) -->
-                <a href="items.html?restaurant=McDonalds" class="restaurant-card" data-category="burgers">
-                    <div class="restaurant-image-container">
-                        <img src="https://placehold.co/800x450/FFC72C/DA291C?text=McDonalds" 
-                             class="restaurant-image" 
-                             alt="McDonalds Big Mac and Fries">
-                    </div>
-                    <div class="details">
-                        <h3>McDonald's</h3>
-                        <p class="restaurant-metadata">Fast Food, Burgers, Breakfast • $</p>
-                        <div class="info-bar">
-                            <span class="rating">★ <span>4.2 (20k+)</span></span>
-                            <span>20-30 min</span>
-                        </div>
-                    </div>
-                </a>
-                
-                <!-- The Grill Hub (Burgers Category) -->
-                <a href="items.html?restaurant=The+Grill+Hub" class="restaurant-card" data-category="burgers">
-                    <div class="restaurant-image-container">
-                        <img src="https://placehold.co/800x450/333333/ffffff?text=Burger+Place" 
-                             class="restaurant-image" 
-                             alt="Restaurant image">
-                    </div>
-                    <div class="details">
-                        <h3>The Grill Hub</h3>
-                        <p class="restaurant-metadata">Burgers, American • $$</p>
-                        <div class="info-bar">
-                            <span class="rating">★ <span>4.7 (500+)</span></span>
-                            <span>25-35 min</span>
-                        </div>
-                    </div>
-                </a>
+                <div class="sort-group">
+                    <label for="sortSelect" style="font-weight: 500;">Sort By:</label>
+                    <select id="sortSelect" style="padding: 8px; border-radius: var(--border-radius-sm); border: 1px solid #ccc;">
+                        <option value="delivery">Fastest Delivery</option>
+                        <option value="rating">Top Rated</option>
+                    </select>
+                </div>
+            </div>
 
-                <!-- Fresh Fries Card (Burgers Category) -->
-                <a href="items.html?restaurant=Fresh+Fries" class="restaurant-card" data-category="burgers">
-                    <div class="restaurant-image-container">
-                         <img src="https://placehold.co/800x450/8B4513/ffffff?text=Fresh+Fries" 
-                             class="restaurant-image" 
-                             alt="Basket of fresh cut fries">
-                    </div>
-                    <div class="details">
-                        <h3>Fresh Fries</h3>
-                        <p class="restaurant-metadata">Fries, Comfort Food, Snacks • $</p>
-                        <div class="info-bar">
-                            <span class="rating">★ <span>4.6 (1.2k+)</span></span>
-                            <span>15-25 min</span>
-                        </div>
-                    </div>
-                </a>
-                
-                <!-- Artisan Pizza Co. (Pizza Category) -->
-                <a href="items.html?restaurant=Artisan+Pizza+Co." class="restaurant-card" data-category="pizza">
-                    <div class="restaurant-image-container">
-                         <img src="https://placehold.co/800x450/ff5a5f/ffffff?text=Pizza+Place" 
-                             class="restaurant-image" 
-                             alt="Restaurant image">
-                    </div>
-                    <div class="details">
-                        <h3>Artisan Pizza Co.</h3>
-                        <p class="restaurant-metadata">Pizza, Italian • $$$</p>
-                        <div class="info-bar">
-                            <span class="rating">★ <span>4.9 (1k+)</span></span>
-                            <span>30-40 min</span>
-                        </div>
-                    </div>
-                </a>
-                
-                <!-- Taqueria del Sol (Mexican Category) -->
-                <a href="items.html?restaurant=Taqueria+del+Sol" class="restaurant-card" data-category="mexican">
-                    <div class="restaurant-image-container">
-                         <img src="https://placehold.co/800x450/007bff/ffffff?text=Taco+Place" 
-                             class="restaurant-image" 
-                             alt="Restaurant image">
-                    </div>
-                    <div class="details">
-                        <h3>Taqueria del Sol</h3>
-                        <p class="restaurant-metadata">Mexican, Tacos • $</p>
-                        <div class="info-bar">
-                            <span class="rating">★ <span>4.5 (800+)</span></span>
-                            <span>15-20 min</span>
-                        </div>
-                    </div>
-                </a>
-                
+            <!-- Restaurant Grid -->
+            <div id="restaurantGrid" class="restaurant-grid">
+                <!-- Restaurant cards will be injected here by JS -->
+                <p>Loading restaurants...</p>
             </div>
             
+            <!-- Load More Button (Working!) -->
             <div class="load-more-container">
-                <button class="btn cta-primary">Load More Restaurants</button>
+                <button id="loadMoreBtn" class="btn cta-secondary">Load More Restaurants</button>
             </div>
         </section>
-
     </main>
 
     <footer>

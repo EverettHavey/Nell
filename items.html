@@ -4,15 +4,158 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NELL - Select Items</title>
-    <link rel="stylesheet" href="styles/style.css">
-    <script src="scripts/script.js" defer></script> 
-    
     <style>
-        /* Base styles from food.css theme */
+        /* Shared CSS Variables (Mocking an external style.css) */
         :root {
+            --color-primary: #1e40af; /* Tailwind blue-700 */
+            --color-secondary: #fcd34d; /* Tailwind amber-300 */
+            --color-dark: #1f2937; /* Tailwind gray-800 */
+            --color-light: #ffffff;
             --color-food-accent: #f5c531; 
             --color-starbucks-green: #00704A;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 32px;
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
         }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+            color: var(--color-dark);
+            margin: 0;
+            padding-top: 60px; /* Space for fixed header */
+        }
+        
+        /* Header/Nav Styles */
+        .main-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: var(--color-dark);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            z-index: 500;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--color-secondary);
+            text-decoration: none;
+        }
+
+        .desktop-nav ul, .mobile-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        .desktop-nav li a {
+            color: var(--color-light);
+            text-decoration: none;
+            padding: 8px 15px;
+            display: block;
+            border-radius: var(--border-radius-sm);
+            transition: background-color 0.2s;
+        }
+
+        .desktop-nav li a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .mobile-nav, .mobile-menu-icon {
+            display: none;
+        }
+
+        /* Button Styles (CTA) */
+        .btn {
+            padding: 10px 20px;
+            border-radius: var(--border-radius-md);
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s, opacity 0.2s;
+        }
+
+        .cta-primary {
+            background-color: var(--color-primary);
+            color: var(--color-light);
+        }
+        
+        .cta-secondary {
+            background-color: #e5e7eb; /* Tailwind gray-200 */
+            color: var(--color-dark);
+        }
+
+        .cta-primary:hover:not(:disabled) {
+            background-color: #1d4ed8; /* Tailwind blue-800 */
+        }
+        
+        .cta-secondary:hover:not(:disabled) {
+            background-color: #d1d5db; /* Tailwind gray-300 */
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: var(--spacing-md);
+            margin-top: var(--spacing-lg);
+            background-color: var(--color-dark);
+            color: var(--color-light);
+            font-size: 0.8rem;
+        }
+        
+        /* Media Queries for Mobile Nav */
+        @media (max-width: 768px) {
+            .desktop-nav {
+                display: none;
+            }
+            .mobile-menu-icon {
+                display: block;
+                color: var(--color-light);
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+            .mobile-nav {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                width: 100%;
+                background-color: var(--color-dark);
+                z-index: 499;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                /* Hide initially */
+                display: none; 
+                flex-direction: column;
+            }
+            .mobile-nav ul {
+                flex-direction: column;
+                padding: 10px 0;
+            }
+            .mobile-nav li a {
+                color: var(--color-light);
+                padding: 10px 20px;
+                width: 100%;
+                box-sizing: border-box;
+                text-align: left;
+            }
+        }
+        
+        /* File Specific Styles */
 
         .item-container {
             max-width: 1200px;
@@ -20,7 +163,6 @@
             padding: var(--spacing-lg) var(--spacing-md);
         }
 
-        /* Hero Banner for Restaurant */
         .restaurant-hero {
             background-color: var(--color-light);
             background-image: url('https://placehold.co/1200x300/f0f0f0/333333?text=Restaurant+Banner');
@@ -56,10 +198,9 @@
             font-size: 2.5rem;
         }
 
-        /* Item Grid */
         .menu-grid {
             display: grid;
-            grid-template-columns: 2fr 1fr; /* Menu on left, Cart on right */
+            grid-template-columns: 2fr 1fr;
             gap: var(--spacing-lg);
         }
         
@@ -75,8 +216,9 @@
             border-radius: var(--border-radius-md);
             overflow: hidden;
             box-shadow: var(--shadow-sm);
-            cursor: pointer;
             transition: transform 0.2s, box-shadow 0.2s;
+            /* Ensure the item itself doesn't navigate */
+            cursor: pointer; 
         }
 
         .menu-item:hover {
@@ -139,14 +281,13 @@
             background-color: #e5b42d;
         }
 
-        /* Cart Sidebar */
         .cart-sidebar {
             background-color: var(--color-light);
             border-radius: var(--border-radius-md);
             padding: var(--spacing-md);
             height: fit-content;
             position: sticky;
-            top: 100px; /* Offset from fixed header */
+            top: 100px;
         }
         
         .cart-item {
@@ -217,7 +358,6 @@
                 { name: 'Chili Cheese Fries', description: 'Classic fries smothered in beef chili and melted cheddar.', price: 8.99, imageText: 'Chili Fries' },
                 { name: 'Cajun Spiced Fries', description: 'Fries tossed in a spicy, smoky Cajun blend.', price: 4.50, imageText: 'Cajun Fries' }
             ],
-            // --- NEW RESTAURANT MENUS ADDED BELOW ---
             'Nell Grocers': [
                 { name: 'Organic Gala Apples (1 lb)', description: 'Crisp, sweet, and locally sourced organic apples.', price: 3.99, imageText: 'Apples' },
                 { name: 'Whole Milk (1 Gallon)', description: 'Farm-fresh 100% whole vitamin D milk.', price: 4.50, imageText: 'Milk' },
@@ -253,27 +393,30 @@
         
         document.addEventListener('DOMContentLoaded', () => {
             const params = new URLSearchParams(window.location.search);
-            // Decode the URL parameter to get the correct restaurant name
             const encodedRestaurantName = params.get('restaurant') || 'Unknown Restaurant';
             const restaurantName = decodeURIComponent(encodedRestaurantName.replace(/\+/g, ' '));
             
-            // Set the dynamic content
             const titleElement = document.getElementById('restaurantTitle');
             if (titleElement) {
                 titleElement.textContent = restaurantName;
             }
             
-            // --- Menu Rendering Logic ---
             const menuListContainer = document.getElementById('itemList');
-            // Select the specific menu, or fall back to 'default' if not found
             const menuToRender = RESTAURANT_MENUS[restaurantName] || RESTAURANT_MENUS['default'];
             
-            // Clear existing mock items
-            menuListContainer.innerHTML = ''; 
+            // --- Cart State and Elements ---
+            let cartItems = [];
+            const cartList = document.getElementById('cartList');
+            const cartTotal = document.getElementById('cartTotal');
+            const checkoutBtn = document.getElementById('checkoutBtn');
 
+            menuListContainer.innerHTML = ''; 
             menuToRender.forEach(item => {
                 const itemElement = document.createElement('div');
                 itemElement.className = 'menu-item';
+                itemElement.setAttribute('data-name', item.name);
+                itemElement.setAttribute('data-price', item.price.toFixed(2));
+
                 itemElement.innerHTML = `
                     <div class="item-image-container">
                         <img src="https://placehold.co/300x150/6E3845/ffffff?text=${item.imageText}" alt="${item.name}">
@@ -289,9 +432,8 @@
                 `;
                 menuListContainer.appendChild(itemElement);
             });
-            // -----------------------------
             
-            // Generate mock banner image based on restaurant name (simple mock logic)
+            // Generate mock banner image based on restaurant name
             const hero = document.getElementById('restaurantHero');
             if (hero) {
                 let color = 'f0f0f0';
@@ -307,18 +449,12 @@
                 hero.style.backgroundImage = `url('https://placehold.co/1200x300/${color}/333333?text=${restaurantName.toUpperCase()}')`;
             }
             
-            // Mock cart functionality
-            let cartItems = [];
-            const cartList = document.getElementById('cartList');
-            const cartTotal = document.getElementById('cartTotal');
-            const checkoutBtn = document.getElementById('checkoutBtn');
-
             const updateCart = () => {
                 let total = 0;
                 cartList.innerHTML = '';
                 
                 if (cartItems.length === 0) {
-                    cartList.innerHTML = '<p class="text-center" style="font-style:italic;">Your cart is empty.</p>';
+                    cartList.innerHTML = '<p class="text-center" style="font-style:italic; color: #777;">Your cart is empty.</p>';
                     checkoutBtn.disabled = true;
                     checkoutBtn.textContent = 'Add items to checkout';
                     checkoutBtn.classList.remove('cta-primary');
@@ -340,7 +476,7 @@
                         cartList.appendChild(itemElement);
                     });
                     checkoutBtn.disabled = false;
-                    checkoutBtn.textContent = `Checkout ($${total.toFixed(2)})`;
+                    checkoutBtn.textContent = `Proceed to Delivery ($${total.toFixed(2)})`;
                     checkoutBtn.classList.add('cta-primary');
                     checkoutBtn.classList.remove('cta-secondary');
                 }
@@ -359,20 +495,43 @@
                 }
                 
                 updateCart();
-                console.log('Cart updated:', cartItems);
             };
 
-            // Attach event listeners to all dynamically created 'Add' buttons
+            // Attach event listeners to all dynamically created 'Add' buttons (FIXED ITEM CLICK BUG)
             menuListContainer.addEventListener('click', (e) => {
-                if (e.target.classList.contains('add-btn')) {
+                // Ensure if a user clicks anywhere on the item card, it adds to cart (if not explicitly clicking the Add button)
+                const itemElement = e.target.closest('.menu-item');
+                if (itemElement) {
                     e.preventDefault(); 
-                    const itemElement = e.target.closest('.menu-item');
-                    const itemName = itemElement.querySelector('h4').textContent;
-                    const itemPrice = itemElement.querySelector('.item-price').textContent;
                     
-                    addItemToCart(itemName, itemPrice);
+                    // Check if they clicked the main body of the card or the dedicated 'Add' button
+                    if (e.target.classList.contains('add-btn') || e.target.closest('.menu-item')) {
+                        const itemName = itemElement.querySelector('h4').textContent;
+                        const itemPrice = itemElement.querySelector('.item-price').textContent;
+                        addItemToCart(itemName, itemPrice);
+                    }
                 }
             });
+
+            // --- Checkout Logic (UPDATED TO REDIRECT) ---
+            checkoutBtn.addEventListener('click', () => {
+                if (cartItems.length === 0) return; 
+
+                const orderDetails = {
+                    id: 'ORDER-' + Math.random().toString(36).substring(2, 9).toUpperCase(),
+                    restaurant: restaurantName,
+                    items: cartItems,
+                    total: cartTotal.textContent,
+                    time: new Date().toLocaleTimeString(),
+                };
+                
+                // Save order details to localStorage
+                localStorage.setItem('nell_current_order', JSON.stringify(orderDetails));
+
+                // Redirect to the new tracking page
+                window.location.href = 'tracking.html';
+            });
+            // ------------------------------------
 
             // Initial cart load
             updateCart();
@@ -382,13 +541,13 @@
 <body>
     <header class="main-header">
         <a href="index.html" class="logo">NELL</a>
-        <!-- Navigation remains the same -->
         <nav class="desktop-nav">
             <ul>
                 <li><a href="index.html">Home</a></li> 
                 <li><a href="services.html">Services</a></li>
                 <li><a href="city.html">Cities</a></li>
-                <li><a href="career.html">Careers</a></li>
+                <!-- Pointing this directly to food.html to allow testing of that file -->
+                <li><a href="food.html">Order Food</a></li> 
                 <li><a href="aboutus.html">About Us</a></li>
                 <li><a href="support.html">Support</a></li>
             </ul>
@@ -401,11 +560,11 @@
             <li><a href="index.html">Home</a></li> 
             <li><a href="services.html">Services</a></li>
             <li><a href="city.html">Cities</a></li>
-            <li><a href="career.html">Careers</a></li>
+            <li><a href="food.html">Order Food</a></li>
             <li><a href="aboutus.html">About Us</a></li>
-            <li><a href="support.html">Support</li>
-            </ul>
-        </nav>
+            <li><a href="support.html">Support</a></li>
+        </ul>
+    </nav>
 
         <main class="page-content">
             <section class="item-container">
@@ -423,7 +582,6 @@
                     <div class="menu-section">
                         <h2 style="margin-bottom: var(--spacing-md);">Menu & Specials</h2>
                         
-                        <!-- Item List Container - Content is now dynamically generated by the script -->
                         <div id="itemList" class="item-list">
                             <!-- Dynamic menu items will be inserted here -->
                             <p>Loading menu...</p>
@@ -452,5 +610,7 @@
         <footer>
             <p>&copy; 2025 NELL, Inc. | All Rights Reserved.</p>
         </footer>
-    </body>
-    </html>
+    
+</body>
+</html>
+
