@@ -1,458 +1,568 @@
-/* --- 1. BASE STYLES & MOBILE-FIRST LAYOUT (Default: Mobile) --- */
+/* styles/style.css */
 
+/* --- 1. Global Reset & Variables --- */
 :root {
-    --primary-color: #007bff; /* Blue */
-    --secondary-color: #ff9900; /* Orange/Yellow */
-    --text-color: #333;
-    --bg-color: #f4f4f9;
-    --white: #ffffff;
-    --font-stack: 'Arial', sans-serif;
-    --light-bg-primary: #e6f0ff; /* Light blue/primary accent */
-    --light-bg-secondary: #e9e9f1; /* Light gray/secondary accent */
-    --header-height: 60px;
+    /* Color Palette */
+    --color-primary: #007bff; /* Bright Blue (for main CTAs and backgrounds) */
+    --color-secondary: #ff5a5f; /* Coral/Red (for secondary CTAs and contrasting elements) */
+    --color-dark: #1f1f1f; /* Near-black for text and main headers */
+    --color-light: #f8f9fa; /* Off-white for light backgrounds */
+    --color-text: #333; /* Standard dark text */
+    --color-link: #007bff;
+
+    /* Spacing */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 3rem;
+
+    /* Typography */
+    --font-family-sans: 'Arial', sans-serif;
+    --font-family-serif: 'Georgia', serif;
+
+    /* Shadows & Border Radius */
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --border-radius-sm: 4px;
+    --border-radius-md: 8px;
 }
 
 * {
-    box-sizing: border-box;
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-    font-family: var(--font-stack);
+    font-family: var(--font-family-sans);
     line-height: 1.6;
-    color: var(--text-color);
-    background: var(--bg-color);
-    /* Mobile: Keep this padding to clear the fixed header */
-    padding-top: var(--header-height); 
+    color: var(--color-text);
+    background-color: white; /* Changed body background to white for cleaner look */
+}
+
+/* --- 2. Typography & Links --- */
+h1, h2, h3 {
+    font-family: var(--font-family-sans);
+    color: var(--color-dark);
+    line-height: 1.2;
+    margin-bottom: var(--spacing-sm);
+}
+
+h1 { font-size: 2.5rem; }
+h2 { font-size: 2rem; }
+h3 { font-size: 1.5rem; }
+
+p {
+    margin-bottom: var(--spacing-md);
 }
 
 a {
+    color: var(--color-link);
     text-decoration: none;
-    color: var(--primary-color);
+    transition: color 0.3s;
+}
+
+a:hover {
+    color: var(--color-primary);
 }
 
 ul {
     list-style: none;
 }
 
-/* --- Utility Classes --- */
-.bg-primary {
-    background-color: var(--primary-color);
+/* --- 3. Layout & Structure --- */
+.page-content {
+    padding: 0; /* Remove default padding for full-width headers */
 }
 
-.bg-secondary {
-    background-color: var(--secondary-color);
+main {
+    padding-top: 80px; /* Space for fixed header */
+    min-height: calc(100vh - 120px); /* Ensures main content takes up most of the screen */
 }
 
-/* --- Navigation & Header --- */
+section {
+    padding: var(--spacing-lg) var(--spacing-md);
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* --- 4. Header & Navigation (Fixed & Responsive) --- */
 .main-header {
-    background: var(--white);
-    padding: 1rem 1.5rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: fixed; 
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: var(--header-height); 
-    z-index: 20; 
+    height: 80px;
+    background-color: white;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 var(--spacing-md);
+    z-index: 1000;
 }
 
 .logo {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--primary-color);
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: var(--color-primary);
+    letter-spacing: -1px;
 }
 
-.desktop-nav {
-    display: none;
+/* Desktop Navigation */
+.desktop-nav ul {
+    display: flex;
+    gap: var(--spacing-md);
 }
 
-.mobile-menu-icon {
-    font-size: 2rem;
-    cursor: pointer;
-    color: var(--text-color);
-    z-index: 30; 
+.desktop-nav a {
+    color: var(--color-text);
+    font-weight: 500;
+    padding: var(--spacing-xs) 0;
+    position: relative;
 }
 
-.mobile-nav {
-    position: fixed; 
-    top: var(--header-height); 
+.desktop-nav a:hover {
+    color: var(--color-primary);
+}
+
+/* Underline effect on hover */
+.desktop-nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background-color: var(--color-primary);
+    bottom: -5px;
     left: 0;
+    transition: width 0.3s ease;
+}
+
+.desktop-nav a:hover::after {
     width: 100%;
-    height: calc(100vh - var(--header-height)); 
-    background: var(--white);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    z-index: 10;
+}
+
+/* Mobile Menu Icon (Hamburger) */
+.mobile-menu-icon {
+    font-size: 1.8rem;
+    cursor: pointer;
+    color: var(--color-dark);
+    display: none; /* Hidden on desktop by default */
+}
+
+/* Mobile Navigation (Slide-in Menu) */
+.mobile-nav {
+    position: fixed;
+    top: 80px; /* Below the header */
+    right: 0;
+    width: 250px;
+    height: calc(100% - 80px); /* Full height below header */
+    background-color: var(--color-dark);
+    transform: translateX(100%);
     transition: transform 0.3s ease-in-out;
-    display: none; 
-    transform: translateY(-100vh); 
-    overflow-y: auto; 
+    padding: var(--spacing-md);
+    z-index: 999;
+    overflow-y: auto;
 }
 
-.mobile-nav.visible {
+/* Assumes JS toggles the 'open' class */
+.mobile-nav.open {
+    transform: translateX(0); /* Slides in */
+}
+
+.mobile-nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.mobile-nav a {
+    color: var(--color-light);
     display: block;
-    transform: translateY(0); 
+    padding: var(--spacing-xs) 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.mobile-nav li a {
-    display: block;
-    padding: 0.75rem 1.5rem;
-    color: var(--text-color);
-    border-bottom: 1px solid #eee;
+.mobile-nav a:hover {
+    color: var(--color-secondary);
 }
 
-/* --- Shared Button Styles (Generic Base) --- */
-.btn {
+
+/* --- 5. Buttons (CTAs) --- */
+.cta-primary, .btn.cta-primary {
     display: inline-block;
-    padding: 0.5rem 1rem;
-    margin-top: 1rem;
-    background: transparent; 
-    color: var(--primary-color);
-    border-radius: 5px;
-    font-size: 0.9rem;
-    transition: background-color 0.3s;
-    border: 1px solid transparent; 
-}
-
-.btn:hover {
-    background: var(--light-bg-primary);
-}
-
-/* * --- CTA Styles (Core Button Look) --- */
-
-.cta-primary, .cta-secondary, .cta-secondary-filled {
-    display: inline-block; 
-    padding: 0.75rem 1.5rem;
-    border-radius: 8px; 
+    background-color: var(--color-primary);
+    color: white;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-md);
     font-weight: bold;
-    transition: background-color 0.3s;
-    margin-top: 1rem; 
-}
-
-/* .cta-primary (Orange/Yellow - Solid Button) */
-.cta-primary {
-    background: var(--secondary-color); 
-    color: var(--white);
-    border: 2px solid var(--secondary-color);
-}
-
-.cta-primary:hover {
-    background: #e68a00; 
-    border-color: #e68a00;
-}
-
-/* .cta-secondary-filled (Solid Blue button) - Used for Rides Service Block */
-.cta-secondary-filled {
-    background: var(--primary-color); 
-    color: var(--white); 
-    border: 2px solid var(--primary-color);
-}
-
-.cta-secondary-filled:hover {
-    background: #0056b3; 
-    border-color: #0056b3;
-}
-
-/* .cta-secondary (Outlined Blue button on white/light background) */
-.cta-secondary {
-    background: var(--white); 
-    color: var(--primary-color); 
-    border: 2px solid var(--primary-color); 
-}
-
-.cta-secondary:hover {
-    background: var(--light-bg-primary);
-}
-
-
-/* ------------------------------------------------------------------------- */
-/* --- 2. INDEX.HTML STYLES (Hero and Content) --- */
-/* ------------------------------------------------------------------------- */
-
-/* Hero Section */
-.hero-section {
-    background: var(--primary-color);
-    color: var(--white);
-    padding: 4rem 1.5rem;
     text-align: center;
+    transition: background-color 0.3s, transform 0.1s;
+    box-shadow: var(--shadow-md);
+    border: none;
 }
-/* Ensure contrast on blue hero */
-.hero-section .cta-secondary {
-    background: var(--white); 
-    color: var(--primary-color); 
-    border: 2px solid var(--white); 
+
+.cta-primary:hover, .btn.cta-primary:hover {
+    background-color: #0056b3; /* Darker blue */
+    transform: translateY(-2px);
 }
+
+.cta-secondary, .btn, .btn.cta-secondary {
+    display: inline-block;
+    background-color: var(--color-secondary);
+    color: white;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    font-weight: bold;
+    text-align: center;
+    transition: background-color 0.3s, transform 0.1s;
+    box-shadow: var(--shadow-md);
+    border: none;
+}
+
+.cta-secondary:hover, .btn:hover, .btn.cta-secondary:hover {
+    background-color: #e54c51; /* Darker red */
+    transform: translateY(-2px);
+}
+
+.btn-link {
+    color: var(--color-primary);
+    font-weight: bold;
+    text-decoration: underline;
+    display: inline-block;
+    margin-top: var(--spacing-sm);
+}
+
 .cta-buttons {
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
-    align-items: center; 
+    gap: var(--spacing-sm);
+    margin-top: var(--spacing-md);
 }
 
-
-/* Index.html Content Wrapper */
-.index-content-wrapper {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 2rem 1.5rem; 
-}
-.index-content-block {
-    background: var(--white);
-    padding: 2rem 1.5rem;
-    margin-bottom: 2rem;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); 
-    transition: transform 0.3s ease-in-out;
-}
-.index-content-block:hover {
-    transform: translateY(-5px); 
-}
-.index-content-block h2, .index-content-block h3 {
-    color: var(--primary-color);
-    margin-bottom: 0.5rem;
-}
-.index-content-block p {
-    margin-bottom: 1rem;
-}
-
-/* --- Footer --- */
-footer {
-    background: var(--text-color);
-    color: var(--white);
+/* --- 6. Index Page: Hero Section & Cards --- */
+.hero-section {
+    background: linear-gradient(135deg, var(--color-primary), #4c96ff);
+    color: white;
     text-align: center;
-    padding: 1.5rem;
-    font-size: 0.9rem;
+    padding: 6rem var(--spacing-md);
+    min-height: 50vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
-/* --- Page Hero Styles (for secondary pages) */
+.hero-section h1 {
+    color: white;
+    font-size: 3.5rem;
+    margin-bottom: var(--spacing-xs);
+}
+
+.hero-section p {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: var(--spacing-md);
+}
+
+/* Service Cards Grid */
+.service-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-lg);
+    text-align: center;
+}
+
+.card {
+    background-color: var(--color-light);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s, box-shadow 0.3s;
+    border: 1px solid #eee;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.city-feature {
+    text-align: center;
+    background-color: var(--color-light);
+    border-radius: var(--border-radius-md);
+    margin: var(--spacing-lg) auto;
+}
+
+/* --- 7. Page Heroes (For inner pages) --- */
 .page-hero {
-    color: var(--white);
-    padding: 3rem 1.5rem;
+    color: white;
+    text-align: center;
+    padding: 4rem var(--spacing-md);
+}
+
+.page-hero h1 {
+    color: white;
+    font-size: 2.5rem;
+}
+
+.bg-primary {
+    background-color: var(--color-primary);
+}
+
+.bg-secondary {
+    background-color: var(--color-secondary);
+}
+
+/* --- 8. About Us Page Sections --- */
+.mission-statement {
     text-align: center;
 }
 
+.values-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-md);
+    text-align: center;
+}
 
-/* ------------------------------------------------------------------------- */
-/* --- 3. SERVICES.HTML STYLES (Fixed Card Layout and Size) --- */
-/* ------------------------------------------------------------------------- */
+.value-card {
+    background-color: white;
+    border-left: 5px solid var(--color-primary);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+}
 
+/* --- 9. Careers Page Sections --- */
+.career-process {
+    text-align: center;
+}
+
+.steps-container {
+    display: flex;
+    gap: var(--spacing-md);
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: var(--spacing-lg);
+}
+
+.step {
+    flex: 1;
+    min-width: 250px;
+    max-width: 300px;
+    position: relative;
+    padding: var(--spacing-md);
+    border: 1px solid #ddd;
+    border-radius: var(--border-radius-md);
+    text-align: center;
+    background-color: white;
+}
+
+.step-number {
+    display: block;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+    background-color: var(--color-secondary);
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+    margin: 0 auto var(--spacing-sm);
+}
+
+.listing {
+    border: 1px solid #ddd;
+    padding: var(--spacing-md);
+    margin-bottom: var(--spacing-sm);
+    border-radius: var(--border-radius-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    transition: box-shadow 0.2s;
+}
+
+.listing:hover {
+    box-shadow: var(--shadow-sm);
+}
+
+/* --- 10. Services Page Sections --- */
 .service-detail-section {
-    padding: 2rem 1.5rem;
     display: flex;
-    flex-direction: column; 
-    gap: 2.5rem;
-    max-width: 1000px;
-    margin: 0 auto;
+    gap: var(--spacing-lg);
+    flex-wrap: wrap;
+    justify-content: center;
 }
+
 .service-block {
-    padding: 1.5rem;
-    background: var(--white);
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-    /* Set up primary card flex for content alignment */
-    display: flex;
-    flex-direction: column;
-}
-
-.service-block h2 {
-    color: var(--primary-color);
-    margin-bottom: 0.5rem;
-}
-
-/* FIX: Ensure content inside the block is a flexible column for better spacing */
-.service-content {
-    display: flex;
-    flex-direction: column;
-    /* Optional: If you have an image, style it here for consistent size */
+    flex: 1;
+    min-width: 300px;
+    max-width: 500px;
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-md);
+    background-color: white;
+    text-align: center;
+    margin-bottom: var(--spacing-lg);
 }
 
 .service-block img {
-    max-width: 80px; /* Reduced image size for a cleaner card look */
-    height: auto;
-    margin-bottom: 1rem;
-    display: block;
+    width: 100%;
+    max-width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    margin-bottom: var(--spacing-md);
+    object-fit: cover;
+    border: 5px solid;
 }
 
-.service-block p {
-    margin-bottom: 1rem;
+.ride-block img {
+    border-color: var(--color-primary);
+}
+
+.foods-block img {
+    border-color: var(--color-secondary);
 }
 
 .service-block ul {
-    margin-top: 0.5rem;
-    padding-left: 1.5rem;
+    text-align: left;
+    margin: var(--spacing-md) 0;
+    padding-left: 20px;
     list-style: disc;
-    margin-bottom: auto; /* Pushes the button to the bottom */
 }
 
-/* Visual Accent with border for modern look */
-.service-block.ride-block {
-    border: 1px solid var(--primary-color); 
-    border-left: 5px solid var(--primary-color); 
-}
-.service-block.foods-block {
-    border: 1px solid var(--secondary-color); 
-    border-left: 5px solid var(--secondary-color);
+.service-block li {
+    margin-bottom: var(--spacing-xs);
+    color: #555;
 }
 
-
-/* ------------------------------------------------------------------------- */
-/* --- 6. DESKTOP/TABLET OPTIMIZATION (Media Query) --- */
-/* (Only the relevant services section is shown here) */
-/* ------------------------------------------------------------------------- */
-@media (min-width: 768px) {
-    /* ... (Other existing desktop styles) ... */
-    
-    /* FIX: SERVICES.HTML / CITY.HTML Layout (2 Columns, prevents stretching) */
-    .service-detail-section {
-        flex-direction: row; 
-        flex-wrap: wrap; 
-    }
-    .service-block {
-        /* Distributes space evenly, but uses max-width to control size */
-        flex: 1 1 45%; 
-        max-width: calc(50% - 1.5rem); /* Calc ensures two columns with gap */
-        box-sizing: border-box; /* Important for preventing overflow */
-    }
-    
-    /* ... (Rest of the media query remains the same) ... */
+/* --- 11. Cities Page Sections --- */
+.city-search {
+    text-align: center;
+    padding: var(--spacing-md) 0;
 }
 
-
-/* ------------------------------------------------------------------------- */
-/* --- 4. CITY.HTML STYLES (Modernizing the city list) --- */
-/* ------------------------------------------------------------------------- */
-.city-list-section {
-    padding: 2rem 1.5rem; 
-    max-width: 800px;
-    margin: 0 auto;
-}
-.city-list-section h2 {
-    color: var(--text-color);
-    margin-top: 1.5rem;
-    margin-bottom: 0.5rem;
-    border-bottom: 2px solid var(--light-bg-secondary); 
-    padding-bottom: 5px;
-}
-.city-list-section input[type="search"] {
+#citySearchInput {
     width: 100%;
-    padding: 0.75rem; 
-    margin-bottom: 1.5rem;
-    border: 1px solid #ccc;
-    border-radius: 25px; 
-    max-width: 350px;
-    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
-}
-.city-list-section a {
-    display: block;
-    padding: 0.5rem 0; 
-    transition: background-color 0.2s;
-    border-bottom: 1px solid #eee;
-}
-.city-list-section a:hover {
-    background-color: var(--light-bg-primary); 
-    padding-left: 0.5rem;
+    max-width: 500px;
+    padding: var(--spacing-sm);
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: var(--border-radius-md);
+    transition: border-color 0.3s;
 }
 
-/* ------------------------------------------------------------------------- */
-/* --- 5. SUPPORT, CAREERS, ABOUT US Generic Layouts --- */
-/* ------------------------------------------------------------------------- */
-
-.steps-container, .values-grid, .faq-sections {
-    display: flex;
-    flex-direction: column; 
-    gap: 1.5rem;
-    max-width: 1000px;
-    margin: 1.5rem auto 0;
-    padding: 0 1.5rem;
-}
-.step, .value-card, .faq-card {
-    padding: 1.5rem;
-    background: var(--white);
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-.job-listings {
-    padding: 2rem 1.5rem;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-.listing {
-    background: var(--white);
-    padding: 1.5rem;
-    margin-bottom: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    display: flex;
-    flex-direction: column;
+#citySearchInput:focus {
+    border-color: var(--color-primary);
+    outline: none;
 }
 
-/* ------------------------------------------------------------------------- */
-/* --- 6. DESKTOP/TABLET OPTIMIZATION (Media Query) --- */
-/* ------------------------------------------------------------------------- */
-@media (min-width: 768px) {
-    
-    /* === NAV & HERO === */
-    body { padding-top: 0; }
-    .main-header { position: static; height: auto; padding: 1.5rem 3rem; justify-content: flex-start; }
-    .mobile-menu-icon, .mobile-nav { display: none; }
-    .desktop-nav { display: block; margin-left: auto; }
-    .desktop-nav ul { display: flex; gap: 1.5rem; }
-    
-    .hero-section {
-        padding: 5rem 3rem;
-    }
-    
-    /* FIX: Index Hero buttons stack horizontally */
-    .cta-buttons {
-        flex-direction: row;
-        justify-content: center;
-    }
+.city-list {
+    padding: var(--spacing-md) 0;
+}
 
-    /* --- General Layout and Content Sections (Larger desktop padding) --- */
-    .index-content-wrapper, 
-    .city-list-section,
-    .service-detail-section,
-    .values-grid,
-    .steps-container,
+.city-list h2 {
+    border-bottom: 2px solid var(--color-primary);
+    padding-bottom: var(--spacing-xs);
+    margin-top: var(--spacing-lg);
+}
+
+.city-list ul {
+    columns: 3; /* Multi-column on desktop */
+    column-gap: var(--spacing-lg);
+    margin-top: var(--spacing-md);
+}
+
+.city-list ul li {
+    padding: var(--spacing-xs) 0;
+    font-size: 1.1rem;
+}
+
+.city-list ul a {
+    color: var(--color-text);
+}
+
+.city-list .coming-soon {
+    color: #888;
+}
+
+/* --- 12. Support Page Sections --- */
+.faq-sections {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-md);
+    text-align: center;
+}
+
+.faq-card {
+    background-color: white;
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    box-shadow: var(--shadow-sm);
+    border-top: 5px solid var(--color-secondary);
+}
+
+.contact-cta {
+    text-align: center;
+    background-color: var(--color-light);
+    padding: var(--spacing-lg);
+    border-radius: var(--border-radius-md);
+    margin-top: var(--spacing-lg);
+}
+
+/* --- 13. Footer --- */
+footer {
+    background-color: var(--color-dark);
+    color: white;
+    text-align: center;
+    padding: var(--spacing-md) 0;
+    margin-top: var(--spacing-lg);
+}
+
+/* --- 14. Responsive Design (Mobile-First Adjustments) --- */
+@media (max-width: 768px) {
+    /* General Adjustments */
+    h1 { font-size: 2rem; }
+    h2 { font-size: 1.5rem; }
+    section { padding: var(--spacing-lg) var(--spacing-sm); }
+    .hero-section { padding: 4rem var(--spacing-sm); }
+    .hero-section h1 { font-size: 2.5rem; }
+
+    /* Navigation */
+    .desktop-nav { display: none; } /* Hide desktop nav */
+    .mobile-menu-icon { display: block; } /* Show mobile icon */
+
+    /* Layout Stacking */
+    .cta-buttons { flex-direction: column; } /* Stack buttons on mobile */
+
+    .service-cards, 
+    .values-grid, 
     .faq-sections,
-    .job-listings {
-        padding: 3rem 3rem;
+    .steps-container {
+        grid-template-columns: 1fr; /* Single column stacking */
+        flex-direction: column; /* Stacking for flex items */
     }
 
-    /* SERVICES.HTML / CITY.HTML Layout (2 Columns) */
     .service-detail-section {
-        flex-direction: row; 
-        flex-wrap: wrap; 
-    }
-    .service-block {
-        flex: 1 1 45%; 
-        max-width: 48%; 
+        flex-direction: column;
+        gap: var(--spacing-md);
     }
     
-    /* CAREERS, ABOUT US, SUPPORT Layout (3 Columns) */
-    .steps-container,
-    .values-grid,
-    .faq-sections {
-        flex-direction: row;
-        align-items: stretch;
-        flex-wrap: nowrap;
+    .listing {
+        flex-direction: column;
+        align-items: flex-start;
     }
-    .step, .value-card, .faq-card {
-        flex: 1 1 30%; 
-        max-width: 32%;
+    .listing a {
+        margin-top: var(--spacing-sm);
+        width: 100%;
     }
 
-    /* CAREERS.HTML: Job listings alignment FIX (Title on left, Button on right) */
-    .listing {
-        flex-direction: row;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .listing h3 {
-        margin-bottom: 0;
+    /* City list uses fewer columns */
+    .city-list ul { 
+        columns: 1; 
     }
 }
