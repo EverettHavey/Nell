@@ -186,11 +186,11 @@
                 <div class="form-group">
                     <label>Which service(s) will you provide?</label>
                     <div>
-                        <input type="checkbox" id="serviceRides" name="serviceType" value="Rides">
+                        <input type="checkbox" id="serviceRides" name="serviceType" value="Rides" onchange="filterVehicleTypes()">
                         <label for="serviceRides">Nell Rides (Driving passengers)</label>
                     </div>
                     <div>
-                        <input type="checkbox" id="serviceFoods" name="serviceType" value="Foods">
+                        <input type="checkbox" id="serviceFoods" name="serviceType" value="Foods" onchange="filterVehicleTypes()">
                         <label for="serviceFoods">Nell Foods (Delivering food)</label>
                     </div>
                 </div>
@@ -203,17 +203,7 @@
                         <label for="vehicleType">Vehicle Type</label>
                         <select id="vehicleType" name="vehicleType">
                             <option value="">Select Vehicle Type</option>
-                            <option value="Car">Standard Car</option>
-                            <option value="Bike">Bike (Bicycle)</option>
-                            <option value="Golf Cart">Golf Cart</option>
-                            <option value="Exotic Sportscar">Exotic Sportscar</option>
-                            <option value="Fire Truck">Fire Truck</option>
-                            <option value="Ice Cream Truck">Ice Cream Truck</option>
-                            <option value="Garbage Truck">Garbage Truck</option>
-                            <option value="Heli-Ride">Heli-Ride (Helicopter)</option>
-                            <option value="Airplane">Airplane</option>
-                            <option value="Walk">Walking/Foot Power</option>
-                        </select>
+                            </select>
                     </div>
                 </div>
             </div>
@@ -259,6 +249,30 @@
     </div>
 
     <script>
+        // --- VEHICLE OPTIONS DEFINITION ---
+        const ALL_VEHICLES = {
+            // Options suitable for food delivery
+            'Foods': [
+                { value: 'Car', text: 'Standard Car' },
+                { value: 'Motorcycle', text: 'Motorcycle / Scooter' },
+                { value: 'Bike', text: 'Bike (Bicycle)' },
+                { value: 'Walk', text: 'Walking / Foot Power' }
+            ],
+            // Unique options for Nell Rides from your images
+            'Rides': [
+                { value: 'Car', text: 'Standard Car' }, // Standard car is common to both
+                { value: 'Exotic Sportscar', text: 'Exotic Sportscar' },
+                { value: 'Golf Cart', text: 'Golf Cart' },
+                { value: 'Fire Truck', text: 'Fire Truck' },
+                { value: 'Ice Cream Truck', text: 'Ice Cream Truck' },
+                { value: 'Garbage Truck', text: 'Garbage Truck' },
+                { value: 'Heli-Ride', text: 'Heli-Ride (Helicopter)' },
+                { value: 'Airplane', text: 'Airplane' },
+                { value: 'Walk', text: 'Walking' }
+            ]
+        };
+
+        // --- TOGGLE FIELDS (Handles Role selection) ---
         function toggleFields(role) {
             const driverFields = document.getElementById('driverFields');
             const softwareFields = document.getElementById('softwareFields');
@@ -268,14 +282,15 @@
             const driverInputs = driverFields.querySelectorAll('input, select');
             const softwareInputs = softwareFields.querySelectorAll('input, select, textarea');
             
-            // Function to manage required attribute
             const setRequired = (inputs, isRequired) => {
                 inputs.forEach(input => {
+                    // Skip the checkboxes for service type, as their required status is complex
+                    if (input.id === 'serviceRides' || input.id === 'serviceFoods') return; 
+                    
                     if (isRequired) {
                         input.setAttribute('required', 'required');
                     } else {
                         input.removeAttribute('required');
-                        // Also clear values when fields are hidden/unrequired
                         input.value = ''; 
                         if (input.type === 'checkbox') input.checked = false;
                     }
@@ -289,15 +304,51 @@
             setRequired(driverInputs, false);
             setRequired(softwareInputs, false);
 
-
             if (role === 'DriverDelivery') {
                 driverFields.classList.add('active');
                 consentDriver.classList.remove('hidden');
                 setRequired(driverInputs, true);
+                
+                // Initialize vehicle types on showing driver fields
+                filterVehicleTypes(); 
 
             } else if (role === 'SoftwareEngineer') {
                 softwareFields.classList.add('active');
                 setRequired(softwareInputs, true);
+            }
+        }
+
+        // --- FILTER VEHICLE TYPES (Handles Service type selection) ---
+        function filterVehicleTypes() {
+            const ridesChecked = document.getElementById('serviceRides').checked;
+            const foodsChecked = document.getElementById('serviceFoods').checked;
+            const vehicleSelect = document.getElementById('vehicleType');
+
+            // Clear current options
+            vehicleSelect.innerHTML = '<option value="">Select Vehicle Type</option>';
+
+            let visibleOptions = [];
+
+            if (ridesChecked || foodsChecked) {
+                // Combine and de-duplicate options based on selections
+                if (ridesChecked) {
+                    visibleOptions.push(...ALL_VEHICLES.Rides);
+                }
+                if (foodsChecked) {
+                    visibleOptions.push(...ALL_VEHICLES.Foods);
+                }
+
+                // Remove duplicates by converting to JSON, filtering, and converting back
+                const uniqueOptions = Array.from(new Set(visibleOptions.map(o => JSON.stringify(o))))
+                    .map(s => JSON.parse(s));
+
+                // Add unique options to the dropdown
+                uniqueOptions.forEach(option => {
+                    const newOption = document.createElement('option');
+                    newOption.value = option.value;
+                    newOption.textContent = option.text;
+                    vehicleSelect.appendChild(newOption);
+                });
             }
         }
     </script>
