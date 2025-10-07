@@ -86,11 +86,12 @@
         let isMenuOpen = false; // Mobile menu state
         
         const RIDE_TYPES = [
-            { name: 'Standard', description: 'Affordable, everyday rides (2-4 pax)', icon: '🧍', multiplier: 1.0, minFare: 5.00 },
-            { name: 'Premium', description: 'Luxury sedans, top rated drivers (2-4 pax)', icon: '💎', multiplier: 1.5, minFare: 8.00 },
-            { name: 'SUV', description: 'Extra room for groups (4-6 pax)', icon: '🚐', multiplier: 1.8, minFare: 10.00 },
+            { name: 'Standard', description: 'Affordable, everyday rides (2-4 passengers)', icon: '🧍', multiplier: 1.0, minFare: 5.00 },
+            { name: 'Premium', description: 'Luxury sedans, top rated drivers (2-4 passengers)', icon: '💎', multiplier: 1.5, minFare: 8.00 },
+            { name: 'SUV', description: 'Extra room for groups (4-6 passengers)', icon: '🚐', multiplier: 1.8, minFare: 10.00 },
             // Wheelchair Accessible option
-            { name: 'Accessible', description: 'Wheelchair-accessible vehicle (1-4 pax)', icon: '♿', multiplier: 1.2, minFare: 6.50 },
+            { name: 'Accessible', description: 'Wheelchair-accessible vehicle (1-4 passengers)', icon: '♿', multiplier: 1.2, minFare: 6.50 },
+            { name: 'Share Standard', description: 'Shared ride for one passenger to a similar destination (1-6 passengers)', icon: '🫂', multiplier: 0.7, minFare: 3.50 }
         ];
         
         const DRIVERS = [
