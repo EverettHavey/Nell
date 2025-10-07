@@ -204,7 +204,7 @@
 
     <div class="container">
         <div class="nav-header">
-            <a href="career.html" class="btn-back">← Back to Careers</a>
+            <a href="careers.html" class="btn-back">← Back to Careers</a>
         </div>
         
         <div id="applicationContent">
@@ -428,7 +428,6 @@
             const resultDiv = document.getElementById('submissionResult');
             const formContent = document.getElementById('applicationContent');
             
-            // Check HTML5 validity manually since we are intercepting submission
             if (!form.checkValidity()) {
                 form.reportValidity();
                 return;
@@ -438,6 +437,7 @@
             const roleInput = document.querySelector('input[name="applicationRole"]:checked');
             const serviceInput = document.querySelector('input[name="serviceSelection"]:checked');
             const firstName = document.getElementById('firstName').value;
+            const lastName = document.getElementById('lastName').value;
             const email = document.getElementById('email').value;
 
             const selectedRole = roleInput ? roleInput.value : '';
@@ -450,17 +450,20 @@
             const acceptThreshold = isDriver ? 0.7 : 0.3; 
             const isAccepted = Math.random() < acceptThreshold;
 
-            let statusMessage = '';
+            let statusTitle = '';
             let statusClass = '';
+            let statusMessage = '';
             let detail1Label = '';
             let detail1Value = '';
             
             if (isAccepted) {
                 statusClass = 'status-accepted';
-                statusMessage = 'APPLICATION CONFIRMED';
+                statusTitle = 'APPLICATION UNDER REVIEW';
+                statusMessage = 'Your profile meets our initial qualifications. Please check your email for the next steps in your onboarding process.';
             } else {
                 statusClass = 'status-denied';
-                statusMessage = 'APPLICATION DENIED';
+                statusTitle = 'APPLICATION RESULT';
+                statusMessage = 'Thank you for your interest. Unfortunately, your application did not meet the criteria for this role at this time.';
             }
 
             if (isDriver) {
@@ -475,17 +478,17 @@
             let confirmationHTML = `
                 <div class="confirmation-box">
                     <div class="${statusClass}">
-                        <h2>${statusMessage}</h2>
+                        <h2>${statusTitle}</h2>
                     </div>
 
                     <div class="confirmation-detail">
-                        <span class="confirmation-label">Confirmation ID</span>
+                        <span class="confirmation-label">Application ID</span>
                         <span class="confirmation-value">${applicationID}</span>
                     </div>
                     
                     <div class="confirmation-detail">
                         <span class="confirmation-label">Applicant Name</span>
-                        <span class="confirmation-value">${firstName}</span>
+                        <span class="confirmation-value">${firstName} ${lastName}</span>
                     </div>
 
                     <div class="confirmation-detail">
@@ -498,11 +501,8 @@
                         <span class="confirmation-value">${email}</span>
                     </div>
                     
-                    <p style="margin-top: 30px; text-align: center; color: ${isAccepted ? '#155724' : '#721c24'}; font-size: 1.1em;">
-                        ${isAccepted 
-                            ? 'We\'ve received your submission. **Check your email for the next steps in your onboarding process!**' 
-                            : 'Thank you for your interest. Unfortunately, your preliminary qualifications did not meet the criteria for this role at this time.'
-                        }
+                    <p style="margin-top: 30px; text-align: center; color: ${isAccepted ? '#155724' : '#721c24'}; font-size: 1.1em; font-weight: 500;">
+                        ${statusMessage}
                     </p>
                 </div>
             `;
