@@ -41,7 +41,7 @@ body {
     font-family: var(--font-family-sans);
     line-height: 1.6;
     color: var(--color-text);
-    background-color: white; /* Changed body background to white for cleaner look */
+    background-color: white; 
 }
 
 /* --- 2. Typography & Links --- */
@@ -76,12 +76,12 @@ ul {
 
 /* --- 3. Layout & Structure --- */
 .page-content {
-    padding: 0; /* Remove default padding for full-width headers */
+    padding: 0; 
 }
 
 main {
     padding-top: 80px; /* Space for fixed header */
-    min-height: calc(100vh - 120px); /* Ensures main content takes up most of the screen */
+    min-height: calc(100vh - 120px); 
 }
 
 section {
@@ -103,7 +103,7 @@ section {
     justify-content: space-between;
     align-items: center;
     padding: 0 var(--spacing-md);
-    z-index: 1000;
+    z-index: 1000; /* High Z-index */
 }
 
 .logo {
@@ -130,7 +130,6 @@ section {
     color: var(--color-primary);
 }
 
-/* Underline effect on hover */
 .desktop-nav a::after {
     content: '';
     position: absolute;
@@ -152,6 +151,7 @@ section {
     cursor: pointer;
     color: var(--color-dark);
     display: none; /* Hidden on desktop by default */
+    z-index: 1001; /* Must be higher than header for icon change */
 }
 
 /* Mobile Navigation (Slide-in Menu) */
@@ -162,14 +162,16 @@ section {
     width: 250px;
     height: calc(100% - 80px); /* Full height below header */
     background-color: var(--color-dark);
-    transform: translateX(100%);
+    /* Hidden by default, slid 100% to the right */
+    transform: translateX(100%); 
     transition: transform 0.3s ease-in-out;
     padding: var(--spacing-md);
-    z-index: 999;
+    /* Ensure it sits above the main content */
+    z-index: 999; 
     overflow-y: auto;
 }
 
-/* Assumes JS toggles the 'open' class */
+/* CLASS TOGGLED BY JAVASCRIPT */
 .mobile-nav.open {
     transform: translateX(0); /* Slides in */
 }
@@ -207,7 +209,7 @@ section {
 }
 
 .cta-primary:hover, .btn.cta-primary:hover {
-    background-color: #0056b3; /* Darker blue */
+    background-color: #0056b3; 
     transform: translateY(-2px);
 }
 
@@ -225,7 +227,7 @@ section {
 }
 
 .cta-secondary:hover, .btn:hover, .btn.cta-secondary:hover {
-    background-color: #e54c51; /* Darker red */
+    background-color: #e54c51; 
     transform: translateY(-2px);
 }
 
@@ -293,6 +295,7 @@ section {
 .city-feature {
     text-align: center;
     background-color: var(--color-light);
+    padding: var(--spacing-lg);
     border-radius: var(--border-radius-md);
     margin: var(--spacing-lg) auto;
 }
@@ -532,19 +535,19 @@ footer {
     .hero-section { padding: 4rem var(--spacing-sm); }
     .hero-section h1 { font-size: 2.5rem; }
 
-    /* Navigation */
-    .desktop-nav { display: none; } /* Hide desktop nav */
-    .mobile-menu-icon { display: block; } /* Show mobile icon */
+    /* Navigation Fixes */
+    .desktop-nav { display: none; } 
+    .mobile-menu-icon { display: block; } 
 
     /* Layout Stacking */
-    .cta-buttons { flex-direction: column; } /* Stack buttons on mobile */
+    .cta-buttons { flex-direction: column; } 
 
     .service-cards, 
     .values-grid, 
     .faq-sections,
     .steps-container {
-        grid-template-columns: 1fr; /* Single column stacking */
-        flex-direction: column; /* Stacking for flex items */
+        grid-template-columns: 1fr; 
+        flex-direction: column; 
     }
 
     .service-detail-section {
@@ -561,7 +564,6 @@ footer {
         width: 100%;
     }
 
-    /* City list uses fewer columns */
     .city-list ul { 
         columns: 1; 
     }
