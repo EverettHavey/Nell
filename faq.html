@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nell | Frequently Asked Questions</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: #333;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        }
+        /* --- Navigation Button --- */
+        .nav-header {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .btn-back {
+            background-color: #6c757d;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 0.9em;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+        .btn-back:hover {
+            background-color: #5a6268;
+        }
+        /* --- Header Styles --- */
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 15px;
+        }
+        .header h1 {
+            color: #007bff;
+            font-size: 2.5em;
+            margin: 0;
+        }
+        .header p {
+            font-size: 1.1em;
+            color: #555;
+            margin-top: 10px;
+        }
+        /* --- FAQ Sections --- */
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+        .faq-section {
+            background-color: #f9f9f9;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+        }
+        .faq-section h2 {
+            font-size: 1.6em;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #ff9900;
+            padding-bottom: 10px;
+        }
+        /* --- Accordion Style Q&A --- */
+        .accordion-item {
+            border-bottom: 1px solid #eee;
+            margin-bottom: 5px;
+        }
+        .accordion-button {
+            background-color: transparent;
+            color: #007bff;
+            cursor: pointer;
+            padding: 15px 0;
+            width: 100%;
+            border: none;
+            text-align: left;
+            font-weight: 600;
+            font-size: 1em;
+            transition: color 0.3s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .accordion-button:hover {
+            color: #0056b3;
+        }
+        .accordion-button:after {
+            content: '\002B'; /* Plus sign */
+            font-size: 1.2em;
+            color: #ff9900;
+            margin-left: 10px;
+            transition: transform 0.3s;
+        }
+        .accordion-button.active:after {
+            content: "\2212"; /* Minus sign */
+            transform: rotate(180deg);
+        }
+        .accordion-content {
+            padding: 0 10px 15px 0;
+            background-color: white;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            color: #555;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        
+        <!-- Back to Support Button -->
+        <div class="nav-header">
+            <a href="support.html" class="btn-back">← Back to Support</a>
+        </div>
+
+        <div class="header">
+            <h1>Frequently Asked Questions</h1>
+            <p>Find quick answers about Nell Rides, Nell Foods, and your account.</p>
+        </div>
+
+        <div class="faq-grid">
+            
+            <!-- 1. Rides Support -->
+            <div class="faq-section">
+                <h2>Rides Support</h2>
+                <div class="accordion-list">
+                    
+                    <div class="accordion-item">
+                        <button class="accordion-button">
+                            How do I book a unique vehicle like a Fire Truck or Heli-Ride?
+                        </button>
+                        <div class="accordion-content">
+                            Unique vehicles are listed alongside standard cars when you open the **Nell Rides** app in select markets. Their availability and pricing are dynamic and will be clearly displayed before you confirm your ride.
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-button">
+                            What is the policy on driver conduct?
+                        </button>
+                        <div class="accordion-content">
+                            All Nell drivers are required to adhere to our strict code of conduct, prioritizing passenger safety, professionalism, and courtesy. Any issues can be reported directly through the app's support section.
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-button">
+                            Can I share my ride with another person?
+                        </button>
+                        <div class="accordion-content">
+                            Yes, depending on your location, Nell Rides offers a ride-sharing option to help reduce costs. This feature matches you with riders heading in the same direction.
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-button">
+                            What types of payments are accepted for rides?
+                        </button>
+                        <div class="accordion-content">
+                            We accept all major credit cards, debit cards, and digital payment platforms like Apple Pay and Google Pay, which are securely stored within your app profile.
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <!-- 2. Nell - Foods Support -->
+            <div class="faq-section">
+                <h2>Nell - Foods Support</h2>
+                <div class="accordion-list">
+                    
+                    <div class="accordion-item">
+                        <button class="accordion-button">
+                            What should I do if my food order is incorrect or missing items?
+                        </button>
+                        <div class="accordion-content">
+                            Please contact **Nell Foods Support** immediately through the app. We will process a refund or arrange a new delivery, depending on the restaurant's policy and food quality concerns.
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-button">
+                            How are delivery times estimated?
+                        </button>
+                        <div class="accordion-content">
+                            Delivery times are estimated based on three factors: the restaurant's preparation time, current traffic conditions, and the distance to your location. You can track your courier in real-time in the app.
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-button">
+                            How does Nell ensure restaurant quality?
+                        </button>
+                        <div class="accordion-content">
+                            We use a combination of partner reviews, user feedback, and periodic checks to ensure our restaurant partners maintain high standards of food quality and hygiene.
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-button">
+                            Can I use a bicycle or walk for Nell Foods delivery?
+                        </button>
+                        <div class="accordion-content">
+                            Yes, many of our markets support bicycle and walking couriers, especially in dense urban areas. You can specify your mode of transport during the partner application process.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Account & Billing -->
+            <div class="faq-section">
+                <h2>Account & Billing</h2>
+                <div class="accordion-list">
+                    
+                    <div class="accordion-item">
+                        <button class="accordion-button">
+                            How do I update my profile and personal details?
+                        </button>
+                        <div class="accordion-content">
+                            You can easily manage all personal information, including your name, phone number, and address, in the '**Profile Settings**' section of the Nell app.
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-button">
+                            What is the subscription detail mentioned in the application?
+                        </button>
+                        <div class="accordion-content">
+                            The subscription may refer to optional premium service tiers for riders (like Nell Priority) or, for partners, a small service fee deducted from earnings to cover platform costs. Full details are provided during sign-up.
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-button">
+                            How often are drivers/couriers paid?
+                        </button>
+                        <div class="accordion-content">
+                            Payment schedules vary by region but are typically processed weekly via direct deposit. Instant payment options may also be available for a small fee.
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-button">
+                            My billing statement has an unfamiliar charge. What should I do?
+                        </button>
+                        <div class="accordion-content">
+                            First, check your in-app ride or order history. If you still can't identify the charge, please contact **Account & Billing Support** immediately with the date and amount of the transaction.
+                        </div>
+                    </div>
+
+                    <div class="accordion-item">
+                        <button class="accordion-button">
+                            What is the background check for driver applications?
+                        </button>
+                        <div class="accordion-content">
+                            The background check is a standard procedure for all independent contractor applicants. It verifies identity, checks driving history, and screens for criminal records to ensure the safety and trust of the Nell community.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        // JavaScript for the accordion functionality
+        const accordionButtons = document.querySelectorAll('.accordion-button');
+
+        accordionButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Toggle the 'active' class on the clicked button
+                this.classList.toggle('active');
+
+                // Get the next sibling, which is the content panel
+                const content = this.nextElementSibling;
+                
+                // Toggle max-height to show/hide the content
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    // Set max-height to the scrollHeight of the content (to fit content)
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
+
+                // Optional: Close other open accordions
+                accordionButtons.forEach(otherButton => {
+                    if (otherButton !== this && otherButton.classList.contains('active')) {
+                        otherButton.classList.remove('active');
+                        otherButton.nextElementSibling.style.maxHeight = null;
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
